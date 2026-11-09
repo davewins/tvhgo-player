@@ -251,12 +251,20 @@ export function Component() {
           <button
             type="button"
             className={styles.nav}
-            onClick={() =>
+            onClick={() => {
+              if (!isToday) {
+                // "now" is not on this day's grid: go back to today (which opens at the current time)
+                setSearchParams((prev) => {
+                  prev.delete('day');
+                  return prev;
+                });
+                return;
+              }
               scroller.current?.scrollTo({
                 left: Math.max(0, nowX - 30 * PX_PER_MIN),
                 behavior: 'smooth',
-              })
-            }
+              });
+            }}
           >
             {t('guide_now')}
           </button>
