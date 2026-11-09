@@ -124,6 +124,25 @@ function App() {
               <Route
                 path="/channels"
                 lazy={() => import('@/views/channels/guide/ChannelGuideView')}
+                shouldRevalidate={({
+                  currentUrl,
+                  nextUrl,
+                  defaultShouldRevalidate,
+                }) => {
+                  // typing in the search box only changes ?q=, which the guide filters client side
+                  const withoutQuery = (u: URL) => {
+                    const c = new URL(u);
+                    c.searchParams.delete('q');
+                    return c.href;
+                  };
+                  if (
+                    currentUrl.href !== nextUrl.href &&
+                    withoutQuery(currentUrl) === withoutQuery(nextUrl)
+                  ) {
+                    return false;
+                  }
+                  return defaultShouldRevalidate;
+                }}
               />
               <Route
                 path="/channels/:id"

@@ -63,10 +63,11 @@ Channels are rows and time runs left to right, with a red **now** line.
 - **Earlier / Now / Later** buttons scroll the time axis (Now goes back to today from another day); use the scrollbar or swipe for more.
 - **Click the programme that is on now, or a channel logo → watch live.**
 - **Click any other programme → its page**, where you can record it (existing tvhgo behaviour).
-- **Search** (in the guide toolbar) looks at channel names *and* programme titles on the day shown: channels with no
-  match are hidden, matching programmes are highlighted and the guide jumps to the first one. The guide only holds one
-  day at a time, so if nothing matches it says so; press Enter (or *Search all days*) to search the whole guide with
-  the search page. The search box in the top bar always searches the whole guide.
+- **Search** - there is one search box, in the top bar. On the Channels page it filters the guide as you type: it
+  matches channel names *and* programme titles on the day shown, hides channels with no match, highlights the matching
+  programmes and jumps to the first one. The filter stays when you change day. The guide only holds one day, so if
+  nothing matches it says so; press **Enter** (or *Search all days*) to search the whole guide on the search page.
+  On other pages the same box goes straight to that search page.
 - A red dot on a programme means a recording is scheduled for it.
 - The channel **number** opens that channel's own programme list.
 

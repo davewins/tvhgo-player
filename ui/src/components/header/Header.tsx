@@ -14,11 +14,12 @@ function Header({ onToggle }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const isSearch = useMatch(`/search`);
-  const [searchParams] = useSearchParams();
+  const isChannels = useMatch(`/channels`);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const searchForm = useFormik({
     initialValues: {
-      query: isSearch ? searchParams.get('q') || '' : '',
+      query: isSearch || isChannels ? searchParams.get('q') || '' : '',
     },
     onSubmit: ({ query }) => navigate(`/search?q=${encodeURIComponent(query)}`),
     enableReinitialize: true,
@@ -30,9 +31,26 @@ function Header({ onToggle }: Props) {
         <Input
           name="query"
           icon={<SearchIcon />}
-          placeholder={t('search')}
+          placeholder={isChannels ? t('guide_search') : t('search')}
           value={searchForm.values.query}
-          onChange={searchForm.handleChange}
+          onChange={(e) => {
+            searchForm.handleChange(e);
+            if (isChannels) {
+              // on the Channels page the guide filters live as you type; Enter searches the whole guide
+              const value = e.target.value;
+              setSearchParams(
+                (prev) => {
+                  if (value) {
+                    prev.set('q', value);
+                  } else {
+                    prev.delete('q');
+                  }
+                  return prev;
+                },
+                { replace: true }
+              );
+            }
+          }}
           onBlur={searchForm.handleBlur}
         />
       </form>

@@ -166,7 +166,7 @@ export function Component() {
 
   const scroller = useRef<HTMLDivElement>(null);
   const [now, setNow] = useState(moment().unix());
-  const [search, setSearch] = useState('');
+  const search = searchParams.get('q') || '';
   const [playing, setPlaying] = useState<EpgChannel | null>(null);
 
   // keep the "now" line moving, and refresh the data now and then so ended programmes drop out
@@ -312,18 +312,6 @@ export function Component() {
           >
             {t('guide_later')} ›
           </button>
-          <input
-            className={styles.search}
-            type="search"
-            placeholder={t('guide_search')}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && query !== '') {
-                searchAllDays();
-              }
-            }}
-          />
         </div>
       </div>
 
