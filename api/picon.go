@@ -1,6 +1,8 @@
 package api
 
 import (
+	"context"
+	"errors"
 	"io"
 	"net/http"
 	"strconv"
@@ -36,6 +38,10 @@ func (s *router) GetPicon(w http.ResponseWriter, r *http.Request) {
 		if err == core.ErrPiconNotFound {
 			response.NotFound(w, err)
 			return
+		}
+
+		if errors.Is(err, context.Canceled) {
+			return // the browser gave up on the request (e.g. scrolled past); not an error
 		}
 
 		log.Error().Int("id", id).
