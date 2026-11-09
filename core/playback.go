@@ -1,0 +1,58 @@
+package core
+
+import (
+	"context"
+	"errors"
+	"io"
+)
+
+var (
+	ErrPlaybackConversionDisabled = errors.New("on-demand conversion is disabled")
+	ErrPlaybackNoSource           = errors.New("recording file not available")
+	ErrLiveDisabled               = errors.New("live transcoding is disabled")
+	ErrLiveBusy                   = errors.New("too many live streams")
+	ErrLiveQuality                = errors.New("unsupported quality")
+)
+
+type (
+	// PlaybackStatus is the state of the browser-playable copy of a recording.
+	PlaybackStatus string
+
+	// PlaybackInfo describes whether and how a recording can be played in a browser.
+	PlaybackInfo struct {
+		Status PlaybackStatus `json:"status"`
+		// Progress of a running conversion in percent.
+		Progress int `json:"progress"`
+		// Source of a ready file: "library" (the configured source dir) or "cache" (converted by tvhgo).
+		Source string `json:"source,omitempty"`
+		// CanConvert is true if tvhgo can create the playable copy itself.
+		CanConvert bool   `json:"canConvert"`
+		Error      string `json:"error,omitempty"`
+	}
+
+	// PlaybackService finds or creates browser-playable copies (MP4) of finished recordings.
+	PlaybackService interface {
+		// Status returns the playback state of a recording.
+		Status(rec *Recording) PlaybackInfo
+		// Prepare starts converting a recording if no playable copy exists (idempotent).
+		Prepare(rec *Recording) (PlaybackInfo, error)
+		// LiveQualities returns the selectable live transcode heights (empty if live transcoding is disabled).
+		LiveQualities() []int
+		// StreamLive transcodes the raw MPEG-TS stream from src to a fragmented MP4 of the given height on dst
+		// until ctx is cancelled or src ends.
+		StreamLive(ctx context.Context, src io.Reader, dst io.Writer, height int) error
+		// Thumb returns the path of a thumbnail image for a recording: a frame from the recording itself if it
+		// is finished, otherwise (or if no frame can be made) TMDb artwork for the programme, if configured.
+		Thumb(ctx context.Context, rec *Recording) (string, bool)
+		// File returns the path of the ready playable copy, if there is one.
+		File(rec *Recording) (string, bool)
+	}
+)
+
+const (
+	PlaybackNone       PlaybackStatus = "none"
+	PlaybackQueued     PlaybackStatus = "queued"
+	PlaybackConverting PlaybackStatus = "converting"
+	PlaybackReady      PlaybackStatus = "ready"
+	PlaybackFailed     PlaybackStatus = "failed"
+)

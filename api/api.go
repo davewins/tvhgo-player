@@ -19,6 +19,7 @@ type router struct {
 	picons                core.PiconService
 	recordings            core.RecordingService
 	streaming             core.StreamingService
+	playback              core.PlaybackService
 	sessionManager        core.SessionManager
 	sessions              core.SessionRepository
 	users                 core.UserRepository
@@ -45,6 +46,7 @@ func New(
 	picons core.PiconService,
 	recordings core.RecordingService,
 	streaming core.StreamingService,
+	playback core.PlaybackService,
 	sessionManager core.SessionManager,
 	sessions core.SessionRepository,
 	users core.UserRepository,
@@ -65,6 +67,7 @@ func New(
 		sessions:              sessions,
 		users:                 users,
 		streaming:             streaming,
+		playback:              playback,
 		passwordAuthenticator: passwordAuthenticator,
 		tokens:                tokens,
 		tokenService:          tokenService,
@@ -124,6 +127,8 @@ func (s *router) Handler() http.Handler {
 	authenticated.Get("/channels", s.GetChannels)
 	authenticated.Get("/channels/{id}", s.GetChannel)
 	authenticated.Get("/channels/{number}/stream", s.StreamChannel)
+	authenticated.Get("/channels/{number}/live", s.StreamChannelLive)
+	authenticated.Get("/playback/live", s.GetLiveQualities)
 
 	authenticated.Get("/picon/{id}", s.GetPicon)
 
@@ -143,6 +148,10 @@ func (s *router) Handler() http.Handler {
 	authenticated.Put("/recordings/{id}/cancel", s.CancelRecording)
 	authenticated.Put("/recordings/{id}/move/{dest}", s.MoveRecording)
 	authenticated.Get("/recordings/{id}/stream", s.StreamRecording)
+	authenticated.Get("/recordings/{id}/play", s.PlayRecording)
+	authenticated.Get("/recordings/{id}/playback", s.GetPlaybackStatus)
+	authenticated.Get("/recordings/{id}/thumb", s.GetRecordingThumb)
+	authenticated.Post("/recordings/{id}/playback", s.PreparePlayback)
 
 	authenticated.Get("/profiles/stream", s.GetStreamProfiles)
 

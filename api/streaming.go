@@ -1,7 +1,6 @@
 package api
 
 import (
-	"context"
 	"errors"
 	"net/http"
 	"syscall"
@@ -34,7 +33,7 @@ func (s *router) StreamChannel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, err := s.streaming.GetChannelStream(context.Background(), number, profile)
+	res, err := s.streaming.GetChannelStream(r.Context(), number, profile)
 	if err != nil {
 		log.Error().Int64("channel", number).
 			Err(err).Msg("failed to get channel stream")
@@ -68,7 +67,7 @@ func (s *router) StreamChannel(w http.ResponseWriter, r *http.Request) {
 func (s *router) StreamRecording(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 
-	res, err := s.streaming.GetRecordingStream(context.Background(), id)
+	res, err := s.streaming.GetRecordingStream(r.Context(), id)
 	if err != nil {
 		log.Error().Str("id", id).
 			Err(err).Msg("failed to get recording stream")

@@ -19,6 +19,7 @@ import (
 	"github.com/davidborzek/tvhgo/services/dvr"
 	"github.com/davidborzek/tvhgo/services/epg"
 	"github.com/davidborzek/tvhgo/services/picon"
+	"github.com/davidborzek/tvhgo/services/playback"
 	profiles "github.com/davidborzek/tvhgo/services/profile"
 	"github.com/davidborzek/tvhgo/services/recording"
 	"github.com/davidborzek/tvhgo/services/streaming"
@@ -97,6 +98,7 @@ func start(ctx *cli.Context) error {
 	streamingService := streaming.New(tvhStreamingClient)
 	dvrConfigService := dvr.New(tvhClient)
 	profileService := profiles.New(tvhClient)
+	playbackService := playback.New(cfg.Playback)
 
 	sessionCleaner := auth.NewSessionCleaner(
 		sessionRepository,
@@ -114,6 +116,7 @@ func start(ctx *cli.Context) error {
 		piconService,
 		recordingService,
 		streamingService,
+		playbackService,
 		sessionManager,
 		sessionRepository,
 		userRepository,

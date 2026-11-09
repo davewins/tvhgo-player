@@ -93,7 +93,7 @@ func (c *client) Exec(
 	}
 
 	encoded := strings.NewReader(q.Encode())
-	req, err := http.NewRequest(http.MethodPost, u, encoded)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u, encoded)
 	if err != nil {
 		return nil, err
 	}

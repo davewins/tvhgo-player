@@ -17,6 +17,7 @@ type (
 		Database  DatabaseConfig  `yaml:"database"  envPrefix:"DATABASE_"`
 		Metrics   MetricsConfig   `yaml:"metrics"  envPrefix:"METRICS_"`
 		Log       LogConfig       `yaml:"log" envPrefix:"LOG_"`
+		Playback  PlaybackConfig  `yaml:"playback" envPrefix:"PLAYBACK_"`
 	}
 )
 
@@ -137,4 +138,5 @@ func (c *Config) loadDefaults() {
 	c.Database.SetDefaults()
 	c.Metrics.SetDefaults()
 	c.Log.SetDefaults()
+	c.Playback.SetDefaults()
 }
