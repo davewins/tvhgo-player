@@ -228,3 +228,106 @@ metrics:
   port: 2345
   token: supersecret
 ```
+
+### Playback config (playback)
+
+Settings for playing **finished recordings** in the browser. Browsers cannot play the MPEG-TS files Tvheadend
+records, so tvhgo serves an MP4. It looks for one in this order: (1) `source_dir`, if you already have a pipeline or
+media server that creates MP4 copies, (2) its own cache, (3) if `convert` is enabled, it creates one on demand with
+ffmpeg the first time someone presses Play (progress is shown, afterwards it starts instantly and supports seeking).
+
+Playing **live TV** needs none of this: it uses Tvheadend's `webtv-*` stream profiles (Tvheadend needs ffmpeg for
+those; the `webtv-h264-aac-matroska` profile is used where the browser supports it, otherwise
+`webtv-vp8-vorbis-webm`).
+
+| Key                  | Env variable                       | Default            | Description                                                                                           |
+| -------------------- | ---------------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------- |
+| `tvheadend_root`     | `TVHGO_PLAYBACK_TVHEADEND_ROOT`    | `/recordings`      | Directory prefix of the recording file paths that Tvheadend reports.                                  |
+| `recordings_dir`     | `TVHGO_PLAYBACK_RECORDINGS_DIR`    | `tvheadend_root`   | Where tvhgo sees that same directory. Mount it read-only into the container.                          |
+| `source_dir`         | `TVHGO_PLAYBACK_SOURCE_DIR`        | _(empty)_          | Optional folder with ready-made MP4s mirroring the recordings tree: `<root>/a/b.ts` → `<source_dir>/a/b.mp4`. |
+| `convert`            | `TVHGO_PLAYBACK_CONVERT`           | `false`            | Convert recordings on demand with ffmpeg (needs `ffmpeg`/`ffprobe`, `recordings_dir`, writable `cache_dir`). |
+| `cache_dir`          | `TVHGO_PLAYBACK_CACHE_DIR`         | `/tvhgo/cache`     | Where converted files are stored.                                                                     |
+| `cache_max_gb`       | `TVHGO_PLAYBACK_CACHE_MAX_GB`      | `50`               | Size limit of the cache. Least recently played files are removed first.                               |
+| `cache_max_age_days` | `TVHGO_PLAYBACK_CACHE_MAX_AGE_DAYS`| `30`               | Files not played for this long are removed.                                                           |
+| `max_jobs`           | `TVHGO_PLAYBACK_MAX_JOBS`          | `1`                | Number of conversions running at the same time (others wait in a queue).                              |
+| `ffmpeg` / `ffprobe` | `TVHGO_PLAYBACK_FFMPEG` / `_FFPROBE` | `ffmpeg` / `ffprobe` | Binaries to use.                                                                                  |
+| `tmdb_api_key`       | `TVHGO_PLAYBACK_TMDB_API_KEY`      | _(empty)_          | Optional [TMDb](https://www.themoviedb.org) v3 API key: programme artwork for recordings without a frame (e.g. upcoming ones). Programme titles are sent to TMDb; only exact title matches are used; results are cached in `cache_dir`. |
+| `tmdb_language`      | `TVHGO_PLAYBACK_TMDB_LANGUAGE`     | `en-GB`            | Language for TMDb lookups.                                                                            |
+| `preset`             | `TVHGO_PLAYBACK_PRESET`            | `veryfast`         | x264 speed preset.                                                                                    |
+| `crf`                | `TVHGO_PLAYBACK_CRF`               | `22`               | x264 quality (lower = better and larger). SD recordings use `crf - 2`.                                |
+
+Conversions re-encode to H.264/AAC with a keyframe every ~2 seconds (so seeking works in every browser), pick the
+main audio track (not the audio-description one) and convert non-square-pixel SD video to square pixels.
+
+**Thumbnails:** the recordings list and detail pages show a still from the recording (from `source_dir`'s
+`<name>-thumb.jpg` if present, otherwise extracted with ffmpeg and cached). Recordings without one (e.g. upcoming
+ones) fall back to TMDb artwork if `tmdb_api_key` is set.
+
+*This product uses the TMDB API but is not endorsed or certified by TMDB.*
+
+### TMDb artwork
+
+Optional. Recordings that are not finished yet (such as upcoming ones) have no frame to use as a thumbnail; with a
+TMDb key tvhgo fetches the programme's artwork from [The Movie Database](https://www.themoviedb.org) instead.
+
+**1. Get a key (free, for personal use)**
+
+1. Create an account at <https://www.themoviedb.org/signup> and confirm your email.
+2. Open *Settings → API* (<https://www.themoviedb.org/settings/api>) and request an API key (choose the *Developer*
+   option and accept the [terms of use](https://www.themoviedb.org/api-terms-of-use)).
+3. Copy the **API Key** - a 32-character string of letters and digits. (Not the long *API Read Access Token*;
+   tvhgo uses the v3 key.)
+4. Check it works: `curl "https://api.themoviedb.org/3/authentication?api_key=YOUR_KEY"` should answer `{"success":true,...}`.
+
+**2. Give it to tvhgo - any one of these**
+
+=== "Docker compose (recommended)"
+
+    Put it in the `.env` file next to your compose file (this file is git-ignored; never commit a key):
+
+    ```bash
+    TMDB_API_KEY=0123456789abcdef0123456789abcdef
+    ```
+
+    The example compose file passes it through as `TVHGO_PLAYBACK_TMDB_API_KEY: ${TMDB_API_KEY:-}`. Then apply it:
+
+    ```bash
+    docker compose up -d
+    ```
+
+=== "Environment variable"
+
+    ```bash
+    TVHGO_PLAYBACK_TMDB_API_KEY=0123456789abcdef0123456789abcdef
+    TVHGO_PLAYBACK_TMDB_LANGUAGE=en-GB     # optional
+    ```
+
+=== "Config file"
+
+    ```yaml
+    playback:
+      tmdb_api_key: 0123456789abcdef0123456789abcdef
+      tmdb_language: en-GB
+    ```
+
+    Settings in the config file override environment variables. Keep the file private (`chmod 600`).
+
+=== "Portainer / other stack tools"
+
+    Add a stack variable (for example `TVHGO_TMDB_KEY`) and reference it from the compose file as
+    `TVHGO_PLAYBACK_TMDB_API_KEY: ${TVHGO_TMDB_KEY}`, so the key is stored in the stack's settings and not in the
+    compose text.
+
+**3. Check it**
+
+Open *Recordings → Upcoming*. Programmes TMDb knows by their exact title (e.g. a soap or a drama series) get a
+picture within a few seconds the first time. Programmes it has no exact match for (news, one-offs) correctly stay
+blank. Pictures are cached in `<cache_dir>/art`; to force a fresh lookup delete that folder (a "no match" is
+otherwise remembered for a week).
+
+**Privacy and licence**
+
+- tvhgo sends the **programme title** (for example `Emmerdale`) and your key to TMDb to look it up, and downloads the
+  image. Nothing else is sent. Leave the key unset to switch this off completely.
+- Use of the TMDb API is subject to their terms. *This product uses the TMDB API but is not endorsed or certified by TMDB.*
+

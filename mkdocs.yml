@@ -47,6 +47,7 @@ repo_url: https://github.com/davidborzek/tvhgo
 nav:
   - "Welcome": "index.md"
   - "Installation": "installation.md"
+  - "Player, guide and thumbnails": "player.md"
   - "Configuration":
       - "Configuration": "configuration.md"
       - "Auth": "auth.md"
@@ -67,6 +68,8 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
+  - admonition
+  - pymdownx.details
   - attr_list
   - md_in_html
   - pymdownx.emoji:

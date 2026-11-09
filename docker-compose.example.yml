@@ -1,0 +1,53 @@
+# Example docker compose file for the tvhgo fork with the in-browser player.
+#
+#   1. cp .env.example .env     and fill in the values
+#   2. mkdir -p data && sudo chown 1000:1000 data       (the container runs as uid 1000)
+#   3. docker compose -f docker-compose.example.yml up -d --build
+#   4. docker compose -f docker-compose.example.yml exec tvhgo tvhgo admin user add
+#
+# Full guide: docs/installation.md        All settings: docs/configuration.md
+services:
+  tvhgo:
+    build:
+      context: .
+      dockerfile: Dockerfile.player      # builds the web UI + server and installs ffmpeg
+    image: tvhgo-player:local
+    container_name: tvhgo
+    restart: unless-stopped
+    ports:
+      - "8080:8080"                      # web UI + API. Put a reverse proxy with HTTPS in front for remote access.
+    environment:
+      # --- Tvheadend (required) -------------------------------------------------------------
+      TVHGO_TVHEADEND_HOST: ${TVHEADEND_HOST:?set TVHEADEND_HOST in .env}
+      TVHGO_TVHEADEND_PORT: ${TVHEADEND_PORT:-9981}
+      TVHGO_TVHEADEND_USERNAME: ${TVHEADEND_USERNAME:?set TVHEADEND_USERNAME in .env}
+      TVHGO_TVHEADEND_PASSWORD: ${TVHEADEND_PASSWORD:?set TVHEADEND_PASSWORD in .env}
+
+      # --- Live TV quality choice (tvhgo transcodes Tvheadend's raw stream with ffmpeg) -----
+      TVHGO_PLAYBACK_LIVE_TRANSCODE: "true"
+      TVHGO_PLAYBACK_LIVE_QUALITIES: "1080,720,480,360"
+      TVHGO_PLAYBACK_LIVE_MAX_STREAMS: "3"          # concurrent live transcodes (each uses CPU)
+
+      # --- Recording playback ----------------------------------------------------------------
+      # TVHEADEND_ROOT is the directory prefix Tvheadend reports for its recordings (see "Storage path" in
+      # Tvheadend's DVR settings). RECORDINGS_DIR is where this container sees the same directory.
+      TVHGO_PLAYBACK_TVHEADEND_ROOT: /recordings
+      TVHGO_PLAYBACK_RECORDINGS_DIR: /recordings
+      # Optional: folder of ready-made MP4s mirroring the recordings tree (a/b.ts -> <dir>/a/b.mp4), e.g. made by
+      # your own pipeline. Leave out if you have none.
+      # TVHGO_PLAYBACK_SOURCE_DIR: /recordings/_mp4
+      TVHGO_PLAYBACK_CONVERT: "true"                # convert on first play when no MP4 exists
+      TVHGO_PLAYBACK_CACHE_DIR: /tvhgo/cache
+      TVHGO_PLAYBACK_CACHE_MAX_GB: "50"
+      TVHGO_PLAYBACK_CACHE_MAX_AGE_DAYS: "30"
+      TVHGO_PLAYBACK_MAX_JOBS: "1"                  # concurrent conversions
+
+      # --- Optional: TMDb artwork for recordings without a frame (e.g. upcoming ones) ------
+      # Leave TMDB_API_KEY empty in .env to disable. See docs/configuration.md#tmdb-artwork.
+      TVHGO_PLAYBACK_TMDB_API_KEY: ${TMDB_API_KEY:-}
+      TVHGO_PLAYBACK_TMDB_LANGUAGE: en-GB
+
+      TZ: Europe/London
+    volumes:
+      - ./data:/tvhgo                    # database + converted-file cache (must be writable by uid 1000)
+      - /path/to/tvheadend/recordings:/recordings:ro     # <-- change: your recordings folder (read-only is enough)

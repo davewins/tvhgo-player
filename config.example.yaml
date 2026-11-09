@@ -43,3 +43,20 @@ metrics:
   port: 8081
   host: 127.0.0.1
   token: <metrics_token>
+
+# In-browser playback of finished recordings (live TV needs no extra setup: it uses tvheadend's webtv profiles).
+# Browsers cannot play tvheadend's MPEG-TS files, so tvhgo serves an MP4: first one from source_dir (if you already
+# have a pipeline/media server making them), then its own cache, then - if convert is on - it converts on demand.
+playback:
+  tvheadend_root: /recordings        # prefix of the file paths tvheadend reports
+  recordings_dir: /recordings        # where tvhgo sees that same directory (mount read-only)
+  # source_dir: /recordings/_mp4     # optional: ready-made MP4s mirroring the tree (a/b.ts -> <source_dir>/a/b.mp4)
+  convert: true                      # convert on first play with ffmpeg
+  cache_dir: /tvhgo/cache
+  cache_max_gb: 50
+  cache_max_age_days: 30
+  max_jobs: 1                        # concurrent conversions
+  preset: veryfast                   # x264 preset
+  crf: 22                            # quality, lower = better/larger (SD uses crf-2)
+  # tmdb_api_key: <key>              # optional: TMDb artwork for recordings without a frame (e.g. upcoming)
+  # tmdb_language: en-GB

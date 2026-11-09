@@ -34,3 +34,7 @@ dist-ssr
 *.sw?
 
 coverage/
+
+# local compose settings and data (see docker-compose.example.yml)
+.env
+/data/
