@@ -56,17 +56,22 @@ type Props = {
   channelNumber?: number;
   // ... or a finished recording id (plays the browser-friendly MP4 copy).
   recordingId?: string;
+  // Channel logo, shown for radio (audio-only) streams instead of a black video area.
+  picon?: string;
 };
 
 function Inner({
   title,
   channelNumber,
   recordingId,
+  picon,
 }: Omit<Props, 'visible' | 'onClose'>) {
   const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [preparing, setPreparing] = useState<PlaybackInfo | null>(null);
+  // radio: the stream has no video, only audio
+  const [audioOnly, setAudioOnly] = useState(false);
   // live: heights tvhgo can transcode to (null = still loading) and the current choice ("auto" or a height)
   const [qualities, setQualities] = useState<number[] | null>(null);
   const [quality, setQuality] = useState<string>(AUTO);
@@ -214,22 +219,25 @@ function Inner({
     <div className={styles.player}>
       <div className={styles.header}>
         <h3 className={styles.title}>{title}</h3>
-        {channelNumber !== undefined && qualities && qualities.length > 0 && (
-          <label className={styles.quality}>
-            {t('quality')}
-            <select
-              value={quality}
-              onChange={(e) => onQualityChange(e.target.value)}
-            >
-              {qualities.map((q) => (
-                <option key={q} value={String(q)}>
-                  {q}p
-                </option>
-              ))}
-              <option value={AUTO}>{t('quality_auto')}</option>
-            </select>
-          </label>
-        )}
+        {channelNumber !== undefined &&
+          !audioOnly &&
+          qualities &&
+          qualities.length > 0 && (
+            <label className={styles.quality}>
+              {t('quality')}
+              <select
+                value={quality}
+                onChange={(e) => onQualityChange(e.target.value)}
+              >
+                {qualities.map((q) => (
+                  <option key={q} value={String(q)}>
+                    {q}p
+                  </option>
+                ))}
+                <option value={AUTO}>{t('quality_auto')}</option>
+              </select>
+            </label>
+          )}
       </div>
       {preparing && (
         <div className={styles.preparing}>
@@ -246,15 +254,43 @@ function Inner({
           </div>
         </div>
       )}
+      {audioOnly && (
+        <div className={styles.radio}>
+          {picon && <img className={styles.radioLogo} src={picon} alt="" />}
+          <span className={styles.radioLabel}>{t('radio')}</span>
+          <div className={styles.eq} aria-hidden="true">
+            <span />
+            <span />
+            <span />
+            <span />
+            <span />
+          </div>
+        </div>
+      )}
       <video
         ref={videoRef}
-        className={styles.video}
+        className={audioOnly ? styles.videoAudioOnly : styles.video}
         style={preparing ? { display: 'none' } : undefined}
         controls
         playsInline
-        onError={() =>
-          setError(recordingId ? t('player_no_copy') : t('player_live_error'))
-        }
+        onLoadedMetadata={(e) => {
+          const v = e.currentTarget;
+          setAudioOnly(v.videoWidth === 0 && v.videoHeight === 0);
+        }}
+        onError={() => {
+          // "Auto" uses tvheadend's own video profiles, which cannot carry a radio stream: retry with tvhgo's
+          // own transcoder (it handles audio-only channels)
+          if (
+            channelNumber !== undefined &&
+            quality === AUTO &&
+            qualities &&
+            qualities.length > 0
+          ) {
+            setQuality(String(qualities.includes(720) ? 720 : qualities[0]));
+            return;
+          }
+          setError(recordingId ? t('player_no_copy') : t('player_live_error'));
+        }}
       />
       {error && <p className={styles.error}>{error}</p>}
     </div>

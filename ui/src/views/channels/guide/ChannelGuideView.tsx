@@ -327,6 +327,7 @@ export function Component() {
           onClose={() => setPlaying(null)}
           title={playing.channelName}
           channelNumber={playing.channelNumber}
+          picon={`/api/picon/${playing.piconId}`}
         />
       )}
     </div>

@@ -300,9 +300,6 @@ func (s *service) buildArgs(in, out string, p *probe) ([]string, error) {
 			}
 		}
 	}
-	if vIdx < 0 {
-		return nil, fmt.Errorf("no video stream")
-	}
 	if aIdx < 0 { // fall back to any audio stream
 		for _, st := range p.Streams {
 			if st.CodecType == "audio" {
@@ -310,6 +307,16 @@ func (s *service) buildArgs(in, out string, p *probe) ([]string, error) {
 				break
 			}
 		}
+	}
+	if vIdx < 0 {
+		if aIdx < 0 {
+			return nil, fmt.Errorf("no video or audio stream")
+		}
+		// radio recording: audio only
+		return []string{"-nostdin", "-v", "error", "-y", "-progress", "pipe:1", "-fflags", "+genpts",
+			"-i", "file:" + in, "-map", "0:" + strconv.Itoa(aIdx),
+			"-vn", "-c:a", "aac", "-b:a", "160k", "-ac", "2", "-sn", "-dn",
+			"-movflags", "+faststart", "-f", "mp4", out}, nil
 	}
 
 	// deinterlace: always for MPEG-2 SD (broadcast SD is interlaced), only frames flagged interlaced otherwise

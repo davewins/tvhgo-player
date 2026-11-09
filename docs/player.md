@@ -17,6 +17,10 @@ A player opens on top of the page.
 
 Your choice is remembered in the browser. The default is **720p**.
 
+**Radio channels** play too. A radio channel has no video, so tvhgo detects the audio-only stream and the player shows
+the station logo, a "Radio" label and a plain audio bar instead of a black video area. This works on any quality
+setting, and with *Auto* as well. Radio *recordings* are converted to audio-only MP4 for playback in the same way.
+
 Things to know:
 
 - Each live viewer is one ffmpeg process (limit: `LIVE_MAX_STREAMS`, default 3). Pick a lower quality on a slow server.
@@ -114,5 +118,7 @@ All need a logged-in session (like the rest of the API).
 ## Limitations
 
 - Transcoding and conversion use the CPU (no hardware acceleration yet).
+- Whether a channel is radio is detected from its stream (no video), not from Tvheadend's channel data, so the quality
+  menu simply disappears for radio.
 - Audio-description tracks are skipped by choosing the main audio track; subtitles are not included in converted video.
 - No Chromecast / AirPlay / external-player integration.

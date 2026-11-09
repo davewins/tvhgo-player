@@ -33,6 +33,7 @@ func (s *service) qualityAllowed(h int) bool {
 // liveArgs builds the ffmpeg arguments that turn a raw MPEG-TS stream on stdin into a fragmented MP4 on stdout.
 func liveArgs(height int, preset string) []string {
 	h := strconv.Itoa(height)
+	// the video map is optional: radio channels have no video and come out as audio-only MP4
 	// never upscale; keep the display aspect ratio (handles non-square-pixel SD); deinterlace interlaced frames
 	vf := fmt.Sprintf("yadif=0:-1:1,scale=w=trunc(min(%s\\,ih)*dar/2)*2:h=min(%s\\,ih):flags=bilinear,setsar=1", h, h)
 	crf, maxrate := "23", "6M"
@@ -47,13 +48,14 @@ func liveArgs(height int, preset string) []string {
 	return []string{
 		"-nostdin", "-v", "error", "-fflags", "+genpts+discardcorrupt",
 		"-probesize", "1500000", "-analyzeduration", "1500000",
-		"-i", "pipe:0", "-map", "0:v:0", "-map", "0:a:0?",
+		"-i", "pipe:0", "-map", "0:v:0?", "-map", "0:a:0?",
 		"-vf", vf,
 		"-c:v", "libx264", "-preset", preset, "-tune", "zerolatency", "-crf", crf, "-maxrate", maxrate, "-bufsize", "2M",
 		"-force_key_frames", "expr:gte(t,n_forced*1)", "-pix_fmt", "yuv420p",
 		"-c:a", "aac", "-b:a", "128k", "-ac", "2", "-af", "aresample=async=1",
 		"-sn", "-dn",
-		"-f", "mp4", "-movflags", "frag_keyframe+empty_moov+default_base_moof", "pipe:1",
+		// frag_duration: audio-only (radio) streams have no video keyframes to cut fragments at
+		"-f", "mp4", "-movflags", "frag_keyframe+empty_moov+default_base_moof", "-frag_duration", "1000000", "pipe:1",
 	}
 }
 

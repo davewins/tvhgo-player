@@ -191,7 +191,7 @@ func TestCleanupAgeAndSize(t *testing.T) {
 
 func TestLiveArgs(t *testing.T) {
 	joined := strings.Join(liveArgs(720, "veryfast"), " ")
-	for _, want := range []string{"pipe:0", "pipe:1", "min(720\\,ih)", "-crf 24", "frag_keyframe+empty_moov", "-map 0:a:0?", "n_forced*1"} {
+	for _, want := range []string{"pipe:0", "pipe:1", "min(720\\,ih)", "-crf 24", "frag_keyframe+empty_moov", "-frag_duration 1000000", "-map 0:v:0?", "-map 0:a:0?", "n_forced*1"} {
 		if !strings.Contains(joined, want) {
 			t.Errorf("missing %q in %s", want, joined)
 		}
@@ -297,5 +297,33 @@ func TestThumbPrefersPipelineFrame(t *testing.T) {
 	up := &core.Recording{ID: "r2", Title: "Show", Status: "scheduled"}
 	if _, ok := s.Thumb(context.Background(), up); ok {
 		t.Fatal("no artwork expected")
+	}
+}
+
+func TestBuildArgsAudioOnly(t *testing.T) {
+	s, _ := testService(t)
+	p := &probe{}
+	st := struct {
+		Index       int               `json:"index"`
+		CodecType   string            `json:"codec_type"`
+		CodecName   string            `json:"codec_name"`
+		Height      int               `json:"height"`
+		SAR         string            `json:"sample_aspect_ratio"`
+		DAR         string            `json:"display_aspect_ratio"`
+		Channels    int               `json:"channels"`
+		Disposition map[string]int    `json:"disposition"`
+		Tags        map[string]string `json:"tags"`
+	}{Index: 0, CodecType: "audio", CodecName: "mp2", Channels: 2}
+	p.Streams = append(p.Streams, st)
+	args, err := s.buildArgs("/in.ts", "/out.mp4.part", p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	joined := strings.Join(args, " ")
+	if !strings.Contains(joined, "-vn") || !strings.Contains(joined, "-c:a aac") || strings.Contains(joined, "libx264") {
+		t.Fatalf("expected an audio-only conversion, got %s", joined)
+	}
+	if _, err := s.buildArgs("/in.ts", "/out", &probe{}); err == nil {
+		t.Fatal("a file with no streams must be rejected")
 	}
 }

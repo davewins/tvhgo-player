@@ -68,6 +68,7 @@ export const Component = () => {
             onClose={() => setPlaying(false)}
             title={channel.name}
             channelNumber={channel.number}
+            picon={`/api/picon/${channel.piconId}`}
           />
         )}
       </div>

@@ -38,6 +38,8 @@
   (tvhgo transcodes Tvheadend's raw stream with ffmpeg, so it works with any Tvheadend, no profile setup needed) or
   **Auto**, which uses Tvheadend's own browser profile. Your choice is remembered. Closing the player releases the
   tuner straight away.
+- **Radio channels** play in the same player: audio-only streams are detected and shown with the station logo and an
+  audio bar (no black video box).
 - **Play finished recordings in the browser, with seeking.** tvhgo serves a browser-friendly MP4:
   1. a ready-made MP4 from a folder you point it at (for example from your own pipeline or a media server), else
   2. its own cache, else
@@ -86,6 +88,9 @@ reverse-proxy notes and troubleshooting.
 
 ![Recordings - upcoming](docs/screenshots/recordings-upcoming.png)
 *Upcoming recordings with TMDb artwork where the programme is found.*
+
+![Radio](docs/screenshots/radio-player.png)
+*Radio channels play as audio only, with the station logo.*
 
 ![Preparing a recording](docs/screenshots/recording-preparing.png)
 *A recording with no MP4 yet is converted when you press Play.*
