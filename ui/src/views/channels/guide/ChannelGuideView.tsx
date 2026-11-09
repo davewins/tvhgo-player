@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import Button from '@/components/common/button/Button';
 import EmptyState from '@/components/common/emptyState/EmptyState';
 import Player from '@/components/player/Player';
 import { getEpg } from '@/clients/api/api';
@@ -53,6 +54,10 @@ export async function loader({
   return { epg: epg || [], dayStart, axisStart, axisEnd, isToday };
 }
 
+// a programme matches the search if its title or subtitle contains the (lower-cased) text
+const matches = (e: EpgEvent, q: string) =>
+  q !== '' && `${e.title} ${e.subtitle || ''}`.toLowerCase().includes(q);
+
 const px = (seconds: number) => (seconds / 60) * PX_PER_MIN;
 
 function GuideRow({
@@ -60,6 +65,7 @@ function GuideRow({
   axisStart,
   axisEnd,
   now,
+  search,
   onPlay,
   onEvent,
   onChannel,
@@ -68,6 +74,7 @@ function GuideRow({
   axisStart: number;
   axisEnd: number;
   now: number;
+  search: string;
   onPlay: (c: EpgChannel) => void;
   onEvent: (e: EpgEvent) => void;
   onChannel: (c: EpgChannel) => void;
@@ -120,7 +127,7 @@ function GuideRow({
           return (
             <div
               key={e.id}
-              className={`${styles.event} ${live ? styles.live : ''} ${past ? styles.past : ''}`}
+              className={`${styles.event} ${live ? styles.live : ''} ${past ? styles.past : ''} ${search && matches(e, search) ? styles.match : ''} ${search && !matches(e, search) ? styles.dim : ''}`}
               style={{
                 left: px(start - axisStart),
                 width: px(end - start) - 2,
@@ -186,13 +193,43 @@ export function Component() {
     }
   }, [dayStart]);
 
+  const query = search.trim().toLowerCase();
+  // this guide only holds the selected day; the search page looks through the whole guide
+  const searchAllDays = () =>
+    navigate(`/search?q=${encodeURIComponent(search.trim())}`);
   const channels = useMemo(
     () =>
-      epg.filter((c) =>
-        c.channelName.toLowerCase().includes(search.toLowerCase())
-      ),
-    [epg, search]
+      query === ''
+        ? epg
+        : epg.filter(
+            (c) =>
+              c.channelName.toLowerCase().includes(query) ||
+              c.events.some((e) => matches(e, query))
+          ),
+    [epg, query]
   );
+
+  // jump to the first matching programme that is on now or later
+  useEffect(() => {
+    if (query === '' || !scroller.current) {
+      return;
+    }
+    let first: number | null = null;
+    for (const c of channels) {
+      for (const e of c.events) {
+        if (e.endsAt > now && matches(e, query)) {
+          const at = Math.max(e.startsAt, axisStart);
+          first = first === null ? at : Math.min(first, at);
+        }
+      }
+    }
+    if (first !== null) {
+      scroller.current.scrollTo({
+        left: Math.max(0, px(first - axisStart) - 20),
+        behavior: 'smooth',
+      });
+    }
+  }, [query]);
 
   const ticks = useMemo(() => {
     const list: { at: number; hour: boolean }[] = [];
@@ -278,14 +315,29 @@ export function Component() {
           <input
             className={styles.search}
             type="search"
-            placeholder={t('search')}
+            placeholder={t('guide_search')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && query !== '') {
+                searchAllDays();
+              }
+            }}
           />
         </div>
       </div>
 
-      {channels.length === 0 ? (
+      {channels.length === 0 && query !== '' ? (
+        <EmptyState
+          title={t('guide_no_match', { query: search.trim() })}
+          subtitle={t('guide_no_match_hint')}
+        >
+          <Button
+            label={t('guide_search_all')}
+            onClick={() => searchAllDays()}
+          />
+        </EmptyState>
+      ) : channels.length === 0 ? (
         <EmptyState title={t('no_epg')} />
       ) : (
         <div className={styles.scroller} ref={scroller}>
@@ -320,6 +372,7 @@ export function Component() {
                 axisStart={axisStart}
                 axisEnd={axisEnd}
                 now={now}
+                search={query}
                 onPlay={setPlaying}
                 onEvent={(e) => navigate(`/guide/events/${e.id}`)}
                 onChannel={(ch) => navigate(`/channels/${ch.channelId}`)}

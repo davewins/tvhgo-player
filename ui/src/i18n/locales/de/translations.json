@@ -388,5 +388,9 @@
   "guide_later": "Später",
   "guide_now": "Jetzt",
   "channel_programmes": "Sendungen dieses Senders",
-  "radio": "Radio"
+  "radio": "Radio",
+  "guide_search": "Sender und Sendungen suchen",
+  "guide_no_match": "Nichts gefunden für \"{{query}}\" an diesem Tag",
+  "guide_no_match_hint": "Diese Ansicht zeigt einen Tag. Mit Enter oder dem Button wird der gesamte Programmführer durchsucht.",
+  "guide_search_all": "Alle Tage durchsuchen"
 }

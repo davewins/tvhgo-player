@@ -394,5 +394,9 @@
   "guide_later": "Later",
   "guide_now": "Now",
   "channel_programmes": "Programmes on this channel",
-  "radio": "Radio"
+  "radio": "Radio",
+  "guide_search": "Search channels and programmes",
+  "guide_no_match": "Nothing matching \"{{query}}\" on this day",
+  "guide_no_match_hint": "This guide shows one day at a time. Press Enter, or the button, to search the whole guide.",
+  "guide_search_all": "Search all days"
 }

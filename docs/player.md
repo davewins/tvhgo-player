@@ -60,9 +60,13 @@ How conversions are made - and why:
 Channels are rows and time runs left to right, with a red **now** line.
 
 - **Day tabs** for the next 8 days; today starts at the current half hour, other days open at 18:00.
-- **Earlier / Now / Later** buttons scroll the time axis; use the scrollbar or swipe for more. **Search** filters channels.
+- **Earlier / Now / Later** buttons scroll the time axis (Now goes back to today from another day); use the scrollbar or swipe for more.
 - **Click the programme that is on now, or a channel logo → watch live.**
 - **Click any other programme → its page**, where you can record it (existing tvhgo behaviour).
+- **Search** (in the guide toolbar) looks at channel names *and* programme titles on the day shown: channels with no
+  match are hidden, matching programmes are highlighted and the guide jumps to the first one. The guide only holds one
+  day at a time, so if nothing matches it says so; press Enter (or *Search all days*) to search the whole guide with
+  the search page. The search box in the top bar always searches the whole guide.
 - A red dot on a programme means a recording is scheduled for it.
 - The channel **number** opens that channel's own programme list.
 
