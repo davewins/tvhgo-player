@@ -2,6 +2,7 @@ import Checkbox from '@/components/common/checkbox/Checkbox';
 import { Recording } from '@/clients/api/api.types';
 import { TestIds } from '@/__test__/ids';
 import styles from './RecordingListItem.module.scss';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
@@ -22,6 +23,7 @@ function RecordingListItem({
   onSelection,
 }: Props) {
   const { t } = useTranslation();
+  const [noThumb, setNoThumb] = useState(false);
 
   const renderRecIndicator = () => {
     if (recording.status === 'recording') {
@@ -36,6 +38,18 @@ function RecordingListItem({
 
   return (
     <div className={styles.RecordingListItem} tabIndex={0}>
+      {noThumb ? (
+        <div className={styles.thumb} onClick={onClick} />
+      ) : (
+        <img
+          className={styles.thumb}
+          src={`/api/recordings/${recording.id}/thumb`}
+          alt=""
+          loading="lazy"
+          onClick={onClick}
+          onError={() => setNoThumb(true)}
+        />
+      )}
       <div className={styles.link} onClick={onClick}>
         <span className={styles.title}>
           {renderTitle(recording.title, recording.subtitle)}

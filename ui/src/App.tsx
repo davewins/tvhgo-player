@@ -123,7 +123,7 @@ function App() {
               />
               <Route
                 path="/channels"
-                lazy={() => import('@/views/channels/list/ChannelListView')}
+                lazy={() => import('@/views/channels/guide/ChannelGuideView')}
               />
               <Route
                 path="/channels/:id"
@@ -172,9 +172,7 @@ function App() {
               <Route
                 path="/dvr/recordings/:id"
                 lazy={() =>
-                  import(
-                    '@/views/recordings/RecordingDetailView/RecordingDetailView'
-                  )
+                  import('@/views/recordings/RecordingDetailView/RecordingDetailView')
                 }
               />
               <Route
@@ -204,17 +202,13 @@ function App() {
                   <Route
                     path="two-factor-auth/disable"
                     lazy={() =>
-                      import(
-                        '@/modals/twoFactorAuth/disable/TwoFactorAuthDisableModal'
-                      )
+                      import('@/modals/twoFactorAuth/disable/TwoFactorAuthDisableModal')
                     }
                   />
                   <Route
                     path="two-factor-auth/setup"
                     lazy={() =>
-                      import(
-                        '@/modals/twoFactorAuth/setup/TwoFactorAuthSetupModal'
-                      )
+                      import('@/modals/twoFactorAuth/setup/TwoFactorAuthSetupModal')
                     }
                   />
                   <Route

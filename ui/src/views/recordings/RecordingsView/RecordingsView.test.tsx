@@ -158,11 +158,10 @@ test.each([[null], ['upcoming'], ['finished'], ['failed'], ['removed']])(
 );
 
 test.each([
-  [null, 'upcoming'],
+  [null, 'finished'],
   ['upcoming', 'upcoming'],
   ['finished', 'finished'],
   ['failed', 'failed'],
-  ['removed', 'removed'],
 ])(
   'should render single page: status=%s',
   (status: string | null, expectedStatus: string) => {
@@ -181,11 +180,10 @@ test.each([
 );
 
 test.each([
-  [null, 'upcoming'],
+  [null, 'finished'],
   ['upcoming', 'upcoming'],
   ['finished', 'finished'],
   ['failed', 'failed'],
-  ['removed', 'removed'],
 ])(
   'should render multiple pages: status=%s',
   (status: string | null, expectedStatus: string) => {
@@ -205,6 +203,7 @@ test.each([
 
 describe('cancel recordings', () => {
   test('should cancel all recordings', async () => {
+    mockStatus('upcoming');
     const recordings = buildRecordings('upcoming', 5);
     // Set first recording to recording state.
     recordings[0].status = 'recording';
@@ -247,6 +246,7 @@ describe('cancel recordings', () => {
   });
 
   test('should cancel selected recordings', async () => {
+    mockStatus('upcoming');
     const recordings = buildRecordings('upcoming', 5);
     // Set first recording to recording state.
     recordings[0].status = 'recording';
@@ -375,16 +375,10 @@ describe('change status', () => {
   test.each([
     ['upcoming', 'finished'],
     ['upcoming', 'failed'],
-    ['upcoming', 'removed'],
     ['finished', 'upcoming'],
     ['finished', 'failed'],
-    ['finished', 'removed'],
     ['failed', 'upcoming'],
     ['failed', 'finished'],
-    ['failed', 'removed'],
-    ['removed', 'upcoming'],
-    ['removed', 'finished'],
-    ['removed', 'failed'],
   ])(
     "should change status from '%s' to'%s'",
     async (currentStatus: string, newStatus: string) => {
@@ -430,31 +424,29 @@ const mockStatus = (status: string | null) => {
 };
 
 const buildRecordings = (status: string, count: number): Recording[] => {
-  return [...Array(count).keys()].map(
-    (i): Recording => ({
-      channelId: 'someChannelId',
-      channelName: 'Some Channel',
-      createdAt: 0,
-      description: 'Some Description',
-      duration: 0,
-      enabled: true,
-      endPadding: 2,
-      endsAt: 0,
-      eventId: 1,
-      extraText: 'Extra Text',
-      filename: '',
-      id: `${i + 1}`,
-      langTitle: {
-        ger: 'Some Title',
-      },
-      originalEndsAt: 0,
-      originalStartsAt: 0,
-      piconId: 1,
-      startPadding: 3,
-      startsAt: 0,
-      status,
-      subtitle: 'Some Subtitle',
-      title: 'Some Title',
-    })
-  );
+  return [...Array(count).keys()].map((i): Recording => ({
+    channelId: 'someChannelId',
+    channelName: 'Some Channel',
+    createdAt: 0,
+    description: 'Some Description',
+    duration: 0,
+    enabled: true,
+    endPadding: 2,
+    endsAt: 0,
+    eventId: 1,
+    extraText: 'Extra Text',
+    filename: '',
+    id: `${i + 1}`,
+    langTitle: {
+      ger: 'Some Title',
+    },
+    originalEndsAt: 0,
+    originalStartsAt: 0,
+    piconId: 1,
+    startPadding: 3,
+    startsAt: 0,
+    status,
+    subtitle: 'Some Subtitle',
+    title: 'Some Title',
+  }));
 };

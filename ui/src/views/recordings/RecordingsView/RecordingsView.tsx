@@ -42,7 +42,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     sort_key: query.get('sortKey') || 'startsAt',
     // eslint-disable-next-line camelcase
     sort_dir: query.get('sortDir') || 'asc',
-    status: (query.get('status') as RecordingStatus) || 'upcoming',
+    status: (query.get('status') as RecordingStatus) || 'finished',
   });
 }
 
@@ -66,7 +66,7 @@ export function Component() {
     useManageRecordings();
 
   const getStatus = () =>
-    (queryParams.get('status') as RecordingStatus) || 'upcoming';
+    (queryParams.get('status') as RecordingStatus) || 'finished';
 
   const sortKey = useMemo(
     () => queryParams.get('sortKey') || 'startsAt',
@@ -172,20 +172,16 @@ export function Component() {
             testID={TestIds.RECORDINGS_STATUS_DROPDOWN}
             options={[
               {
-                title: t('upcoming'),
-                value: 'upcoming',
-              },
-              {
                 title: t('finished'),
                 value: 'finished',
               },
               {
-                title: t('failed'),
-                value: 'failed',
+                title: t('upcoming'),
+                value: 'upcoming',
               },
               {
-                title: t('removed'),
-                value: 'removed',
+                title: t('failed'),
+                value: 'failed',
               },
             ]}
           />

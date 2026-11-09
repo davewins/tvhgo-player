@@ -379,5 +379,19 @@
   "weekday_5": "Friday",
   "weekday_6": "Saturday",
   "windows_compatible_filename": "Windows compatible filename",
-  "yes": "Yes"
+  "yes": "Yes",
+  "watch_live": "Watch live",
+  "play": "Play",
+  "player_live_unsupported": "Live playback is not supported in this browser.",
+  "player_live_error": "The live stream stopped or could not be started.",
+  "player_no_copy": "This recording cannot be played in the browser: no playable copy exists and on-demand conversion is not enabled.",
+  "player_convert_failed": "Preparing this recording for playback failed.",
+  "player_queued": "Waiting for a free conversion slot…",
+  "player_preparing": "Preparing recording for playback… {{progress}}%",
+  "quality": "Quality",
+  "quality_auto": "Auto (Tvheadend)",
+  "guide_earlier": "Earlier",
+  "guide_later": "Later",
+  "guide_now": "Now",
+  "channel_programmes": "Programmes on this channel"
 }

@@ -1,0 +1,72 @@
+.player {
+  width: min(92vw, 1060px);
+  padding: 2.5rem 1rem 1rem 1rem;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.quality {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  margin-right: 2.5rem;
+
+  select {
+    background: var(--color-card-bg);
+    color: inherit;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 2px;
+    padding: 0.25rem;
+  }
+}
+
+.title {
+  margin: 0;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.video {
+  width: 100%;
+  max-height: 75vh;
+  background: #000;
+  border-radius: 2px;
+}
+
+.error {
+  margin: 0.75rem 0 0 0;
+  color: var(--color-danger-bg);
+}
+
+.preparing {
+  padding: 3rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.bar {
+  width: min(80%, 480px);
+  height: 0.5rem;
+  background: var(--color-border-subtle);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  background: #58a6ff;
+  transition: width 1s linear;
+}

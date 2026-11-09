@@ -9,6 +9,7 @@ import {
   EpgEvent,
   ErrorResponse,
   ListResponse,
+  PlaybackInfo,
   Recording,
   Session,
   Token,
@@ -207,6 +208,23 @@ export async function getRecordings(
 
 export async function getRecording(id: string): Promise<Recording> {
   const response = await client.get<Recording>(`/recordings/${id}`);
+  return response.data;
+}
+
+export async function getLiveQualities(): Promise<number[]> {
+  const response = await client.get<{ qualities: number[] }>('/playback/live');
+  return response.data.qualities || [];
+}
+
+export async function getPlayback(id: string): Promise<PlaybackInfo> {
+  const response = await client.get<PlaybackInfo>(`/recordings/${id}/playback`);
+  return response.data;
+}
+
+export async function preparePlayback(id: string): Promise<PlaybackInfo> {
+  const response = await client.post<PlaybackInfo>(
+    `/recordings/${id}/playback`
+  );
   return response.data;
 }
 

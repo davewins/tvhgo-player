@@ -7,11 +7,15 @@ import {
 } from 'react-router-dom';
 import { getChannel, getEpgEvents } from '@/clients/api/api';
 
+import Button from '@/components/common/button/Button';
 import EventChannelInfo from '@/components/epg/event/channelInfo/EventChannelInfo';
 import GuideEvent from '@/components/epg/guide/event/GuideEvent';
 import PaginationControls from '@/components/common/paginationControls/PaginationControls';
+import Player from '@/components/player/Player';
 import styles from './ChannelView.module.scss';
 import { usePagination } from '@/hooks/pagination';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const defaultLimit = 50;
 
@@ -34,6 +38,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export const Component = () => {
+  const { t } = useTranslation();
+  const [playing, setPlaying] = useState(false);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -52,6 +58,18 @@ export const Component = () => {
           channelName={channel.name}
           picon={`/api/picon/${channel.piconId}`}
         />
+        <Button
+          label={'▶ ' + t('watch_live')}
+          onClick={() => setPlaying(true)}
+        />
+        {playing && (
+          <Player
+            visible
+            onClose={() => setPlaying(false)}
+            title={channel.name}
+            channelNumber={channel.number}
+          />
+        )}
       </div>
       <div className={styles.events}>
         {entries.map((event) => (

@@ -19,6 +19,7 @@ import Pair from '@/components/common/pairList/Pair/Pair';
 import PairKey from '@/components/common/pairList/PairKey/PairKey';
 import PairList from '@/components/common/pairList/PairList';
 import PairValue from '@/components/common/pairList/PairValue/PairValue';
+import Player from '@/components/player/Player';
 import { Recording } from '@/clients/api/api.types';
 import styles from './RecordingDetailView.module.scss';
 import { useFormik } from 'formik';
@@ -49,6 +50,8 @@ export function Component() {
     pending,
   } = useManageRecordingByEvent();
 
+  const [playing, setPlaying] = useState<boolean>(false);
+  const [noThumb, setNoThumb] = useState<boolean>(false);
   const [confirmationModalVisible, setConfirmationModalVisible] =
     useState<boolean>(false);
 
@@ -158,6 +161,14 @@ export function Component() {
     }
   };
 
+  const renderPlayButton = () => {
+    if (recording?.status === 'completed') {
+      return (
+        <Button label={'▶ ' + t('play')} onClick={() => setPlaying(true)} />
+      );
+    }
+  };
+
   const renderDownloadButton = () => {
     if (recording?.status === 'completed') {
       return (
@@ -228,6 +239,14 @@ export function Component() {
         channelName={recording.channelName}
         picon={`/api/picon/${recording.piconId}`}
       />
+      {!noThumb && (
+        <img
+          className={styles.thumb}
+          src={`/api/recordings/${recording.id}/thumb`}
+          alt=""
+          onError={() => setNoThumb(true)}
+        />
+      )}
       <h2>{recording.title}</h2>
       <PairList>
         <Pair>
@@ -249,9 +268,18 @@ export function Component() {
       </PairList>
 
       <div className={styles.actions}>
+        {renderPlayButton()}
         {renderCancelButton()}
         {renderDownloadButton()}
       </div>
+      {playing && (
+        <Player
+          visible
+          onClose={() => setPlaying(false)}
+          title={recording.title}
+          recordingId={recording.id}
+        />
+      )}
 
       {renderTimeForm()}
     </div>

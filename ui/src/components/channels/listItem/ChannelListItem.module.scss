@@ -45,3 +45,20 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.play {
+  margin: 0 1rem 0 auto;
+  flex-shrink: 0;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  border: 1px solid #58a6ff;
+  background-color: #58a6ff;
+  color: white;
+  font-size: 0.8rem;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}

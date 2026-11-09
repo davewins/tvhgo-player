@@ -71,24 +71,19 @@ exports[`should render multiple pages: status=failed 1`] = `
             data-testid="recordings-status-dropdown"
           >
             <option
-              value="upcoming"
-            >
-              upcoming
-            </option>
-            <option
               value="finished"
             >
               finished
             </option>
             <option
+              value="upcoming"
+            >
+              upcoming
+            </option>
+            <option
               value="failed"
             >
               failed
-            </option>
-            <option
-              value="removed"
-            >
-              removed
             </option>
           </select>
         </div>
@@ -177,6 +172,12 @@ exports[`should render multiple pages: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/1/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -207,6 +208,12 @@ exports[`should render multiple pages: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/2/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -237,6 +244,12 @@ exports[`should render multiple pages: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/3/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -267,6 +280,12 @@ exports[`should render multiple pages: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/4/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -297,6 +316,12 @@ exports[`should render multiple pages: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/5/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -434,24 +459,19 @@ exports[`should render multiple pages: status=finished 1`] = `
             data-testid="recordings-status-dropdown"
           >
             <option
-              value="upcoming"
-            >
-              upcoming
-            </option>
-            <option
               value="finished"
             >
               finished
             </option>
             <option
+              value="upcoming"
+            >
+              upcoming
+            </option>
+            <option
               value="failed"
             >
               failed
-            </option>
-            <option
-              value="removed"
-            >
-              removed
             </option>
           </select>
         </div>
@@ -540,6 +560,12 @@ exports[`should render multiple pages: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/1/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -570,6 +596,12 @@ exports[`should render multiple pages: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/2/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -600,6 +632,12 @@ exports[`should render multiple pages: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/3/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -630,6 +668,12 @@ exports[`should render multiple pages: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/4/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -660,6 +704,12 @@ exports[`should render multiple pages: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/5/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -771,369 +821,6 @@ exports[`should render multiple pages: status=null 1`] = `
             <h3
               class="_headline_ee1e54"
             >
-              confirm_cancel_recordings
-            </h3>
-            <button
-              class="_button_a7f9df _medium_a7f9df _red_a7f9df"
-              data-testid="confirm-delete-btn"
-            >
-              cancel
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_header_58c8e0"
-    >
-      <div
-        class="_headerLeft_58c8e0"
-      >
-        <div
-          class="_inputContainer_979188"
-        >
-          <select
-            class="_dropdown_979188"
-            data-testid="recordings-status-dropdown"
-          >
-            <option
-              value="upcoming"
-            >
-              upcoming
-            </option>
-            <option
-              value="finished"
-            >
-              finished
-            </option>
-            <option
-              value="failed"
-            >
-              failed
-            </option>
-            <option
-              value="removed"
-            >
-              removed
-            </option>
-          </select>
-        </div>
-        <div
-          class="_sort_58c8e0"
-        >
-          <div
-            class="_inputContainer_979188"
-          >
-            <select
-              class="_dropdown_979188"
-              data-testid="recordings-sort-dropdown"
-            >
-              <option
-                value="startsAt"
-              >
-                sort_by.start_date
-              </option>
-              <option
-                value="endsAt"
-              >
-                sort_by.end_date
-              </option>
-              <option
-                value="title"
-              >
-                sort_by.title
-              </option>
-              <option
-                value="channelName"
-              >
-                sort_by.channel
-              </option>
-            </select>
-          </div>
-          <button
-            class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _text_a7f9df"
-            data-testid="recordings-sort-direction-btn"
-          >
-            <svg
-              class="_sortDirIcon_58c8e0"
-              fill="none"
-              height="800px"
-              stroke="#000000"
-              stroke-width="3"
-              viewBox="0 0 64 64"
-              width="800px"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="45.15 57.47 19.88 30.84 45.15 6.58"
-              />
-            </svg>
-          </button>
-        </div>
-        <button
-          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df"
-        >
-          create_recording
-        </button>
-      </div>
-      <div
-        class="_actions_58c8e0"
-      >
-        <button
-          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _red_a7f9df _deleteButton_58c8e0"
-          data-testid="delete-cancel-recordings-btn"
-        >
-          cancel
-        </button>
-        <div
-          class="_container_f0b037 _selectAll_58c8e0"
-        >
-          <input
-            class="_checkbox_f0b037"
-            data-testid="select-all-recordings-checkbox"
-            type="checkbox"
-          />
-        </div>
-      </div>
-    </div>
-    <div
-      class="_recordings_58c8e0"
-    >
-      <div
-        class="_RecordingListItem_566f12"
-        tabindex="0"
-      >
-        <div
-          class="_link_566f12"
-        >
-          <span
-            class="_title_566f12"
-          >
-            Some Title (Some Subtitle)
-          </span>
-          <div
-            class="_secondary_566f12"
-          >
-            <span>
-              Some Channel | event_datetime
-            </span>
-          </div>
-        </div>
-        <div
-          class="_container_f0b037"
-        >
-          <input
-            class="_checkbox_f0b037"
-            data-testid="select-recording-checkbox"
-            type="checkbox"
-          />
-        </div>
-      </div>
-      <div
-        class="_RecordingListItem_566f12"
-        tabindex="0"
-      >
-        <div
-          class="_link_566f12"
-        >
-          <span
-            class="_title_566f12"
-          >
-            Some Title (Some Subtitle)
-          </span>
-          <div
-            class="_secondary_566f12"
-          >
-            <span>
-              Some Channel | event_datetime
-            </span>
-          </div>
-        </div>
-        <div
-          class="_container_f0b037"
-        >
-          <input
-            class="_checkbox_f0b037"
-            data-testid="select-recording-checkbox"
-            type="checkbox"
-          />
-        </div>
-      </div>
-      <div
-        class="_RecordingListItem_566f12"
-        tabindex="0"
-      >
-        <div
-          class="_link_566f12"
-        >
-          <span
-            class="_title_566f12"
-          >
-            Some Title (Some Subtitle)
-          </span>
-          <div
-            class="_secondary_566f12"
-          >
-            <span>
-              Some Channel | event_datetime
-            </span>
-          </div>
-        </div>
-        <div
-          class="_container_f0b037"
-        >
-          <input
-            class="_checkbox_f0b037"
-            data-testid="select-recording-checkbox"
-            type="checkbox"
-          />
-        </div>
-      </div>
-      <div
-        class="_RecordingListItem_566f12"
-        tabindex="0"
-      >
-        <div
-          class="_link_566f12"
-        >
-          <span
-            class="_title_566f12"
-          >
-            Some Title (Some Subtitle)
-          </span>
-          <div
-            class="_secondary_566f12"
-          >
-            <span>
-              Some Channel | event_datetime
-            </span>
-          </div>
-        </div>
-        <div
-          class="_container_f0b037"
-        >
-          <input
-            class="_checkbox_f0b037"
-            data-testid="select-recording-checkbox"
-            type="checkbox"
-          />
-        </div>
-      </div>
-      <div
-        class="_RecordingListItem_566f12"
-        tabindex="0"
-      >
-        <div
-          class="_link_566f12"
-        >
-          <span
-            class="_title_566f12"
-          >
-            Some Title (Some Subtitle)
-          </span>
-          <div
-            class="_secondary_566f12"
-          >
-            <span>
-              Some Channel | event_datetime
-            </span>
-          </div>
-        </div>
-        <div
-          class="_container_f0b037"
-        >
-          <input
-            class="_checkbox_f0b037"
-            data-testid="select-recording-checkbox"
-            type="checkbox"
-          />
-        </div>
-      </div>
-    </div>
-    <div
-      class="_controls_f3f6fd"
-    >
-      <button
-        class="_button_09f37a _disabled_09f37a"
-        data-testid="pagination-first-page-btn"
-        disabled=""
-      >
-        &lt;&lt;
-      </button>
-      <button
-        class="_button_09f37a _disabled_09f37a"
-        data-testid="pagination-previous-page-btn"
-        disabled=""
-      >
-        &lt;
-      </button>
-      <span
-        class="_page_f3f6fd"
-      >
-        pagination_info
-      </span>
-      <button
-        class="_button_09f37a"
-        data-testid="pagination-next-page-btn"
-      >
-        &gt;
-      </button>
-      <button
-        class="_button_09f37a"
-        data-testid="pagination-last-page-btn"
-      >
-        &gt;&gt;
-      </button>
-    </div>
-  </div>
-</DocumentFragment>
-`;
-
-exports[`should render multiple pages: status=removed 1`] = `
-<DocumentFragment>
-  <div
-    class="_Recordings_58c8e0"
-  >
-    <div
-      class="_modalWrapper_12177b "
-    >
-      <div
-        class="_modal_12177b"
-        style="max-width: 25rem; width: 100%;"
-      >
-        <div
-          class="_container_12177b"
-        >
-          <button
-            class="_button_2ae682"
-          >
-            <svg
-              fill="none"
-              height="800px"
-              viewBox="0 0 24 24"
-              width="800px"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g
-                id="Menu / Close_LG"
-              >
-                <path
-                  d="M21 21L12 12M12 12L3 3M12 12L21.0001 3M12 12L3 21.0001"
-                  id="Vector"
-                  stroke="#000000"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                />
-              </g>
-            </svg>
-          </button>
-          <div
-            class="_content_ee1e54"
-          >
-            <h3
-              class="_headline_ee1e54"
-            >
               confirm_delete_recordings
             </h3>
             <button
@@ -1160,24 +847,19 @@ exports[`should render multiple pages: status=removed 1`] = `
             data-testid="recordings-status-dropdown"
           >
             <option
-              value="upcoming"
-            >
-              upcoming
-            </option>
-            <option
               value="finished"
             >
               finished
             </option>
             <option
+              value="upcoming"
+            >
+              upcoming
+            </option>
+            <option
               value="failed"
             >
               failed
-            </option>
-            <option
-              value="removed"
-            >
-              removed
             </option>
           </select>
         </div>
@@ -1266,6 +948,12 @@ exports[`should render multiple pages: status=removed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/1/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -1296,6 +984,12 @@ exports[`should render multiple pages: status=removed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/2/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -1326,6 +1020,12 @@ exports[`should render multiple pages: status=removed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/3/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -1356,6 +1056,12 @@ exports[`should render multiple pages: status=removed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/4/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -1386,6 +1092,12 @@ exports[`should render multiple pages: status=removed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/5/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -1523,24 +1235,19 @@ exports[`should render multiple pages: status=upcoming 1`] = `
             data-testid="recordings-status-dropdown"
           >
             <option
-              value="upcoming"
-            >
-              upcoming
-            </option>
-            <option
               value="finished"
             >
               finished
             </option>
             <option
+              value="upcoming"
+            >
+              upcoming
+            </option>
+            <option
               value="failed"
             >
               failed
-            </option>
-            <option
-              value="removed"
-            >
-              removed
             </option>
           </select>
         </div>
@@ -1629,6 +1336,12 @@ exports[`should render multiple pages: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/1/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -1659,6 +1372,12 @@ exports[`should render multiple pages: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/2/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -1689,6 +1408,12 @@ exports[`should render multiple pages: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/3/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -1719,6 +1444,12 @@ exports[`should render multiple pages: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/4/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -1749,6 +1480,12 @@ exports[`should render multiple pages: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/5/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -1886,24 +1623,19 @@ exports[`should render single page: status=failed 1`] = `
             data-testid="recordings-status-dropdown"
           >
             <option
-              value="upcoming"
-            >
-              upcoming
-            </option>
-            <option
               value="finished"
             >
               finished
             </option>
             <option
+              value="upcoming"
+            >
+              upcoming
+            </option>
+            <option
               value="failed"
             >
               failed
-            </option>
-            <option
-              value="removed"
-            >
-              removed
             </option>
           </select>
         </div>
@@ -1992,6 +1724,12 @@ exports[`should render single page: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/1/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -2022,6 +1760,12 @@ exports[`should render single page: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/2/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -2052,6 +1796,12 @@ exports[`should render single page: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/3/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -2082,6 +1832,12 @@ exports[`should render single page: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/4/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -2112,6 +1868,12 @@ exports[`should render single page: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/5/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -2251,24 +2013,19 @@ exports[`should render single page: status=finished 1`] = `
             data-testid="recordings-status-dropdown"
           >
             <option
-              value="upcoming"
-            >
-              upcoming
-            </option>
-            <option
               value="finished"
             >
               finished
             </option>
             <option
+              value="upcoming"
+            >
+              upcoming
+            </option>
+            <option
               value="failed"
             >
               failed
-            </option>
-            <option
-              value="removed"
-            >
-              removed
             </option>
           </select>
         </div>
@@ -2357,6 +2114,12 @@ exports[`should render single page: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/1/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -2387,6 +2150,12 @@ exports[`should render single page: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/2/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -2417,6 +2186,12 @@ exports[`should render single page: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/3/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -2447,6 +2222,12 @@ exports[`should render single page: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/4/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -2477,6 +2258,12 @@ exports[`should render single page: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/5/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -2590,371 +2377,6 @@ exports[`should render single page: status=null 1`] = `
             <h3
               class="_headline_ee1e54"
             >
-              confirm_cancel_recordings
-            </h3>
-            <button
-              class="_button_a7f9df _medium_a7f9df _red_a7f9df"
-              data-testid="confirm-delete-btn"
-            >
-              cancel
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_header_58c8e0"
-    >
-      <div
-        class="_headerLeft_58c8e0"
-      >
-        <div
-          class="_inputContainer_979188"
-        >
-          <select
-            class="_dropdown_979188"
-            data-testid="recordings-status-dropdown"
-          >
-            <option
-              value="upcoming"
-            >
-              upcoming
-            </option>
-            <option
-              value="finished"
-            >
-              finished
-            </option>
-            <option
-              value="failed"
-            >
-              failed
-            </option>
-            <option
-              value="removed"
-            >
-              removed
-            </option>
-          </select>
-        </div>
-        <div
-          class="_sort_58c8e0"
-        >
-          <div
-            class="_inputContainer_979188"
-          >
-            <select
-              class="_dropdown_979188"
-              data-testid="recordings-sort-dropdown"
-            >
-              <option
-                value="startsAt"
-              >
-                sort_by.start_date
-              </option>
-              <option
-                value="endsAt"
-              >
-                sort_by.end_date
-              </option>
-              <option
-                value="title"
-              >
-                sort_by.title
-              </option>
-              <option
-                value="channelName"
-              >
-                sort_by.channel
-              </option>
-            </select>
-          </div>
-          <button
-            class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _text_a7f9df"
-            data-testid="recordings-sort-direction-btn"
-          >
-            <svg
-              class="_sortDirIcon_58c8e0"
-              fill="none"
-              height="800px"
-              stroke="#000000"
-              stroke-width="3"
-              viewBox="0 0 64 64"
-              width="800px"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="45.15 57.47 19.88 30.84 45.15 6.58"
-              />
-            </svg>
-          </button>
-        </div>
-        <button
-          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df"
-        >
-          create_recording
-        </button>
-      </div>
-      <div
-        class="_actions_58c8e0"
-      >
-        <button
-          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _red_a7f9df _deleteButton_58c8e0"
-          data-testid="delete-cancel-recordings-btn"
-        >
-          cancel
-        </button>
-        <div
-          class="_container_f0b037 _selectAll_58c8e0"
-        >
-          <input
-            class="_checkbox_f0b037"
-            data-testid="select-all-recordings-checkbox"
-            type="checkbox"
-          />
-        </div>
-      </div>
-    </div>
-    <div
-      class="_recordings_58c8e0"
-    >
-      <div
-        class="_RecordingListItem_566f12"
-        tabindex="0"
-      >
-        <div
-          class="_link_566f12"
-        >
-          <span
-            class="_title_566f12"
-          >
-            Some Title (Some Subtitle)
-          </span>
-          <div
-            class="_secondary_566f12"
-          >
-            <span>
-              Some Channel | event_datetime
-            </span>
-          </div>
-        </div>
-        <div
-          class="_container_f0b037"
-        >
-          <input
-            class="_checkbox_f0b037"
-            data-testid="select-recording-checkbox"
-            type="checkbox"
-          />
-        </div>
-      </div>
-      <div
-        class="_RecordingListItem_566f12"
-        tabindex="0"
-      >
-        <div
-          class="_link_566f12"
-        >
-          <span
-            class="_title_566f12"
-          >
-            Some Title (Some Subtitle)
-          </span>
-          <div
-            class="_secondary_566f12"
-          >
-            <span>
-              Some Channel | event_datetime
-            </span>
-          </div>
-        </div>
-        <div
-          class="_container_f0b037"
-        >
-          <input
-            class="_checkbox_f0b037"
-            data-testid="select-recording-checkbox"
-            type="checkbox"
-          />
-        </div>
-      </div>
-      <div
-        class="_RecordingListItem_566f12"
-        tabindex="0"
-      >
-        <div
-          class="_link_566f12"
-        >
-          <span
-            class="_title_566f12"
-          >
-            Some Title (Some Subtitle)
-          </span>
-          <div
-            class="_secondary_566f12"
-          >
-            <span>
-              Some Channel | event_datetime
-            </span>
-          </div>
-        </div>
-        <div
-          class="_container_f0b037"
-        >
-          <input
-            class="_checkbox_f0b037"
-            data-testid="select-recording-checkbox"
-            type="checkbox"
-          />
-        </div>
-      </div>
-      <div
-        class="_RecordingListItem_566f12"
-        tabindex="0"
-      >
-        <div
-          class="_link_566f12"
-        >
-          <span
-            class="_title_566f12"
-          >
-            Some Title (Some Subtitle)
-          </span>
-          <div
-            class="_secondary_566f12"
-          >
-            <span>
-              Some Channel | event_datetime
-            </span>
-          </div>
-        </div>
-        <div
-          class="_container_f0b037"
-        >
-          <input
-            class="_checkbox_f0b037"
-            data-testid="select-recording-checkbox"
-            type="checkbox"
-          />
-        </div>
-      </div>
-      <div
-        class="_RecordingListItem_566f12"
-        tabindex="0"
-      >
-        <div
-          class="_link_566f12"
-        >
-          <span
-            class="_title_566f12"
-          >
-            Some Title (Some Subtitle)
-          </span>
-          <div
-            class="_secondary_566f12"
-          >
-            <span>
-              Some Channel | event_datetime
-            </span>
-          </div>
-        </div>
-        <div
-          class="_container_f0b037"
-        >
-          <input
-            class="_checkbox_f0b037"
-            data-testid="select-recording-checkbox"
-            type="checkbox"
-          />
-        </div>
-      </div>
-    </div>
-    <div
-      class="_controls_f3f6fd"
-    >
-      <button
-        class="_button_09f37a _disabled_09f37a"
-        data-testid="pagination-first-page-btn"
-        disabled=""
-      >
-        &lt;&lt;
-      </button>
-      <button
-        class="_button_09f37a _disabled_09f37a"
-        data-testid="pagination-previous-page-btn"
-        disabled=""
-      >
-        &lt;
-      </button>
-      <span
-        class="_page_f3f6fd"
-      >
-        pagination_info
-      </span>
-      <button
-        class="_button_09f37a _disabled_09f37a"
-        data-testid="pagination-next-page-btn"
-        disabled=""
-      >
-        &gt;
-      </button>
-      <button
-        class="_button_09f37a _disabled_09f37a"
-        data-testid="pagination-last-page-btn"
-        disabled=""
-      >
-        &gt;&gt;
-      </button>
-    </div>
-  </div>
-</DocumentFragment>
-`;
-
-exports[`should render single page: status=removed 1`] = `
-<DocumentFragment>
-  <div
-    class="_Recordings_58c8e0"
-  >
-    <div
-      class="_modalWrapper_12177b "
-    >
-      <div
-        class="_modal_12177b"
-        style="max-width: 25rem; width: 100%;"
-      >
-        <div
-          class="_container_12177b"
-        >
-          <button
-            class="_button_2ae682"
-          >
-            <svg
-              fill="none"
-              height="800px"
-              viewBox="0 0 24 24"
-              width="800px"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g
-                id="Menu / Close_LG"
-              >
-                <path
-                  d="M21 21L12 12M12 12L3 3M12 12L21.0001 3M12 12L3 21.0001"
-                  id="Vector"
-                  stroke="#000000"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                />
-              </g>
-            </svg>
-          </button>
-          <div
-            class="_content_ee1e54"
-          >
-            <h3
-              class="_headline_ee1e54"
-            >
               confirm_delete_recordings
             </h3>
             <button
@@ -2981,24 +2403,19 @@ exports[`should render single page: status=removed 1`] = `
             data-testid="recordings-status-dropdown"
           >
             <option
-              value="upcoming"
-            >
-              upcoming
-            </option>
-            <option
               value="finished"
             >
               finished
             </option>
             <option
+              value="upcoming"
+            >
+              upcoming
+            </option>
+            <option
               value="failed"
             >
               failed
-            </option>
-            <option
-              value="removed"
-            >
-              removed
             </option>
           </select>
         </div>
@@ -3087,6 +2504,12 @@ exports[`should render single page: status=removed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/1/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -3117,6 +2540,12 @@ exports[`should render single page: status=removed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/2/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -3147,6 +2576,12 @@ exports[`should render single page: status=removed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/3/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -3177,6 +2612,12 @@ exports[`should render single page: status=removed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/4/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -3207,6 +2648,12 @@ exports[`should render single page: status=removed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/5/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -3346,24 +2793,19 @@ exports[`should render single page: status=upcoming 1`] = `
             data-testid="recordings-status-dropdown"
           >
             <option
-              value="upcoming"
-            >
-              upcoming
-            </option>
-            <option
               value="finished"
             >
               finished
             </option>
             <option
+              value="upcoming"
+            >
+              upcoming
+            </option>
+            <option
               value="failed"
             >
               failed
-            </option>
-            <option
-              value="removed"
-            >
-              removed
             </option>
           </select>
         </div>
@@ -3452,6 +2894,12 @@ exports[`should render single page: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/1/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -3482,6 +2930,12 @@ exports[`should render single page: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/2/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -3512,6 +2966,12 @@ exports[`should render single page: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/3/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -3542,6 +3002,12 @@ exports[`should render single page: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/4/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -3572,6 +3038,12 @@ exports[`should render single page: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
+        <img
+          alt=""
+          class="_thumb_566f12"
+          loading="lazy"
+          src="/api/recordings/5/thumb"
+        />
         <div
           class="_link_566f12"
         >
@@ -3711,24 +3183,19 @@ exports[`should render with no recordings: status=failed 1`] = `
             data-testid="recordings-status-dropdown"
           >
             <option
-              value="upcoming"
-            >
-              upcoming
-            </option>
-            <option
               value="finished"
             >
               finished
             </option>
             <option
+              value="upcoming"
+            >
+              upcoming
+            </option>
+            <option
               value="failed"
             >
               failed
-            </option>
-            <option
-              value="removed"
-            >
-              removed
             </option>
           </select>
         </div>
@@ -3899,24 +3366,19 @@ exports[`should render with no recordings: status=finished 1`] = `
             data-testid="recordings-status-dropdown"
           >
             <option
-              value="upcoming"
-            >
-              upcoming
-            </option>
-            <option
               value="finished"
             >
               finished
             </option>
             <option
+              value="upcoming"
+            >
+              upcoming
+            </option>
+            <option
               value="failed"
             >
               failed
-            </option>
-            <option
-              value="removed"
-            >
-              removed
             </option>
           </select>
         </div>
@@ -4061,13 +3523,13 @@ exports[`should render with no recordings: status=null 1`] = `
             <h3
               class="_headline_ee1e54"
             >
-              confirm_cancel_recordings
+              confirm_delete_recordings
             </h3>
             <button
               class="_button_a7f9df _medium_a7f9df _red_a7f9df"
               data-testid="confirm-delete-btn"
             >
-              cancel
+              delete
             </button>
           </div>
         </div>
@@ -4087,24 +3549,19 @@ exports[`should render with no recordings: status=null 1`] = `
             data-testid="recordings-status-dropdown"
           >
             <option
-              value="upcoming"
-            >
-              upcoming
-            </option>
-            <option
               value="finished"
             >
               finished
             </option>
             <option
+              value="upcoming"
+            >
+              upcoming
+            </option>
+            <option
               value="failed"
             >
               failed
-            </option>
-            <option
-              value="removed"
-            >
-              removed
             </option>
           </select>
         </div>
@@ -4173,7 +3630,7 @@ exports[`should render with no recordings: status=null 1`] = `
           class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _red_a7f9df _deleteButton_58c8e0"
           data-testid="delete-cancel-recordings-btn"
         >
-          cancel
+          delete
         </button>
         <div
           class="_container_f0b037 _selectAll_58c8e0 _disabled_f0b037"
@@ -4275,24 +3732,19 @@ exports[`should render with no recordings: status=removed 1`] = `
             data-testid="recordings-status-dropdown"
           >
             <option
-              value="upcoming"
-            >
-              upcoming
-            </option>
-            <option
               value="finished"
             >
               finished
             </option>
             <option
+              value="upcoming"
+            >
+              upcoming
+            </option>
+            <option
               value="failed"
             >
               failed
-            </option>
-            <option
-              value="removed"
-            >
-              removed
             </option>
           </select>
         </div>
@@ -4463,24 +3915,19 @@ exports[`should render with no recordings: status=upcoming 1`] = `
             data-testid="recordings-status-dropdown"
           >
             <option
-              value="upcoming"
-            >
-              upcoming
-            </option>
-            <option
               value="finished"
             >
               finished
             </option>
             <option
+              value="upcoming"
+            >
+              upcoming
+            </option>
+            <option
               value="failed"
             >
               failed
-            </option>
-            <option
-              value="removed"
-            >
-              removed
             </option>
           </select>
         </div>

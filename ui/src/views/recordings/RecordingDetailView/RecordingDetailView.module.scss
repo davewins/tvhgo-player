@@ -12,3 +12,13 @@
   justify-content: flex-start;
   gap: 1rem;
 }
+
+.thumb {
+  display: block;
+  width: min(100%, 28rem);
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 3px;
+  margin: 1rem 0;
+  background-color: var(--color-border-subtle);
+}

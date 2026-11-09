@@ -35,3 +35,13 @@
   height: 0.7rem;
   border-radius: 90px;
 }
+
+.thumb {
+  width: 6.5rem;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 2px;
+  flex-shrink: 0;
+  background-color: var(--color-border-subtle);
+  cursor: pointer;
+}

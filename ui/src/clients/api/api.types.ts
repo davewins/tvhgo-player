@@ -228,10 +228,7 @@ export type DVRConfigHooks = {
 };
 
 export type DVRRetentionType =
-  | 'days'
-  | 'forever'
-  | 'on_file_removal'
-  | 'maintained_space';
+  'days' | 'forever' | 'on_file_removal' | 'maintained_space';
 
 export type DVRRetentionPolicy = {
   days: number;
@@ -248,4 +245,12 @@ export type CreateRecordingOpts = {
   endPadding?: number;
   comment?: string;
   configId?: string;
+};
+
+export type PlaybackInfo = {
+  status: 'none' | 'queued' | 'converting' | 'ready' | 'failed';
+  progress: number;
+  source?: 'library' | 'cache';
+  canConvert: boolean;
+  error?: string;
 };

@@ -79,6 +79,11 @@ exports[`with status completed > should render recording 1`] = `
         />
       </div>
     </div>
+    <img
+      alt=""
+      class="_thumb_8b9d52"
+      src="/api/recordings/someID/thumb"
+    />
     <h2>
       Some Title
     </h2>
@@ -145,6 +150,11 @@ exports[`with status completed > should render recording 1`] = `
     <div
       class="_actions_8b9d52"
     >
+      <button
+        class="_button_a7f9df _medium_a7f9df"
+      >
+        ▶ play
+      </button>
       <button
         class="_button_a7f9df _medium_a7f9df _red_a7f9df"
         type="button"
@@ -242,6 +252,11 @@ exports[`with status recording > should render recording 1`] = `
         />
       </div>
     </div>
+    <img
+      alt=""
+      class="_thumb_8b9d52"
+      src="/api/recordings/someID/thumb"
+    />
     <h2>
       Some Title
     </h2>
@@ -468,6 +483,11 @@ exports[`with status scheduled > should render recording 1`] = `
         />
       </div>
     </div>
+    <img
+      alt=""
+      class="_thumb_8b9d52"
+      src="/api/recordings/someID/thumb"
+    />
     <h2>
       Some Title
     </h2>
