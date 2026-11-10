@@ -1,6 +1,11 @@
 div.Login {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  box-sizing: border-box;
+  min-height: 100vh;
+  min-height: 100dvh;
+  /* room to scroll the Login button clear of the browser's floating bottom bar (iOS Safari) */
+  padding: 1rem 0 calc(5rem + env(safe-area-inset-bottom));
 }

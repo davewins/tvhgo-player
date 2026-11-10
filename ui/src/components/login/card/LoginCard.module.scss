@@ -2,10 +2,16 @@
   border-radius: 2px;
   background-color: var(--color-card-bg);
   padding: 3rem;
+  box-sizing: border-box;
+  width: calc(100% - 2rem);
   max-width: 22rem;
-  flex: 1;
-  margin: 2rem;
+  margin: 1rem;
   gap: 2rem;
+
+  @media screen and (max-width: 480px) {
+    padding: 1.5rem;
+    gap: 1.25rem;
+  }
 
   display: flex;
   flex-direction: column;

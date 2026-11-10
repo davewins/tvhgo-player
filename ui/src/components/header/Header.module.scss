@@ -27,6 +27,35 @@
   align-items: center;
   gap: 1rem;
   margin-left: auto;
+  min-width: 0;
+
+  form {
+    min-width: 0;
+  }
+
+  input {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .bar {
+    padding: 0 0.75rem;
+  }
+
+  .left {
+    gap: 0.5rem;
+  }
+
+  .logo {
+    max-width: 4rem;
+  }
+
+  .right {
+    flex: 1;
+    gap: 0.5rem;
+  }
 }
 
 .logo {

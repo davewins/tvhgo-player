@@ -128,7 +128,7 @@ $row: 68px;
   bottom: 0;
   width: 2px;
   background: #e5484d;
-  z-index: 3;
+  z-index: 1; // above the programme tiles, below the sticky channel column
   pointer-events: none;
 }
 
@@ -146,6 +146,7 @@ $row: 68px;
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  box-shadow: 0 1px 0 var(--color-bg); // also covers the 1px gap between rows, so the now line cannot show through
   padding: 0 0.5rem;
   background: var(--color-bg);
 }
