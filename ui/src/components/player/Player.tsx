@@ -97,6 +97,24 @@ function Inner({
   const [qualities, setQualities] = useState<number[] | null>(null);
   const [quality, setQuality] = useState<string>(AUTO);
 
+  // Radio has no video track. Safari (HLS) reports 0x0 until the first frame is decoded, so a zero size is only
+  // believed once playback has had a moment to start; any real size at any time means it is video after all.
+  const audioTimer = useRef<ReturnType<typeof setTimeout>>();
+  const checkVideo = (e: { currentTarget: HTMLVideoElement }) => {
+    const v = e.currentTarget;
+    clearTimeout(audioTimer.current);
+    if (v.videoWidth > 0 || v.videoHeight > 0) {
+      setAudioOnly(false);
+      return;
+    }
+    audioTimer.current = setTimeout(() => {
+      if (!v.paused && v.videoWidth === 0 && v.videoHeight === 0) {
+        setAudioOnly(true);
+      }
+    }, 3000);
+  };
+  useEffect(() => () => clearTimeout(audioTimer.current), []);
+
   // --- live: find out which qualities are available and pick the remembered / a sensible default
   useEffect(() => {
     if (channelNumber === undefined) {
@@ -328,10 +346,10 @@ function Inner({
         style={preparing ? { display: 'none' } : undefined}
         controls
         playsInline
-        onLoadedMetadata={(e) => {
-          const v = e.currentTarget;
-          setAudioOnly(v.videoWidth === 0 && v.videoHeight === 0);
-        }}
+        onLoadedMetadata={checkVideo}
+        onLoadedData={checkVideo}
+        onPlaying={checkVideo}
+        onResize={checkVideo}
         onError={() => {
           // "Auto" uses tvheadend's own video profiles, which cannot carry a radio stream: retry with tvhgo's
           // own transcoder (it handles audio-only channels)
