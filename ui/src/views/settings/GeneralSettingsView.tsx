@@ -52,10 +52,14 @@ export const Component = () => {
       title: t(`default`),
       value: 'default',
     },
-    ...moment.locales().map((locale) => ({
-      title: t(`locales.${locale}`),
-      value: locale,
-    })),
+    // 'en-gb-12h' is the app's own UK English default, not a choice
+    ...moment
+      .locales()
+      .filter((locale) => locale !== 'en-gb-12h')
+      .map((locale) => ({
+        title: t(`locales.${locale}`),
+        value: locale,
+      })),
   ];
 
   const handleChangeLanguage = (lang: string) => {

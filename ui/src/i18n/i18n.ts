@@ -8,14 +8,34 @@ import moment from 'moment/min/moment-with-locales';
 
 const fallbackLng = 'en';
 
-i18n.on('languageChanged', (lng) => {
-  const timeLocale = localStorage.getItem('time_locale');
+// moment's plain "en" is the US layout (11/17/2026, Nov 17, 2026). English here means UK English by default:
+// day first, Monday as the first day of the week, and the 12-hour clock that was already in use. Choosing
+// "en-gb" under Settings > General > Time format still gives the 24-hour clock.
+moment.defineLocale('en-gb-12h', {
+  parentLocale: 'en-gb',
+  longDateFormat: {
+    L: 'DD/MM/YYYY',
+    LL: 'D MMMM YYYY',
+    LT: 'h:mm A',
+    LTS: 'h:mm:ss A',
+    LLL: 'D MMMM YYYY h:mm A',
+    LLLL: 'dddd, D MMMM YYYY h:mm A',
+    lll: 'D MMM YYYY h:mm A',
+    llll: 'ddd, D MMM YYYY h:mm A',
+  },
+});
+moment.locale('en'); // defineLocale switches the active locale: restore it until the language is known
 
+export function momentLocaleFor(language: string, timeLocale: string | null) {
   if (timeLocale) {
-    moment.locale(timeLocale);
-  } else {
-    moment.locale(lng);
+    return timeLocale;
   }
+  // "en-US" etc. would be a person's own choice, but the app's "en" is UK English
+  return language === 'en' ? 'en-gb-12h' : language;
+}
+
+i18n.on('languageChanged', (lng) => {
+  moment.locale(momentLocaleFor(lng, localStorage.getItem('time_locale')));
 });
 
 i18n

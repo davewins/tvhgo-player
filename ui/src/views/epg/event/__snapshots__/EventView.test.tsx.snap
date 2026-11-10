@@ -1232,41 +1232,14 @@ exports[`should render with related events 1`] = `
     <div
       class="_EventRelated_9241f8"
     >
-      <h2>
+      <h2
+        class="_heading_9241f8"
+      >
         related_events
       </h2>
       <div
-        class="_PairList_768617"
-      >
-        <div
-          class="_Pair_2d5b35"
-        >
-          <div
-            class="_PairKey_b66d6a"
-          >
-            Some Channel
-          </div>
-          <div
-            class="_PairValue_05cc8e"
-          />
-        </div>
-      </div>
-      <div
-        class="_PairList_768617"
-      >
-        <div
-          class="_Pair_2d5b35"
-        >
-          <div
-            class="_PairKey_b66d6a"
-          >
-            Some Channel2
-          </div>
-          <div
-            class="_PairValue_05cc8e"
-          />
-        </div>
-      </div>
+        class="_list_9241f8"
+      />
     </div>
   </div>
 </DocumentFragment>
