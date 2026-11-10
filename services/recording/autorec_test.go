@@ -76,7 +76,7 @@ func TestCreateAutorecDefaultsToThisChannelAndSkipsRepeats(t *testing.T) {
 	m, svc := newMock(t)
 	expectNoRulesYet(m)
 	expectCreate(m, map[string]interface{}{
-		"enabled": true, "name": "Emmerdale", "title": "^Emmerdale$", "channel": "chITV1",
+		"enabled": true, "name": "Emmerdale", "title": "^" + core.TitleTagPattern + "Emmerdale$", "channel": "chITV1",
 		"record": core.AutorecRecordDifferentDescription, "comment": "Created by tvhgo",
 	})
 
@@ -91,7 +91,7 @@ func TestCreateAutorecAnyChannelAndRepeats(t *testing.T) {
 	m, svc := newMock(t)
 	expectNoRulesYet(m)
 	expectCreate(m, map[string]interface{}{
-		"enabled": true, "name": "Emmerdale", "title": "^Emmerdale$", "channel": "",
+		"enabled": true, "name": "Emmerdale", "title": "^" + core.TitleTagPattern + "Emmerdale$", "channel": "",
 		"record": core.AutorecRecordAll, "comment": "Created by tvhgo", "config_name": "cfg",
 	})
 
@@ -109,7 +109,7 @@ func TestCreateAutorecEscapesTitle(t *testing.T) {
 	m.EXPECT().Exec(gomock.Any(), "/api/dvr/autorec/grid", gomock.Any(), gomock.Any()).DoAndReturn(respond(`{"entries":[]}`))
 	m.EXPECT().Exec(gomock.Any(), "/api/channel/grid", gomock.Any(), gomock.Any()).DoAndReturn(respond(channelsJSON)).AnyTimes()
 	expectCreate(m, map[string]interface{}{
-		"enabled": true, "name": "Still Game (Part 2)? A+B", "title": `^Still Game \(Part 2\)\? A\+B$`, "channel": "chBBC",
+		"enabled": true, "name": "Still Game (Part 2)? A+B", "title": "^" + core.TitleTagPattern + `Still Game \(Part 2\)\? A\+B$`, "channel": "chBBC",
 		"record": core.AutorecRecordDifferentDescription, "comment": "Created by tvhgo",
 	})
 
@@ -182,4 +182,35 @@ func TestPlainTitleOf(t *testing.T) {
 		assert.Equal(t, want.plain, plain, in)
 		assert.Equal(t, want.ok, ok, in)
 	}
+}
+
+func TestCreateAutorecIgnoresTheBroadcastTag(t *testing.T) {
+	m, svc := newMock(t)
+	m.EXPECT().Exec(gomock.Any(), "/api/epg/events/load", gomock.Any(), gomock.Any()).
+		DoAndReturn(respond(`{"entries":[{"eventId":7,"title":"New: Lingo","channelUuid":"chITV1"}]}`))
+	m.EXPECT().Exec(gomock.Any(), "/api/dvr/autorec/grid", gomock.Any(), gomock.Any()).DoAndReturn(respond(`{"entries":[]}`))
+	m.EXPECT().Exec(gomock.Any(), "/api/channel/grid", gomock.Any(), gomock.Any()).DoAndReturn(respond(channelsJSON)).AnyTimes()
+	// the rule is for "Lingo", and also matches episodes tagged "New: " / "Final: " ...
+	expectCreate(m, map[string]interface{}{
+		"enabled": true, "name": "Lingo", "title": "^" + core.TitleTagPattern + "Lingo$", "channel": "chITV1",
+		"record": core.AutorecRecordDifferentDescription, "comment": "Created by tvhgo",
+	})
+
+	rule, err := svc.CreateAutorecByEvent(context.Background(), core.CreateAutorecByEvent{EventID: 7})
+	assert.NoError(t, err)
+	assert.Equal(t, "Lingo", rule.PlainTitle)
+	assert.False(t, rule.IsPattern)
+}
+
+func TestCreateAutorecRecognisesAnExistingRuleWhateverTheTag(t *testing.T) {
+	m, svc := newMock(t)
+	m.EXPECT().Exec(gomock.Any(), "/api/epg/events/load", gomock.Any(), gomock.Any()).
+		DoAndReturn(respond(`{"entries":[{"eventId":7,"title":"Final: Lingo","channelUuid":"chITV1"}]}`))
+	// an older rule written by hand for the plain title
+	m.EXPECT().Exec(gomock.Any(), "/api/dvr/autorec/grid", gomock.Any(), gomock.Any()).
+		DoAndReturn(respond(`{"entries":[{"uuid":"a1","enabled":true,"name":"Lingo","title":"^Lingo$","channel":"chITV1"}]}`))
+	m.EXPECT().Exec(gomock.Any(), "/api/channel/grid", gomock.Any(), gomock.Any()).DoAndReturn(respond(channelsJSON)).AnyTimes()
+
+	_, err := svc.CreateAutorecByEvent(context.Background(), core.CreateAutorecByEvent{EventID: 7})
+	assert.ErrorIs(t, err, core.ErrAutorecExists)
 }

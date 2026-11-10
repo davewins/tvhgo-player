@@ -27,6 +27,15 @@ describe('coveringRule', () => {
       coveringRule([rule({})], { ...event, title: 'EMMERDALE' })
     ).toBeTruthy();
   });
+  test('a tagged programme is covered by a rule for the plain title, and the other way round', () => {
+    const tagged = { title: 'New: Emmerdale', channelId: 'itv1' };
+    expect(
+      coveringRule([rule({ title: '^((New|Final): ?)?Emmerdale$' })], tagged)
+    ).toBeTruthy();
+    expect(
+      coveringRule([rule({ title: '^((New|Final): ?)?Emmerdale$' })], event)
+    ).toBeTruthy();
+  });
   test('a rule for another channel does not cover it', () => {
     expect(coveringRule([rule({ channelId: 'bbc1' })], event)).toBeUndefined();
   });

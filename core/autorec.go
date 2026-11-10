@@ -55,6 +55,10 @@ var literalTitle = regexp.MustCompile(`^\^(.*)\$$`)
 
 // PlainTitleOf returns the text a title pattern matches exactly, if it is a plain "^text$" pattern.
 func PlainTitleOf(pattern string) (string, bool) {
+	// rules made by tvhgo allow the broadcast tag ("New: ") in front of the title
+	if strings.HasPrefix(pattern, "^"+TitleTagPattern) {
+		pattern = "^" + strings.TrimPrefix(pattern, "^"+TitleTagPattern)
+	}
 	m := literalTitle.FindStringSubmatch(pattern)
 	if m == nil {
 		return pattern, false

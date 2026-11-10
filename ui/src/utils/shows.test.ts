@@ -35,6 +35,25 @@ describe('groupShows', () => {
   });
 });
 
+describe('broadcast tags', () => {
+  test('"New: Lingo" and "Lingo" are one show, named without the tag', () => {
+    const shows = groupShows([
+      rec('1', 'New: Lingo', 100),
+      rec('2', 'Lingo', 200),
+      rec('3', 'Final: Lingo', 300),
+      rec('4', 'DIY SOS: The Big Build', 150),
+    ]);
+    expect(shows).toHaveLength(2);
+    const lingo = findShow(shows, 'Lingo')!;
+    expect(lingo.title).toBe('Lingo');
+    expect(lingo.episodes.map((r) => r.id)).toEqual(['3', '2', '1']);
+    // a real "Name: Subtitle" title is left alone
+    expect(findShow(shows, 'DIY SOS: The Big Build')).toBeTruthy();
+    // and the tagged name finds the show too
+    expect(findShow(shows, 'New: Lingo')).toBe(lingo);
+  });
+});
+
 describe('sortShows', () => {
   const shows = groupShows(recs);
   const titles = (s: ReturnType<typeof sortShows>) => s.map((x) => x.title);

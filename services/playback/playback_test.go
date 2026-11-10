@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -415,5 +416,44 @@ func TestTMDbFallsBackToMostPopularWhenNoUKShow(t *testing.T) {
 	}
 	if b, _ := os.ReadFile(p); string(b) != "APIMG" {
 		t.Fatalf("expected the most popular match, got %q", b)
+	}
+}
+
+func TestTMDbIgnoresTheBroadcastTag(t *testing.T) {
+	var queries []string
+	var mu sync.Mutex
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case strings.HasPrefix(r.URL.Path, "/search/tv"):
+			mu.Lock()
+			queries = append(queries, r.URL.Query().Get("query"))
+			mu.Unlock()
+			_, _ = w.Write([]byte(`{"results":[{"name":"Lingo","origin_country":["GB"],"backdrop_path":"/l.jpg","popularity":3}]}`))
+		case strings.HasPrefix(r.URL.Path, "/search/movie"):
+			_, _ = w.Write([]byte(`{"results":[]}`))
+		case r.URL.Path == "/img/l.jpg":
+			_, _ = w.Write([]byte("LINGO"))
+		default:
+			w.WriteHeader(404)
+		}
+	}))
+	defer srv.Close()
+	s, _ := testService(t)
+	s.cfg.TMDBAPIKey, s.cfg.TMDBLanguage = "k", "en-GB"
+	s.tmdbAPI, s.tmdbImg = srv.URL, srv.URL+"/img"
+
+	p1, ok := s.tmdbImage(context.Background(), "New: Lingo")
+	if !ok {
+		t.Fatal("expected artwork for the tagged title")
+	}
+	// the tagged and the plain title share one cached picture and one lookup
+	p2, ok2 := s.tmdbImage(context.Background(), "Lingo")
+	if !ok2 || p1 != p2 {
+		t.Fatalf("expected the same cached file, got %q and %q", p1, p2)
+	}
+	mu.Lock()
+	defer mu.Unlock()
+	if len(queries) != 1 || queries[0] != "Lingo" {
+		t.Fatalf("expected one search for the clean title, got %v", queries)
 	}
 }

@@ -3,6 +3,7 @@ package recording
 import (
 	"context"
 	"regexp"
+	"strings"
 
 	"github.com/davidborzek/tvhgo/core"
 	"github.com/davidborzek/tvhgo/tvheadend"
@@ -94,7 +95,9 @@ func (s *service) CreateAutorecByEvent(
 	}
 	event := events.Entries[0]
 
-	pattern := "^" + regexp.QuoteMeta(event.Title) + "$"
+	// the rule is for the programme, not for its tag: "New: Lingo" and a later plain "Lingo" are the same show
+	name := core.CleanTitle(event.Title)
+	pattern := "^" + core.TitleTagPattern + regexp.QuoteMeta(name) + "$"
 	channel := event.ChannelUUID
 	if opts.AnyChannel {
 		channel = ""
@@ -106,7 +109,7 @@ func (s *service) CreateAutorecByEvent(
 		return nil, err
 	}
 	for _, r := range existing {
-		if r.Title == pattern && r.ChannelID == channel {
+		if r.ChannelID == channel && !r.IsPattern && strings.EqualFold(r.PlainTitle, name) {
 			return r, core.ErrAutorecExists
 		}
 	}
@@ -117,7 +120,7 @@ func (s *service) CreateAutorecByEvent(
 	}
 	conf := map[string]interface{}{
 		"enabled": true,
-		"name":    event.Title,
+		"name":    name,
 		"title":   pattern,
 		"channel": channel,
 		"record":  record,
@@ -146,7 +149,7 @@ func (s *service) CreateAutorecByEvent(
 	return mapAutorec(autorecEntry{
 		UUID:    created.UUID,
 		Enabled: true,
-		Name:    event.Title,
+		Name:    name,
 		Title:   pattern,
 		Channel: channel,
 		Record:  record,

@@ -156,6 +156,10 @@ On a programme's page, **Record** records that one broadcast. **Record series** 
   Untick it to record repeats too.
 - A rule made here matches the exact title (and the channel), like the rules you would write by hand in Tvheadend.
   Making the same rule twice is refused.
+- Broadcasters tag titles ("New: Lingo", "Final: Lingo"). The tag is ignored: the rule is for "Lingo" and also matches
+  the tagged episodes, artwork is looked up for "Lingo", and recordings are grouped as one show. Only a few known
+  tags are removed (New, New Series, Final, Last, Last in Series, Return(s), Premiere); a title like
+  "DIY SOS: The Big Build" is left alone.
 - A programme already covered by a rule says so on its page, with a link to the rules.
 
 **DVR → Series rules** lists every rule (including ones made in Tvheadend itself), with **Disable / Enable** and

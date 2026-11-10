@@ -214,6 +214,8 @@ func (s *service) tmdbSearch(ctx context.Context, kind, title string) (string, e
 
 // tmdbImage returns cached TMDb artwork (a landscape backdrop, else the poster) for a programme title.
 func (s *service) tmdbImage(ctx context.Context, title string) (string, bool) {
+	// "New: Lingo" is the programme "Lingo": TMDb does not know the broadcaster's tag
+	title = core.CleanTitle(title)
 	key := normTitle(title)
 	if key == "" || len(key) > 120 {
 		return "", false

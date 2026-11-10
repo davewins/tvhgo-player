@@ -1,4 +1,5 @@
 import { Recording } from '@/clients/api/api.types';
+import { cleanTitle } from './title';
 
 export type Show = {
   // the title all its recordings share
@@ -14,7 +15,8 @@ export type EpisodeSort = 'newest' | 'oldest' | 'title';
 
 // Shows are told apart by title only, whatever the channel: the conversion pipeline files recordings into one
 // folder per title for Jellyfin, so this view mirrors that.
-const keyOf = (title: string) => title.trim().toLowerCase();
+// (without the broadcaster's tag: "New: Lingo" and "Lingo" are one show).
+const keyOf = (title: string) => cleanTitle(title).toLowerCase();
 
 export function groupShows(recordings: Recording[]): Show[] {
   const map = new Map<string, Recording[]>();
@@ -29,7 +31,11 @@ export function groupShows(recordings: Recording[]): Show[] {
   }
   return [...map.values()].map((list) => {
     const episodes = sortEpisodes(list, 'newest');
-    return { title: episodes[0].title, episodes, latest: episodes[0] };
+    return {
+      title: cleanTitle(episodes[0].title),
+      episodes,
+      latest: episodes[0],
+    };
   });
 }
 
