@@ -1,11 +1,15 @@
 .EventRecordButton {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  flex: 1;
+  flex: 1 1 11rem;
+  max-width: 16rem;
+  min-height: 2.75rem;
   border: 1px solid var(--color-danger-bg);
-  padding: 0.5rem;
-  border-radius: 2px;
+  padding: 0 1.25rem;
+  font: inherit;
+  border-radius: 3px;
   background-color: var(--color-danger-bg);
   color: white;
   cursor: pointer;
@@ -25,4 +29,10 @@
   width: 1rem;
   height: 1rem;
   fill: var(--color-text-primary);
+}
+
+@media screen and (max-width: 700px) {
+  .EventRecordButton {
+    max-width: none;
+  }
 }

@@ -1,3 +1,9 @@
 .Event {
   padding: 3rem;
 }
+
+@media screen and (max-width: 700px) {
+  .Event {
+    padding: 1rem;
+  }
+}

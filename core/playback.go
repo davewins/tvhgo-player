@@ -52,6 +52,9 @@ type (
 		// Thumb returns the path of a thumbnail image for a recording: a frame from the recording itself if it
 		// is finished, otherwise (or if no frame can be made) TMDb artwork for the programme, if configured.
 		Thumb(ctx context.Context, rec *Recording) (string, bool)
+		// ProgrammeArt returns TMDb artwork for a programme title (e.g. one that has not aired yet), if a key is
+		// configured and the title matches.
+		ProgrammeArt(ctx context.Context, title string) (string, bool)
 		// File returns the path of the ready playable copy, if there is one.
 		File(rec *Recording) (string, bool)
 	}

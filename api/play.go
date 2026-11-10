@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/davidborzek/tvhgo/api/request"
 	"github.com/davidborzek/tvhgo/api/response"
 	"github.com/davidborzek/tvhgo/core"
 	"github.com/go-chi/chi/v5"
@@ -151,6 +152,35 @@ func (s *router) GetRecordingThumb(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	p, ok := s.playback.Thumb(r.Context(), rec)
+	serveImage(w, r, p, ok)
+}
+
+// GetEventArt godoc
+//
+//	@Summary	Get artwork (from TMDb, if configured) for an epg event's programme
+//	@Tags		epg
+//	@Param		id	path	int	true	"Event id"
+//	@Produce	image/jpeg
+//	@Success	200
+//	@Failure	404	{object}	response.ErrorResponse
+//	@Security	JWT
+//	@Router		/epg/events/{id}/thumb [get]
+func (s *router) GetEventArt(w http.ResponseWriter, r *http.Request) {
+	id, err := request.NumericURLParam(r, "id")
+	if err != nil {
+		response.BadRequestf(w, "invalid value for parameter 'id'")
+		return
+	}
+	event, err := s.epg.GetEvent(r.Context(), id)
+	if err != nil {
+		response.NotFound(w, core.ErrEpgEventNotFound)
+		return
+	}
+	p, ok := s.playback.ProgrammeArt(r.Context(), event.Title)
+	serveImage(w, r, p, ok)
+}
+
+func serveImage(w http.ResponseWriter, r *http.Request, p string, ok bool) {
 	if !ok {
 		response.NotFound(w, core.ErrRecordingNotFound)
 		return

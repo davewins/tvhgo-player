@@ -121,6 +121,7 @@ func (s *router) Handler() http.Handler {
 	authenticated.Get("/epg", s.GetEpg)
 	authenticated.Get("/epg/events", s.GetEpgEvents)
 	authenticated.Get("/epg/events/{id}", s.GetEpgEvent)
+	authenticated.Get("/epg/events/{id}/thumb", s.GetEventArt)
 	authenticated.Get("/epg/events/{id}/related", s.GetRelatedEpgEvents)
 	authenticated.Get("/epg/content-types", s.GetEpgContentTypes)
 

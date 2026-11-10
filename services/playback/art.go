@@ -62,6 +62,14 @@ func (s *service) Thumb(ctx context.Context, rec *core.Recording) (string, bool)
 	return "", false
 }
 
+// ProgrammeArt returns TMDb artwork for a programme title: there is no frame to take for something not yet recorded.
+func (s *service) ProgrammeArt(ctx context.Context, title string) (string, bool) {
+	if s.cfg.TMDBAPIKey == "" {
+		return "", false
+	}
+	return s.tmdbImage(ctx, title)
+}
+
 // frame returns a still from the recording: the pipeline's "<name>-thumb.jpg" next to the MP4 if there is one,
 // else one cached by tvhgo, else one extracted now (from the playable MP4 or the original file).
 func (s *service) frame(ctx context.Context, rec *core.Recording) (string, bool) {

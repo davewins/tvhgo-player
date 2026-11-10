@@ -7,6 +7,7 @@ import PairKey from '@/components/common/pairList/PairKey/PairKey';
 import PairList from '@/components/common/pairList/PairList';
 import PairValue from '@/components/common/pairList/PairValue/PairValue';
 import styles from './EventInfo.module.scss';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
@@ -27,11 +28,21 @@ function EventInfo({
   seriesRule,
 }: Props) {
   const { t } = useTranslation();
+  // artwork for the programme (TMDb, if configured); shown only when there is some
+  const [noArt, setNoArt] = useState(false);
 
   return (
     <div className={styles.EventInfo}>
-      <h1>{event.title}</h1>
-      <div>
+      {!noArt && (
+        <img
+          className={styles.art}
+          src={`/api/epg/events/${event.id}/thumb`}
+          alt=""
+          onError={() => setNoArt(true)}
+        />
+      )}
+      <h1 className={styles.title}>{event.title}</h1>
+      <div className={styles.actions}>
         <EventRecordButton
           pending={pending}
           onClick={handleOnRecord}

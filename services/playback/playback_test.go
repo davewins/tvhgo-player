@@ -327,3 +327,31 @@ func TestBuildArgsAudioOnly(t *testing.T) {
 		t.Fatal("a file with no streams must be rejected")
 	}
 }
+
+func TestProgrammeArtNeedsAKey(t *testing.T) {
+	s, _ := testService(t)
+	s.cfg.TMDBAPIKey = ""
+	if p, ok := s.ProgrammeArt(context.Background(), "Emmerdale"); ok || p != "" {
+		t.Fatalf("no key must give no artwork, got %q %v", p, ok)
+	}
+}
+
+func TestProgrammeArtUsesTMDb(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case strings.HasPrefix(r.URL.Path, "/search/tv"):
+			_, _ = w.Write([]byte(`{"results":[{"name":"Bargain Hunt","backdrop_path":"/bh.jpg","popularity":5}]}`))
+		case r.URL.Path == "/img/bh.jpg":
+			_, _ = w.Write([]byte("JPEGDATA"))
+		default:
+			w.WriteHeader(404)
+		}
+	}))
+	defer srv.Close()
+	s, _ := testService(t)
+	s.cfg.TMDBAPIKey, s.cfg.TMDBLanguage = "k", "en-GB"
+	s.tmdbAPI, s.tmdbImg = srv.URL, srv.URL+"/img"
+	if _, ok := s.ProgrammeArt(context.Background(), "Bargain Hunt"); !ok {
+		t.Fatal("expected artwork for an exact title match")
+	}
+}

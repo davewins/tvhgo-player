@@ -225,10 +225,19 @@ exports[`should open profile selection 1`] = `
     <div
       class="_EventInfo_a6cff5"
     >
-      <h1>
+      <img
+        alt=""
+        class="_art_a6cff5"
+        src="/api/epg/events/1/thumb"
+      />
+      <h1
+        class="_title_a6cff5"
+      >
         Some Title
       </h1>
-      <div>
+      <div
+        class="_actions_a6cff5"
+      >
         <button
           class="_EventRecordButton_1a746f"
         >
@@ -511,10 +520,19 @@ exports[`should render with pending button 1`] = `
     <div
       class="_EventInfo_a6cff5"
     >
-      <h1>
+      <img
+        alt=""
+        class="_art_a6cff5"
+        src="/api/epg/events/1/thumb"
+      />
+      <h1
+        class="_title_a6cff5"
+      >
         Some Title
       </h1>
-      <div>
+      <div
+        class="_actions_a6cff5"
+      >
         <button
           class="_EventRecordButton_1a746f _pending_1a746f"
         >
@@ -797,10 +815,19 @@ exports[`should render with recording 1`] = `
     <div
       class="_EventInfo_a6cff5"
     >
-      <h1>
+      <img
+        alt=""
+        class="_art_a6cff5"
+        src="/api/epg/events/1/thumb"
+      />
+      <h1
+        class="_title_a6cff5"
+      >
         Some Title
       </h1>
-      <div>
+      <div
+        class="_actions_a6cff5"
+      >
         <button
           class="_EventRecordButton_1a746f"
         >
@@ -1083,10 +1110,19 @@ exports[`should render with related events 1`] = `
     <div
       class="_EventInfo_a6cff5"
     >
-      <h1>
+      <img
+        alt=""
+        class="_art_a6cff5"
+        src="/api/epg/events/1/thumb"
+      />
+      <h1
+        class="_title_a6cff5"
+      >
         Some Title
       </h1>
-      <div>
+      <div
+        class="_actions_a6cff5"
+      >
         <button
           class="_EventRecordButton_1a746f"
         >
@@ -1408,10 +1444,19 @@ exports[`should render without related events 1`] = `
     <div
       class="_EventInfo_a6cff5"
     >
-      <h1>
+      <img
+        alt=""
+        class="_art_a6cff5"
+        src="/api/epg/events/1/thumb"
+      />
+      <h1
+        class="_title_a6cff5"
+      >
         Some Title
       </h1>
-      <div>
+      <div
+        class="_actions_a6cff5"
+      >
         <button
           class="_EventRecordButton_1a746f"
         >

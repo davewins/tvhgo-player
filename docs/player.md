@@ -119,6 +119,7 @@ All need a logged-in session (like the rest of the API).
 | `GET /api/live/hls/{id}/index.m3u8` and `seg*.ts` | The session's playlist and segments |
 | `DELETE /api/live/hls/{id}` | End the session |
 | `GET /api/recordings/{id}/play?download=1` | The MP4 as a named download (attachment) |
+| `GET /api/epg/events/{id}/thumb` | TMDb artwork for the programme's title (404 if none) |
 | `GET/POST /api/dvr/autorec` | List series rules / create one from a programme (`eventId`, `anyChannel`, `recordRepeats`) |
 | `PATCH/DELETE /api/dvr/autorec/{id}` | Enable or disable / delete a series rule |
 
@@ -142,7 +143,10 @@ On **DVR → Recordings → Finished**, recordings are grouped into **shows** (b
 This only changes how the list is displayed. It does not change how Tvheadend records or where files are stored, and
 it works alongside a Jellyfin-style folder-per-show layout (the grouping mirrors it).
 
-## Series rules
+## Programme pages and series rules
+
+A programme's page shows artwork from TMDb when a key is configured and the title matches exactly (nothing is shown
+otherwise), then the title and the **Record** / **Record series** buttons.
 
 On a programme's page, **Record** records that one broadcast. **Record series** makes a *series rule* (a Tvheadend
 "autorec" entry) that records every upcoming programme with the same title:
