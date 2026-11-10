@@ -434,6 +434,8 @@
   "storage_hours_left": "room for about {{hours}} more hours",
   "confirm_delete_selected_one": "Do you really want to delete the selected recording{{size}}? This cannot be undone.",
   "confirm_delete_selected_other": "Do you really want to delete the {{count}} selected recordings{{size}}? This cannot be undone.",
+  "create_recording_short": "+ New",
+  "storage_details": "Details",
   "guide_now": "Now",
   "channel_programmes": "Programmes on this channel",
   "radio": "Radio",

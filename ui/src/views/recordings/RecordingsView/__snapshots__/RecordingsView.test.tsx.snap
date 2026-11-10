@@ -140,9 +140,14 @@ exports[`should render multiple pages: status=failed 1`] = `
           </button>
         </div>
         <button
-          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df"
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _desktopOnly_58c8e0"
         >
           create_recording
+        </button>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _mobileOnly_58c8e0"
+        >
+          create_recording_short
         </button>
       </div>
       <div
@@ -559,9 +564,14 @@ exports[`should render multiple pages: status=finished 1`] = `
           </button>
         </div>
         <button
-          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df"
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _desktopOnly_58c8e0"
         >
           create_recording
+        </button>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _mobileOnly_58c8e0"
+        >
+          create_recording_short
         </button>
       </div>
       <div
@@ -978,9 +988,14 @@ exports[`should render multiple pages: status=null 1`] = `
           </button>
         </div>
         <button
-          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df"
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _desktopOnly_58c8e0"
         >
           create_recording
+        </button>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _mobileOnly_58c8e0"
+        >
+          create_recording_short
         </button>
       </div>
       <div
@@ -1391,9 +1406,14 @@ exports[`should render multiple pages: status=upcoming 1`] = `
           </button>
         </div>
         <button
-          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df"
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _desktopOnly_58c8e0"
         >
           create_recording
+        </button>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _mobileOnly_58c8e0"
+        >
+          create_recording_short
         </button>
       </div>
       <div
@@ -1804,9 +1824,14 @@ exports[`should render single page: status=failed 1`] = `
           </button>
         </div>
         <button
-          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df"
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _desktopOnly_58c8e0"
         >
           create_recording
+        </button>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _mobileOnly_58c8e0"
+        >
+          create_recording_short
         </button>
       </div>
       <div
@@ -2225,9 +2250,14 @@ exports[`should render single page: status=finished 1`] = `
           </button>
         </div>
         <button
-          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df"
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _desktopOnly_58c8e0"
         >
           create_recording
+        </button>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _mobileOnly_58c8e0"
+        >
+          create_recording_short
         </button>
       </div>
       <div
@@ -2646,9 +2676,14 @@ exports[`should render single page: status=null 1`] = `
           </button>
         </div>
         <button
-          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df"
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _desktopOnly_58c8e0"
         >
           create_recording
+        </button>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _mobileOnly_58c8e0"
+        >
+          create_recording_short
         </button>
       </div>
       <div
@@ -3061,9 +3096,14 @@ exports[`should render single page: status=upcoming 1`] = `
           </button>
         </div>
         <button
-          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df"
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _desktopOnly_58c8e0"
         >
           create_recording
+        </button>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _mobileOnly_58c8e0"
+        >
+          create_recording_short
         </button>
       </div>
       <div
@@ -3476,9 +3516,14 @@ exports[`should render with no recordings: status=failed 1`] = `
           </button>
         </div>
         <button
-          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df"
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _desktopOnly_58c8e0"
         >
           create_recording
+        </button>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _mobileOnly_58c8e0"
+        >
+          create_recording_short
         </button>
       </div>
       <div
@@ -3665,9 +3710,14 @@ exports[`should render with no recordings: status=finished 1`] = `
           </button>
         </div>
         <button
-          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df"
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _desktopOnly_58c8e0"
         >
           create_recording
+        </button>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _mobileOnly_58c8e0"
+        >
+          create_recording_short
         </button>
       </div>
       <div
@@ -3854,9 +3904,14 @@ exports[`should render with no recordings: status=null 1`] = `
           </button>
         </div>
         <button
-          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df"
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _desktopOnly_58c8e0"
         >
           create_recording
+        </button>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _mobileOnly_58c8e0"
+        >
+          create_recording_short
         </button>
       </div>
       <div
@@ -4037,9 +4092,14 @@ exports[`should render with no recordings: status=removed 1`] = `
           </button>
         </div>
         <button
-          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df"
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _desktopOnly_58c8e0"
         >
           create_recording
+        </button>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _mobileOnly_58c8e0"
+        >
+          create_recording_short
         </button>
       </div>
       <div
@@ -4220,9 +4280,14 @@ exports[`should render with no recordings: status=upcoming 1`] = `
           </button>
         </div>
         <button
-          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df"
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _desktopOnly_58c8e0"
         >
           create_recording
+        </button>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _mobileOnly_58c8e0"
+        >
+          create_recording_short
         </button>
       </div>
       <div

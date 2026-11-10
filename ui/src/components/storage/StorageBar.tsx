@@ -10,6 +10,8 @@ import { useTranslation } from 'react-i18next';
 export default function StorageBar() {
   const { t } = useTranslation();
   const [s, setS] = useState<StorageStatus | null>(null);
+  // the detail line is long: open on a wide screen, folded away on a phone
+  const [open, setOpen] = useState(window.innerWidth > 700);
 
   useEffect(() => {
     let live = true;
@@ -90,7 +92,12 @@ export default function StorageBar() {
           {t('storage_copies')} {formatBytes(s.recordings.playableBytes)}
         </span>
       </div>
-      <div className={styles.foot}>
+      <details
+        className={styles.foot}
+        open={open}
+        onToggle={(e) => setOpen(e.currentTarget.open)}
+      >
+        <summary>{t('storage_details')}</summary>
         {t('storage_disk', {
           used: formatBytes(s.disk.usedBytes),
           total: formatBytes(s.disk.totalBytes),
@@ -99,7 +106,7 @@ export default function StorageBar() {
         {' · '}
         {limit}
         {hours && ` · ${t('storage_hours_left', { hours })}`}
-      </div>
+      </details>
     </div>
   );
 }

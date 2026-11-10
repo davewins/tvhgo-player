@@ -70,3 +70,15 @@
   font-size: 0.78rem;
   opacity: 0.75;
 }
+
+.foot summary {
+  cursor: pointer;
+  list-style-position: inside;
+}
+
+@media screen and (max-width: 700px) {
+  .panel {
+    margin-bottom: 0.6rem;
+    padding: 0.5rem 0.7rem;
+  }
+}

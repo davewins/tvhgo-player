@@ -428,6 +428,8 @@
   "storage_hours_left": "Platz für etwa {{hours}} weitere Stunden",
   "confirm_delete_selected_one": "Soll die ausgewählte Aufnahme{{size}} wirklich gelöscht werden? Das kann nicht rückgängig gemacht werden.",
   "confirm_delete_selected_other": "Sollen die {{count}} ausgewählten Aufnahmen{{size}} wirklich gelöscht werden? Das kann nicht rückgängig gemacht werden.",
+  "create_recording_short": "+ Neu",
+  "storage_details": "Details",
   "guide_now": "Jetzt",
   "channel_programmes": "Sendungen dieses Senders",
   "radio": "Radio",

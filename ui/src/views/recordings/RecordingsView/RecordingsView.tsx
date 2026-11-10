@@ -498,7 +498,18 @@ export function Component() {
           <Button
             label={t('create_recording')}
             style="blue"
-            className={c()}
+            className={styles.desktopOnly}
+            quiet
+            onClick={() =>
+              navigate('/dvr/recordings/create', {
+                preventScrollReset: true,
+              })
+            }
+          />
+          <Button
+            label={t('create_recording_short')}
+            style="blue"
+            className={styles.mobileOnly}
             quiet
             onClick={() =>
               navigate('/dvr/recordings/create', {

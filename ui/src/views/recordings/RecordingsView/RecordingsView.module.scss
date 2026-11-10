@@ -112,7 +112,19 @@
   gap: 1rem;
 }
 
+.mobileOnly {
+  display: none;
+}
+
 @media screen and (max-width: 700px) {
+  .desktopOnly {
+    display: none;
+  }
+
+  .mobileOnly {
+    display: inline-flex;
+  }
+
   .Recordings {
     padding: 0 0.75rem 1.5rem 0.75rem;
   }
@@ -120,8 +132,8 @@
   // on a phone the controls would pin a large part of the screen and cards would slide under them: let them scroll away
   .header {
     position: static;
-    padding: 0.75rem 0;
-    gap: 0.5rem;
+    padding: 0.4rem 0;
+    gap: 0.25rem;
     align-items: flex-start;
   }
 
@@ -158,7 +170,7 @@
   .actions {
     justify-content: flex-end;
     gap: 0.75rem;
-    min-height: 2.25rem;
+    min-height: 1.75rem;
   }
 
   .showTitle {
