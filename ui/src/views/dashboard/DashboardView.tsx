@@ -37,6 +37,7 @@ export function Component() {
       to: '/dvr',
       items: [
         { title: t('recordings'), to: '/dvr/recordings' },
+        { title: t('series_rules'), to: '/dvr/series' },
         { title: t('config'), to: '/dvr/config' },
       ],
     },

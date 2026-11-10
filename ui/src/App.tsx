@@ -195,6 +195,10 @@ function App() {
                 }
               />
               <Route
+                path="/dvr/series"
+                lazy={() => import('@/views/dvr/series/SeriesRulesView')}
+              />
+              <Route
                 path="/dvr/config"
                 lazy={() => import('@/views/dvr/config/list/DVRConfigListView')}
               />

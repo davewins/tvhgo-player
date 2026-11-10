@@ -119,6 +119,8 @@ All need a logged-in session (like the rest of the API).
 | `GET /api/live/hls/{id}/index.m3u8` and `seg*.ts` | The session's playlist and segments |
 | `DELETE /api/live/hls/{id}` | End the session |
 | `GET /api/recordings/{id}/play?download=1` | The MP4 as a named download (attachment) |
+| `GET/POST /api/dvr/autorec` | List series rules / create one from a programme (`eventId`, `anyChannel`, `recordRepeats`) |
+| `PATCH/DELETE /api/dvr/autorec/{id}` | Enable or disable / delete a series rule |
 
 ## Recordings by show
 
@@ -139,6 +141,22 @@ On **DVR → Recordings → Finished**, recordings are grouped into **shows** (b
 
 This only changes how the list is displayed. It does not change how Tvheadend records or where files are stored, and
 it works alongside a Jellyfin-style folder-per-show layout (the grouping mirrors it).
+
+## Series rules
+
+On a programme's page, **Record** records that one broadcast. **Record series** makes a *series rule* (a Tvheadend
+"autorec" entry) that records every upcoming programme with the same title:
+
+- **This channel only** is the default; **Any channel** matches the title wherever it is shown.
+- **Skip repeats** is on by default: a broadcast whose description was already recorded is not recorded again.
+  Untick it to record repeats too.
+- A rule made here matches the exact title (and the channel), like the rules you would write by hand in Tvheadend.
+  Making the same rule twice is refused.
+- A programme already covered by a rule says so on its page, with a link to the rules.
+
+**DVR → Series rules** lists every rule (including ones made in Tvheadend itself), with **Disable / Enable** and
+**Delete**. Deleting a rule keeps recordings it already made and removes its not-yet-recorded entries. Rules only
+schedule ordinary recordings, so the conversion pipeline and Jellyfin folders work as for any other recording.
 
 ## Browser support
 

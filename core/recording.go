@@ -140,6 +140,18 @@ type (
 		// CreateByEvent creates a new recording by an epg event.
 		CreateByEvent(ctx context.Context, opts CreateRecordingByEvent) error
 
+		// GetAutorecs returns the series rules.
+		GetAutorecs(ctx context.Context) ([]*Autorec, error)
+
+		// CreateAutorecByEvent creates a series rule for an epg event's programme.
+		CreateAutorecByEvent(ctx context.Context, opts CreateAutorecByEvent) (*Autorec, error)
+
+		// SetAutorecEnabled enables or disables a series rule.
+		SetAutorecEnabled(ctx context.Context, id string, enabled bool) error
+
+		// RemoveAutorec deletes a series rule (recordings it already made are kept).
+		RemoveAutorec(ctx context.Context, id string) error
+
 		// CreateByEvent creates a new recording by an epg event.
 		Create(ctx context.Context, opts CreateRecording) error
 

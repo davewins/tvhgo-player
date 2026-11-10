@@ -3,3 +3,27 @@
   flex-direction: column;
   gap: 1rem;
 }
+
+.seriesButton {
+  margin-left: 0.75rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 3px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-accent-light);
+  }
+}
+
+.series {
+  margin: 0.75rem 0 0 0;
+  opacity: 0.9;
+
+  a {
+    color: var(--color-accent);
+  }
+}

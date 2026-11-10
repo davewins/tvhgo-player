@@ -1,6 +1,8 @@
 import {
   AuthInfo,
+  Autorec,
   Channel,
+  CreateAutorecOpts,
   CreateRecordingOpts,
   CreateTokenResponse,
   CreateUser,
@@ -381,4 +383,25 @@ export async function createRecording(
   opts: CreateRecordingOpts
 ): Promise<void> {
   await client.post(`/recordings`, opts);
+}
+
+export async function getAutorecs(): Promise<Array<Autorec>> {
+  const response = await client.get<Array<Autorec>>('/dvr/autorec');
+  return response.data || [];
+}
+
+export async function createAutorec(opts: CreateAutorecOpts): Promise<Autorec> {
+  const response = await client.post<Autorec>('/dvr/autorec', opts);
+  return response.data;
+}
+
+export async function setAutorecEnabled(
+  id: string,
+  enabled: boolean
+): Promise<void> {
+  await client.patch(`/dvr/autorec/${id}`, { enabled });
+}
+
+export async function deleteAutorec(id: string): Promise<void> {
+  await client.delete(`/dvr/autorec/${id}`);
 }

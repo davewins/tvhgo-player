@@ -152,6 +152,11 @@ func (s *router) Handler() http.Handler {
 	authenticated.Put("/recordings/{id}/move/{dest}", s.MoveRecording)
 	authenticated.Get("/recordings/{id}/stream", s.StreamRecording)
 	authenticated.Get("/recordings/{id}/play", s.PlayRecording)
+	authenticated.Get("/dvr/autorec", s.GetAutorecs)
+	authenticated.Post("/dvr/autorec", s.CreateAutorec)
+	authenticated.Patch("/dvr/autorec/{id}", s.UpdateAutorec)
+	authenticated.Delete("/dvr/autorec/{id}", s.DeleteAutorec)
+
 	authenticated.Get("/recordings/{id}/playback", s.GetPlaybackStatus)
 	authenticated.Get("/recordings/{id}/thumb", s.GetRecordingThumb)
 	authenticated.Post("/recordings/{id}/playback", s.PreparePlayback)

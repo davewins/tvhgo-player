@@ -254,3 +254,28 @@ export type PlaybackInfo = {
   canConvert: boolean;
   error?: string;
 };
+
+// A series rule: tvheadend records every upcoming programme matching it.
+export type Autorec = {
+  id: string;
+  enabled: boolean;
+  name: string;
+  title: string;
+  plainTitle: string;
+  // true when the title is a real pattern rather than just an exact title
+  isPattern: boolean;
+  fullText: boolean;
+  // empty = any channel
+  channelId: string;
+  channelName: string;
+  duplicates: 'all' | 'skip_repeats' | 'dvr_config' | 'other';
+  creator: string;
+  comment: string;
+};
+
+export type CreateAutorecOpts = {
+  eventId: number;
+  anyChannel?: boolean;
+  recordRepeats?: boolean;
+  configId?: string;
+};
