@@ -13,6 +13,7 @@ import EmptyState from '@/components/common/emptyState/EmptyState';
 import Player from '@/components/player/Player';
 import { getEpg } from '@/clients/api/api';
 import moment from 'moment';
+import { openingScrollPx } from '@/utils/guideScroll';
 import styles from './ChannelGuideView.module.scss';
 import { useTranslation } from 'react-i18next';
 
@@ -190,17 +191,17 @@ export function Component() {
     };
   }, [isToday, playing]);
 
-  // initial scroll: today opens with "now" just right of the channel column (a little of the past in view); other
-  // days open at 18:00
+  // initial scroll: today opens with "now" just right of the channel column (a little of the past in view); another
+  // day opens at the same time of day as it is now
   useEffect(() => {
     if (scroller.current) {
-      scroller.current.scrollLeft = isToday
-        ? Math.max(
-            0,
-            px(Math.floor(Date.now() / 1000) - axisStart) -
-              NOW_LEAD_MIN * PX_PER_MIN
-          )
-        : px(18 * 3600);
+      scroller.current.scrollLeft = openingScrollPx({
+        isToday,
+        axisStart,
+        now: new Date(),
+        pxPerMin: PX_PER_MIN,
+        leadMin: NOW_LEAD_MIN,
+      });
     }
   }, [dayStart]);
 
