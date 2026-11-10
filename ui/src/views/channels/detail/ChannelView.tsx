@@ -54,6 +54,14 @@ export const Component = () => {
   return (
     <div className={styles.channel}>
       <div className={styles.header}>
+        <Button
+          label={`‹ ${t('go_back')}`}
+          quiet
+          style="text"
+          className={styles.back}
+          onClick={() => navigate(-1)}
+          testID="channel-back-button"
+        />
         <EventChannelInfo
           channelName={channel.name}
           picon={`/api/picon/${channel.piconId}`}
@@ -75,6 +83,7 @@ export const Component = () => {
       <div className={styles.events}>
         {entries.map((event) => (
           <GuideEvent
+            key={event.id}
             eventId={event.id}
             title={event.title}
             subtitle={event.subtitle}
@@ -87,6 +96,8 @@ export const Component = () => {
             dvrState={event.dvrState}
             showProgress
             showDate
+            showThumb
+            fallbackImage={`/api/picon/${channel.piconId}`}
           />
         ))}
       </div>
