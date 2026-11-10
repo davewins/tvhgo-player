@@ -23,6 +23,7 @@ import (
 	profiles "github.com/davidborzek/tvhgo/services/profile"
 	"github.com/davidborzek/tvhgo/services/recording"
 	"github.com/davidborzek/tvhgo/services/streaming"
+	"github.com/davidborzek/tvhgo/services/tuners"
 	"github.com/davidborzek/tvhgo/tvheadend"
 	"github.com/davidborzek/tvhgo/ui"
 	"github.com/go-chi/chi/v5"
@@ -100,6 +101,17 @@ func start(ctx *cli.Context) error {
 	profileService := profiles.New(tvhClient)
 	playbackService := playback.New(cfg.Playback)
 
+	// tuner status needs an admin account in tvheadend: a separate, optional one used only for that
+	var tvhStatusClient tvheadend.Client
+	if cfg.Tvheadend.StatusUsername != "" {
+		tvhStatusClient = tvheadend.New(tvheadend.ClientOpts{
+			URL:      cfg.Tvheadend.URL(),
+			Username: cfg.Tvheadend.StatusUsername,
+			Password: cfg.Tvheadend.StatusPassword,
+		})
+	}
+	tunerService := tuners.New(tvhStatusClient)
+
 	sessionCleaner := auth.NewSessionCleaner(
 		sessionRepository,
 		clock,
@@ -126,7 +138,7 @@ func start(ctx *cli.Context) error {
 		twoFactorService,
 		dvrConfigService,
 		profileService,
-	)
+	).WithTuners(tunerService)
 
 	healthRouter := health.New(tvhClient, dbConn)
 

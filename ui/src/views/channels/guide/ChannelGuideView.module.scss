@@ -300,3 +300,16 @@ $row: 68px;
     font-weight: 600;
   }
 }
+
+.tunerBanner {
+  margin: 0 1rem 0.6rem;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid #d29922;
+  border-radius: 6px;
+  background: rgba(210, 153, 34, 0.12);
+  font-size: 0.85rem;
+}
+
+.blocked {
+  opacity: 0.35;
+}

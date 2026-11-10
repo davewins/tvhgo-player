@@ -19,6 +19,10 @@ type (
 		Port     int    `yaml:"port"     env:"PORT"`
 		Username string `yaml:"username" env:"USERNAME"`
 		Password string `yaml:"password" env:"PASSWORD,unset"`
+		// Optional second account used only to read tuner status and the channel to multiplex map. Tvheadend only
+		// gives those to admin accounts, so keep this separate from the main (non-admin) account.
+		StatusUsername string `yaml:"status_username" env:"STATUS_USERNAME"`
+		StatusPassword string `yaml:"status_password" env:"STATUS_PASSWORD,unset"`
 	}
 )
 

@@ -29,6 +29,7 @@ type router struct {
 	twoFactorService      core.TwoFactorAuthService
 	dvrConfigService      core.DVRConfigService
 	profileService        core.ProfileService
+	tuners                core.TunerService
 }
 
 var corsOpts = cors.Options{
@@ -133,6 +134,8 @@ func (s *router) Handler() http.Handler {
 	authenticated.Get("/live/hls/{id}/{file}", s.ServeLiveHLS)
 	authenticated.Delete("/live/hls/{id}", s.StopLiveHLS)
 	authenticated.Get("/playback/live", s.GetLiveQualities)
+
+	authenticated.Get("/tuners", s.GetTuners)
 
 	authenticated.Get("/picon/{id}", s.GetPicon)
 

@@ -7,6 +7,7 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 import { availableGroups, inGroup, parseGroup } from '@/utils/channelGroups';
+import { busyList, heldMuxes, isFull, joinNames } from '@/utils/tuners';
 import {
   openingScrollPx,
   scrollForMinutes,
@@ -16,11 +17,13 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import Button from '@/components/common/button/Button';
 import EmptyState from '@/components/common/emptyState/EmptyState';
+import Modal from '@/components/common/modal/Modal';
 import Player from '@/components/player/Player';
 import { getEpg } from '@/clients/api/api';
 import moment from 'moment';
 import styles from './ChannelGuideView.module.scss';
 import { useTranslation } from 'react-i18next';
+import { useTuners } from '@/hooks/tuners';
 
 // Layout: 1 minute = PX_PER_MIN pixels. The guide covers the selected day from `axisStart` to `axisEnd`.
 const PX_PER_MIN = 5;
@@ -76,6 +79,7 @@ function GuideRow({
   axisEnd,
   now,
   search,
+  blocked,
   onPlay,
   onEvent,
   onChannel,
@@ -85,6 +89,7 @@ function GuideRow({
   axisEnd: number;
   now: number;
   search: string;
+  blocked: boolean;
   onPlay: (c: EpgChannel) => void;
   onEvent: (e: EpgEvent) => void;
   onChannel: (c: EpgChannel) => void;
@@ -104,7 +109,7 @@ function GuideRow({
         </span>
         <button
           type="button"
-          className={styles.logo}
+          className={`${styles.logo} ${blocked ? styles.blocked : ''}`}
           title={`${t('watch_live')}: ${channel.channelName}`}
           aria-label={`${t('watch_live')}: ${channel.channelName}`}
           onClick={() => onPlay(channel)}
@@ -180,6 +185,12 @@ export function Component() {
   const [now, setNow] = useState(moment().unix());
   const search = searchParams.get('q') || '';
   const [playing, setPlaying] = useState<EpgChannel | null>(null);
+  // every tuner busy: channels on a multiplex nobody holds cannot be watched until a recording finishes
+  const tuners = useTuners();
+  const blockedIds = useMemo(() => new Set(tuners?.blocked ?? []), [tuners]);
+  const [refused, setRefused] = useState<EpgChannel | null>(null);
+  const tryPlay = (c: EpgChannel) =>
+    blockedIds.has(c.channelId) ? setRefused(c) : setPlaying(c);
 
   // keep the "now" line moving, and refresh the data now and then so ended programmes drop out
   useEffect(() => {
@@ -363,6 +374,16 @@ export function Component() {
         </div>
       </div>
 
+      {isFull(tuners) && (
+        <div className={styles.tunerBanner} data-testid="tuner-banner">
+          <strong>{t('tuners_full_title')}.</strong>{' '}
+          {t('tuners_full_banner', {
+            names: joinNames(busyList(tuners)),
+            mux: heldMuxes(tuners),
+          })}
+        </div>
+      )}
+
       <div className={styles.groups}>
         {groups.map((g) => (
           <button
@@ -433,13 +454,28 @@ export function Component() {
                 axisEnd={axisEnd}
                 now={now}
                 search={query}
-                onPlay={setPlaying}
+                blocked={blockedIds.has(c.channelId)}
+                onPlay={tryPlay}
                 onEvent={(e) => navigate(`/guide/events/${e.id}`)}
                 onChannel={(ch) => navigate(`/channels/${ch.channelId}`)}
               />
             ))}
           </div>
         </div>
+      )}
+
+      {refused && tuners && (
+        <Modal visible onClose={() => setRefused(null)} maxWidth={440}>
+          <h3>{t('tuners_blocked', { channel: refused.channelName })}</h3>
+          <p>
+            {t('tuners_blocked_body', {
+              names: joinNames(busyList(tuners)),
+              channel: refused.channelName,
+              mux: heldMuxes(tuners),
+            })}
+          </p>
+          <Button label="OK" onClick={() => setRefused(null)} />
+        </Modal>
       )}
 
       {playing && (

@@ -16,6 +16,7 @@ import {
   Recording,
   Session,
   Token,
+  TunerStatus,
   TwoFactorAuthSettings,
   TwoFactorAuthSetupResult,
   UpdateRecording,
@@ -147,6 +148,11 @@ export async function getEpg(
   const response = await client.get<Array<EpgChannel>>('/epg', {
     params: q,
   });
+  return response.data;
+}
+
+export async function getTuners(): Promise<TunerStatus> {
+  const response = await client.get<TunerStatus>('/tuners');
   return response.data;
 }
 

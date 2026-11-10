@@ -287,3 +287,25 @@ export type CreateAutorecOpts = {
   recordRepeats?: boolean;
   configId?: string;
 };
+
+export type TunerUser = {
+  title: string;
+  channel: string;
+  kind: 'recording' | 'live';
+};
+
+export type Tuner = {
+  name: string;
+  mux: string;
+  busy: boolean;
+  users: TunerUser[];
+};
+
+export type TunerStatus = {
+  available: boolean;
+  total: number;
+  busy: number;
+  tuners: Tuner[];
+  // ids of the channels that cannot be tuned right now (all tuners busy, none on a multiplex that carries them)
+  blocked: string[];
+};
