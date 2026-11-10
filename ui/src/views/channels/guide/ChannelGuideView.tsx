@@ -18,6 +18,8 @@ import { useTranslation } from 'react-i18next';
 
 // Layout: 1 minute = PX_PER_MIN pixels. The guide covers the selected day from `axisStart` to `axisEnd`.
 const PX_PER_MIN = 5;
+// how much of the past is shown to the left of the now line when the guide opens or Now is pressed
+const NOW_LEAD_MIN = 10;
 const SPAN_HOURS = 30; // the day plus the early hours of the next one
 const DAYS = 8;
 
@@ -188,10 +190,17 @@ export function Component() {
     };
   }, [isToday, playing]);
 
-  // initial scroll: today starts at "now"; other days open at 18:00
+  // initial scroll: today opens with "now" just right of the channel column (a little of the past in view); other
+  // days open at 18:00
   useEffect(() => {
     if (scroller.current) {
-      scroller.current.scrollLeft = isToday ? 0 : px(18 * 3600);
+      scroller.current.scrollLeft = isToday
+        ? Math.max(
+            0,
+            px(Math.floor(Date.now() / 1000) - axisStart) -
+              NOW_LEAD_MIN * PX_PER_MIN
+          )
+        : px(18 * 3600);
     }
   }, [dayStart]);
 
@@ -302,7 +311,7 @@ export function Component() {
                 return;
               }
               scroller.current?.scrollTo({
-                left: Math.max(0, nowX - 30 * PX_PER_MIN),
+                left: Math.max(0, nowX - NOW_LEAD_MIN * PX_PER_MIN),
                 behavior: 'smooth',
               });
             }}
