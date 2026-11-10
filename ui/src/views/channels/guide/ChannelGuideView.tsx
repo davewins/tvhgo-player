@@ -6,6 +6,7 @@ import {
   useRevalidator,
   useSearchParams,
 } from 'react-router-dom';
+import { availableGroups, inGroup, parseGroup } from '@/utils/channelGroups';
 import {
   openingScrollPx,
   scrollForMinutes,
@@ -226,16 +227,20 @@ export function Component() {
   // this guide only holds the selected day; the search page looks through the whole guide
   const searchAllDays = () =>
     navigate(`/search?q=${encodeURIComponent(search.trim())}`);
+  // quick groups (HD, +1, News, ...) worked out from channel numbers and names; kept in the URL
+  const group = parseGroup(searchParams.get('group'));
+  const groups = useMemo(() => availableGroups(epg), [epg]);
   const channels = useMemo(
     () =>
-      query === ''
-        ? epg
-        : epg.filter(
-            (c) =>
-              c.channelName.toLowerCase().includes(query) ||
-              c.events.some((e) => matches(e, query))
-          ),
-    [epg, query]
+      epg
+        .filter((c) => inGroup(c, group))
+        .filter(
+          (c) =>
+            query === '' ||
+            c.channelName.toLowerCase().includes(query) ||
+            c.events.some((e) => matches(e, query))
+        ),
+    [epg, query, group]
   );
 
   // jump to the first matching programme that is on now or later
@@ -356,6 +361,30 @@ export function Component() {
             {t('guide_later')} ›
           </button>
         </div>
+      </div>
+
+      <div className={styles.groups}>
+        {groups.map((g) => (
+          <button
+            key={g}
+            type="button"
+            className={`${styles.group} ${g === group ? styles.active : ''}`}
+            aria-pressed={g === group}
+            onClick={() => {
+              setSearchParams((prev) => {
+                if (g === 'all') {
+                  prev.delete('group');
+                } else {
+                  prev.set('group', g);
+                }
+                return prev;
+              });
+              scroller.current?.scrollTo({ top: 0 });
+            }}
+          >
+            {t(`group_${g}`)}
+          </button>
+        ))}
       </div>
 
       {channels.length === 0 && query !== '' ? (
