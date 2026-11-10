@@ -4,6 +4,7 @@ import { useLoaderData, useNavigate, useRevalidator } from 'react-router-dom';
 
 import { Recording } from '@/clients/api/api.types';
 import { Component as RecordingDetailView } from './RecordingDetailView';
+import { TestIds } from '@/__test__/ids';
 import { useManageRecordingByEvent } from '@/hooks/recording';
 import userEvent from '@testing-library/user-event';
 
@@ -102,6 +103,15 @@ describe('with status completed', () => {
     const document = render(<RecordingDetailView />);
 
     expect(document.asFragment()).toMatchSnapshot();
+  });
+
+  test('should go back with the back button', async () => {
+    vi.mocked(useLoaderData).mockReturnValue(buildRecording('completed'));
+    const document = render(<RecordingDetailView />);
+
+    await userEvent.click(document.getByTestId(TestIds.RECORDING_BACK_BUTTON));
+
+    expect(navigateMock).toHaveBeenCalledWith(-1);
   });
 
   test('should delete recording', async () => {

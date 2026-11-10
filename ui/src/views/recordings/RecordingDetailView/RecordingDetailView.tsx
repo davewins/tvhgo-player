@@ -21,6 +21,7 @@ import PairList from '@/components/common/pairList/PairList';
 import PairValue from '@/components/common/pairList/PairValue/PairValue';
 import Player from '@/components/player/Player';
 import { Recording } from '@/clients/api/api.types';
+import { TestIds } from '@/__test__/ids';
 import styles from './RecordingDetailView.module.scss';
 import { useFormik } from 'formik';
 import { useManageRecordingByEvent } from '@/hooks/recording';
@@ -233,6 +234,15 @@ export function Component() {
         title={getConfirmationModalTitle()}
         buttonTitle={getConfirmationButtonLabel()}
         pending={pending}
+      />
+
+      <Button
+        label={`‹ ${t('go_back')}`}
+        quiet
+        style="text"
+        className={styles.back}
+        onClick={() => navigate(-1)}
+        testID={TestIds.RECORDING_BACK_BUTTON}
       />
 
       <EventChannelInfo

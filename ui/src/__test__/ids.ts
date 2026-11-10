@@ -15,6 +15,7 @@ export enum TestIds {
   SELECT_ALL_RECORDINGS_CHECKBOX = 'select-all-recordings-checkbox',
   SELECT_RECORDING_CHECKBOX = 'select-recording-checkbox',
   SHOW_TILE = 'show-tile',
+  RECORDING_BACK_BUTTON = 'recording-back-button',
   RECORDINGS_LAYOUT_GRID = 'recordings-layout-grid',
   RECORDINGS_LAYOUT_LIST = 'recordings-layout-list',
   RECORDINGS_VIEW_TOGGLE = 'recordings-view-toggle',

@@ -57,6 +57,12 @@ exports[`with status completed > should render recording 1`] = `
         </div>
       </div>
     </div>
+    <button
+      class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _text_a7f9df _back_8b9d52"
+      data-testid="recording-back-button"
+    >
+      ‹ go_back
+    </button>
     <div
       class="_EventChannelInfo_e37c34"
     >
@@ -230,6 +236,12 @@ exports[`with status recording > should render recording 1`] = `
         </div>
       </div>
     </div>
+    <button
+      class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _text_a7f9df _back_8b9d52"
+      data-testid="recording-back-button"
+    >
+      ‹ go_back
+    </button>
     <div
       class="_EventChannelInfo_e37c34"
     >
@@ -461,6 +473,12 @@ exports[`with status scheduled > should render recording 1`] = `
         </div>
       </div>
     </div>
+    <button
+      class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _text_a7f9df _back_8b9d52"
+      data-testid="recording-back-button"
+    >
+      ‹ go_back
+    </button>
     <div
       class="_EventChannelInfo_e37c34"
     >

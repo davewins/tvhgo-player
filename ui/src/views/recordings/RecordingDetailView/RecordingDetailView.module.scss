@@ -22,3 +22,18 @@
   margin: 1rem 0;
   background-color: var(--color-border-subtle);
 }
+
+.back {
+  margin: -1.5rem 0 1rem -0.5rem;
+  align-self: flex-start;
+}
+
+@media screen and (max-width: 700px) {
+  .RecordingDetailView {
+    padding: 1rem;
+  }
+
+  .back {
+    margin: 0 0 0.5rem -0.5rem;
+  }
+}
