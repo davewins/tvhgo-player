@@ -13,6 +13,7 @@ import {
   EpgEvent,
   ErrorResponse,
   ListResponse,
+  PipelineStatus,
   PlaybackInfo,
   Recording,
   Session,
@@ -149,6 +150,11 @@ export async function getEpg(
   const response = await client.get<Array<EpgChannel>>('/epg', {
     params: q,
   });
+  return response.data;
+}
+
+export async function getPipeline(): Promise<PipelineStatus> {
+  const response = await client.get<PipelineStatus>('/pipeline');
   return response.data;
 }
 

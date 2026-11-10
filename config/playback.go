@@ -51,6 +51,10 @@ type (
 		// TMDBLanguage is the language for TMDb lookups (default en-GB).
 		TMDBLanguage string `yaml:"tmdb_language" env:"TMDB_LANGUAGE"`
 		// Preset and CRF are the x264 speed preset and quality (lower CRF = better/larger). SD uses CRF-2.
+		// PipelineStatus is the status.json written by the tvh-pipeline container (what it is converting and how far).
+		// Optional: without it tvhgo just shows its own on-demand conversions.
+		PipelineStatus string `yaml:"pipeline_status" env:"PIPELINE_STATUS"`
+
 		Preset string `yaml:"preset" env:"PRESET"`
 		CRF    int    `yaml:"crf" env:"CRF"`
 	}

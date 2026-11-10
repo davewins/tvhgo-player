@@ -33,3 +33,19 @@
     display: none;
   }
 }
+
+.short {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .short {
+    display: inline;
+  }
+}
+
+.long {
+  max-width: 18rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

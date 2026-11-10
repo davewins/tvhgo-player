@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 
 import Checkbox from '@/components/common/checkbox/Checkbox';
+import PipelineChip from '@/components/pipeline/PipelineChip';
 import { Recording } from '@/clients/api/api.types';
 import { Show } from '@/utils/shows';
 import { TestIds } from '@/__test__/ids';
@@ -127,6 +128,7 @@ export function EpisodeTile({
           onClick={onPlay ?? onOpen}
           fallback={`/api/picon/${recording.piconId}`}
         />
+        <PipelineChip recordingId={recording.id} />
         {onPlay && (
           <span className={styles.playIcon} aria-hidden="true">
             ▶

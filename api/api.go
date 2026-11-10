@@ -6,6 +6,7 @@ import (
 	"github.com/davidborzek/tvhgo/config"
 	"github.com/davidborzek/tvhgo/core"
 	_ "github.com/davidborzek/tvhgo/docs/api"
+	"github.com/davidborzek/tvhgo/services/pipeline"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
@@ -30,6 +31,7 @@ type router struct {
 	dvrConfigService      core.DVRConfigService
 	profileService        core.ProfileService
 	tuners                core.TunerService
+	pipe                  *pipeline.Reader
 }
 
 var corsOpts = cors.Options{
@@ -135,6 +137,7 @@ func (s *router) Handler() http.Handler {
 	authenticated.Delete("/live/hls/{id}", s.StopLiveHLS)
 	authenticated.Get("/playback/live", s.GetLiveQualities)
 
+	authenticated.Get("/pipeline", s.GetPipeline)
 	authenticated.Get("/tuners", s.GetTuners)
 	authenticated.Get("/tuners/clashes", s.GetTunerClashes)
 

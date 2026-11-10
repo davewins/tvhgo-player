@@ -19,6 +19,7 @@ import (
 	"github.com/davidborzek/tvhgo/services/dvr"
 	"github.com/davidborzek/tvhgo/services/epg"
 	"github.com/davidborzek/tvhgo/services/picon"
+	"github.com/davidborzek/tvhgo/services/pipeline"
 	"github.com/davidborzek/tvhgo/services/playback"
 	profiles "github.com/davidborzek/tvhgo/services/profile"
 	"github.com/davidborzek/tvhgo/services/recording"
@@ -138,7 +139,7 @@ func start(ctx *cli.Context) error {
 		twoFactorService,
 		dvrConfigService,
 		profileService,
-	).WithTuners(tunerService)
+	).WithTuners(tunerService).WithPipeline(pipeline.New(cfg.Playback.PipelineStatus))
 
 	healthRouter := health.New(tvhClient, dbConn)
 

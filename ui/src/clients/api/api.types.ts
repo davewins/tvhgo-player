@@ -258,8 +258,10 @@ export type Chapter = {
 export type PlaybackInfo = {
   status: 'none' | 'queued' | 'converting' | 'ready' | 'failed';
   progress: number;
-  source?: 'library' | 'cache';
+  source?: 'library' | 'cache' | 'pipeline';
   canConvert: boolean;
+  // conversions in front of a queued one
+  ahead?: number;
   error?: string;
 };
 
@@ -325,4 +327,25 @@ export type Clash = {
   start: number;
   end: number;
   entries: ClashEntry[];
+};
+
+export type PipelineStatus = {
+  // false when no pipeline is configured or it is not running
+  available: boolean;
+  current: {
+    id: string;
+    title: string;
+    step: string;
+    percent: number | null;
+    since: number;
+  } | null;
+  queue: { id: string; title: string; steps: string[] }[];
+  failed: {
+    id: string;
+    title: string;
+    step: string;
+    detail: string;
+    attempts: number;
+    retry_at: number | null;
+  }[];
 };

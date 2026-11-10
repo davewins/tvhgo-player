@@ -6,6 +6,7 @@ import (
 
 	"github.com/davidborzek/tvhgo/api/response"
 	"github.com/davidborzek/tvhgo/core"
+	"github.com/davidborzek/tvhgo/services/pipeline"
 	"github.com/rs/zerolog/log"
 )
 
@@ -70,4 +71,22 @@ func (s *router) GetTunerClashes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	response.JSON(w, clashes, 200)
+}
+
+// WithPipeline adds the recording pipeline status reader (optional).
+func (s *router) WithPipeline(p *pipeline.Reader) *router {
+	s.pipe = p
+	return s
+}
+
+// GetPipeline godoc
+//
+//	@Summary	What the recording pipeline is converting, what waits and what failed
+//	@Tags		pipeline
+//	@Produce	json
+//	@Success	200	{object}	core.PipelineStatus
+//	@Security	JWT
+//	@Router		/pipeline [get]
+func (s *router) GetPipeline(w http.ResponseWriter, r *http.Request) {
+	response.JSON(w, s.pipe.Status(), 200)
 }

@@ -365,8 +365,12 @@ function Inner({
         <div className={styles.preparing}>
           <span>
             {preparing.status === 'queued'
-              ? t('player_queued')
-              : t('player_preparing', { progress: preparing.progress })}
+              ? preparing.ahead
+                ? t('player_queued_ahead', { count: preparing.ahead })
+                : t('player_queued')
+              : preparing.source === 'pipeline'
+                ? t('player_pipeline', { progress: preparing.progress })
+                : t('player_preparing', { progress: preparing.progress })}
           </span>
           <div className={styles.bar}>
             <div

@@ -24,11 +24,13 @@ type (
 		Status PlaybackStatus `json:"status"`
 		// Progress of a running conversion in percent.
 		Progress int `json:"progress"`
-		// Source of a ready file: "library" (the configured source dir) or "cache" (converted by tvhgo).
+		// Source of a ready file: "library" (the configured source dir), "cache" (converted by tvhgo) or "pipeline" (being converted by the recording pipeline).
 		Source string `json:"source,omitempty"`
 		// CanConvert is true if tvhgo can create the playable copy itself.
-		CanConvert bool   `json:"canConvert"`
-		Error      string `json:"error,omitempty"`
+		CanConvert bool `json:"canConvert"`
+		// Ahead is how many other conversions are in front of a queued one.
+		Ahead int    `json:"ahead"`
+		Error string `json:"error,omitempty"`
 	}
 
 	// PlaybackService finds or creates browser-playable copies (MP4) of finished recordings.

@@ -1,4 +1,5 @@
 import Checkbox from '@/components/common/checkbox/Checkbox';
+import PipelineChip from '@/components/pipeline/PipelineChip';
 import { Recording } from '@/clients/api/api.types';
 import { TestIds } from '@/__test__/ids';
 import styles from './RecordingListItem.module.scss';
@@ -63,6 +64,7 @@ function RecordingListItem({
             onError={() => setNoThumb(true)}
           />
         )}
+        <PipelineChip recordingId={recording.id} />
         {onPlay && (
           <span className={styles.playIcon} aria-hidden="true">
             ▶

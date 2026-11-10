@@ -19,6 +19,7 @@ import (
 
 	"github.com/davidborzek/tvhgo/config"
 	"github.com/davidborzek/tvhgo/core"
+	"github.com/davidborzek/tvhgo/services/pipeline"
 	"github.com/rs/zerolog/log"
 )
 
@@ -41,6 +42,8 @@ type service struct {
 	artSem   chan struct{}
 	tmdbAPI  string
 	tmdbImg  string
+	// the recording pipeline's progress (nil without a status file)
+	pipe *pipeline.Reader
 }
 
 // New creates the playback service. With conversion enabled it also starts the cache cleanup.
@@ -54,6 +57,7 @@ func New(cfg config.PlaybackConfig) core.PlaybackService {
 		artSem:   make(chan struct{}, 4),
 		tmdbAPI:  tmdbAPIBase,
 		tmdbImg:  tmdbImageBase,
+		pipe:     pipeline.New(cfg.PipelineStatus),
 	}
 	if cfg.Convert {
 		if err := os.MkdirAll(cfg.CacheDir, 0o755); err != nil {
@@ -170,10 +174,14 @@ func (s *service) Status(rec *core.Recording) core.PlaybackInfo {
 	if c := s.cacheFile(rec, fi); fileOK(c) {
 		return core.PlaybackInfo{Status: core.PlaybackReady, Progress: 100, Source: "cache", CanConvert: true}
 	}
+	// the recording pipeline is already converting this one: show its progress instead of starting a second conversion
+	if pct, ok := s.pipe.Converting(rec.ID); ok {
+		return core.PlaybackInfo{Status: core.PlaybackConverting, Progress: pct, Source: "pipeline", CanConvert: true}
+	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if j, ok := s.jobs[rec.ID]; ok {
-		return core.PlaybackInfo{Status: j.status, Progress: j.progress, Error: j.err, CanConvert: true}
+		return core.PlaybackInfo{Status: j.status, Progress: j.progress, Error: j.err, CanConvert: true, Ahead: s.aheadLocked(j)}
 	}
 	return core.PlaybackInfo{Status: core.PlaybackNone, CanConvert: true}
 }
@@ -183,8 +191,22 @@ func fileOK(p string) bool {
 	return err == nil && fi.Mode().IsRegular() && fi.Size() > 0
 }
 
+// aheadLocked counts the conversions in front of a queued job: those running or queued (the pipeline's counts too).
+func (s *service) aheadLocked(self *job) int {
+	if self.status != core.PlaybackQueued {
+		return 0
+	}
+	n := 0
+	for _, o := range s.jobs {
+		if o != self && (o.status == core.PlaybackConverting || o.status == core.PlaybackQueued) {
+			n++
+		}
+	}
+	return n
+}
+
 func (s *service) Prepare(rec *core.Recording) (core.PlaybackInfo, error) {
-	if info := s.Status(rec); info.Status == core.PlaybackReady {
+	if info := s.Status(rec); info.Status == core.PlaybackReady || info.Source == "pipeline" {
 		return info, nil
 	}
 	if !s.cfg.Convert {
