@@ -117,14 +117,52 @@
     padding: 0 0.75rem 1.5rem 0.75rem;
   }
 
+  // on a phone the controls would pin a large part of the screen and cards would slide under them: let them scroll away
   .header {
-    padding: 1rem 0;
+    position: static;
+    padding: 0.75rem 0;
     gap: 0.5rem;
     align-items: flex-start;
   }
 
   .headerLeft {
+    gap: 0.4rem 0.5rem;
+    min-width: 0;
+
+    select {
+      padding: 0.3rem 0.4rem;
+      font-size: 0.9rem;
+      max-width: 100%;
+    }
+
+    button {
+      font-size: 0.9rem;
+    }
+  }
+
+  .toggleButton {
+    padding: 0.3rem 0.7rem;
+  }
+
+  // the (invisible) Delete button otherwise still takes room beside the controls and squeezes them into one column
+  .headerLeft {
+    flex: 1;
+  }
+
+  .actions {
     gap: 0.5rem;
+  }
+
+  .deleteButton {
+    display: none;
+
+    &.deleteButtonVisible {
+      display: inline-flex;
+    }
+  }
+
+  .showTitle {
+    margin-bottom: 0.5rem;
   }
 
   .grid {
