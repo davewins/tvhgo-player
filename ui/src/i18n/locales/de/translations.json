@@ -406,5 +406,6 @@
   "episodes_count_one": "{{count}} Folge",
   "episodes_count_other": "{{count}} Folgen",
   "show_more": "Mehr",
-  "show_less": "Weniger"
+  "show_less": "Weniger",
+  "download_preparing": "{{title}} wird für den Download vorbereitet… {{progress}}%"
 }

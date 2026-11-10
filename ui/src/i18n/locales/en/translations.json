@@ -412,5 +412,6 @@
   "episodes_count_one": "{{count}} episode",
   "episodes_count_other": "{{count}} episodes",
   "show_more": "More",
-  "show_less": "Less"
+  "show_less": "Less",
+  "download_preparing": "Preparing {{title}} for download… {{progress}}%"
 }

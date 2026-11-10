@@ -6,10 +6,8 @@ import {
   useNavigate,
   useRevalidator,
 } from 'react-router-dom';
-import { getRecording, getRecordingUrl } from '@/clients/api/api';
 
 import Button from '@/components/common/button/Button';
-import ButtonLink from '@/components/common/button/ButtonLink';
 import DeleteConfirmationModal from '@/components/common/deleteConfirmationModal/DeleteConfirmationModal';
 import EventChannelInfo from '@/components/epg/event/channelInfo/EventChannelInfo';
 import Form from '@/components/common/form/Form';
@@ -22,6 +20,8 @@ import PairValue from '@/components/common/pairList/PairValue/PairValue';
 import Player from '@/components/player/Player';
 import { Recording } from '@/clients/api/api.types';
 import { TestIds } from '@/__test__/ids';
+import { downloadRecording } from '@/utils/download';
+import { getRecording } from '@/clients/api/api';
 import styles from './RecordingDetailView.module.scss';
 import { useFormik } from 'formik';
 import { useManageRecordingByEvent } from '@/hooks/recording';
@@ -51,6 +51,7 @@ export function Component() {
     pending,
   } = useManageRecordingByEvent();
 
+  const [downloadNote, setDownloadNote] = useState<string | null>(null);
   const [playing, setPlaying] = useState<boolean>(false);
   const [noThumb, setNoThumb] = useState<boolean>(false);
   const [confirmationModalVisible, setConfirmationModalVisible] =
@@ -173,10 +174,22 @@ export function Component() {
   const renderDownloadButton = () => {
     if (recording?.status === 'completed') {
       return (
-        <ButtonLink
-          href={getRecordingUrl(recording.id)}
-          download
-          label={t('download')}
+        <Button
+          label={
+            downloadNote
+              ? t('download_preparing', {
+                  title: recording.title,
+                  progress: downloadNote,
+                })
+              : t('download')
+          }
+          disabled={downloadNote !== null}
+          onClick={() => {
+            setDownloadNote('0');
+            downloadRecording(recording, (p) =>
+              setDownloadNote(p === null ? null : `${p}`)
+            );
+          }}
         />
       );
     }

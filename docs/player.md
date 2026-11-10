@@ -118,6 +118,7 @@ All need a logged-in session (like the rest of the API).
 | `POST /api/channels/{n}/live/hls?quality=H` | Start a live HLS session (Safari/iOS); returns `{id, url}` of the playlist |
 | `GET /api/live/hls/{id}/index.m3u8` and `seg*.ts` | The session's playlist and segments |
 | `DELETE /api/live/hls/{id}` | End the session |
+| `GET /api/recordings/{id}/play?download=1` | The MP4 as a named download (attachment) |
 
 ## Recordings by show
 
@@ -128,8 +129,10 @@ On **DVR → Recordings → Finished**, recordings are grouped into **shows** (b
 - **Click the picture to play** a recording straight away; click its date/text for the recording's page (details,
   padding, delete). A play button is drawn on the picture. Each card shows the date, channel and time and up to three
   lines of the programme description, with **More / Less** to read it all (hover also shows the full text).
-- **Tick the box** on one or more recordings to **Download** or **Delete** them. Downloading several starts one file
-  after another; your browser may ask permission to allow multiple downloads.
+- **Tick the box** on one or more recordings to **Download** or **Delete** them. Download gives the **MP4** (named
+  like the recording, e.g. `Emmerdale - 2026-11-09 20.00.mp4`), making it first if there is none yet. Only if no MP4
+  can be made does it fall back to the original Tvheadend file. Several recordings download one after another; your
+  browser may ask permission to allow multiple downloads.
 - **Sort** by newest, oldest, title A-Z or (for shows) most episodes. The grid/list choice is remembered in the browser.
 - **All recordings** switches to the plain list (with the original sort and paging); **Shows** switches back.
 - Upcoming and Failed stay as plain lists.

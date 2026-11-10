@@ -167,13 +167,11 @@ exports[`with status completed > should render recording 1`] = `
       >
         delete_recording
       </button>
-      <a
+      <button
         class="_button_a7f9df _medium_a7f9df"
-        download=""
-        href="/api/recordings/someID/stream"
       >
         download
-      </a>
+      </button>
     </div>
   </div>
 </DocumentFragment>

@@ -17,11 +17,7 @@ import {
   useRevalidator,
   useSearchParams,
 } from 'react-router-dom';
-import {
-  RecordingStatus,
-  getRecordingUrl,
-  getRecordings,
-} from '@/clients/api/api';
+import { RecordingStatus, getRecordings } from '@/clients/api/api';
 import { useEffect, useMemo, useState } from 'react';
 
 import Button from '@/components/common/button/Button';
@@ -35,6 +31,7 @@ import Player from '@/components/player/Player';
 import RecordingListItem from '@/components/recordings/listItem/RecordingListItem';
 import { TestIds } from '@/__test__/ids';
 import { c } from '@/utils/classNames';
+import { downloadRecording } from '@/utils/download';
 import styles from './RecordingsView.module.scss';
 import { useManageRecordings } from '@/hooks/recording';
 import { usePagination } from '@/hooks/pagination';
@@ -165,20 +162,27 @@ export function Component() {
   const playHandler = (recording: Recording) =>
     recording.status === 'completed' ? () => setPlaying(recording) : undefined;
 
-  // one file per selected recording; browsers need the downloads spaced out a little to allow several
-  const downloadSelected = () => {
-    [...selectedRecordings]
-      .filter((rec) => rec.status === 'completed')
-      .forEach((rec, i) => {
-        setTimeout(() => {
-          const a = document.createElement('a');
-          a.href = getRecordingUrl(rec.id);
-          a.download = '';
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-        }, i * 700);
-      });
+  // MP4 files, one after another (an MP4 is made first if there is none yet)
+  const [downloadNote, setDownloadNote] = useState<string | null>(null);
+  const downloadSelected = async () => {
+    const list = [...selectedRecordings].filter(
+      (rec) => rec.status === 'completed'
+    );
+    for (const [i, rec] of list.entries()) {
+      const label = `${i + 1}/${list.length}`;
+      await downloadRecording(rec, (percent) =>
+        setDownloadNote(
+          percent === null
+            ? null
+            : t('download_preparing', { title: rec.title, progress: percent })
+        )
+      );
+      if (list.length > 1 && i < list.length - 1) {
+        setDownloadNote(`${t('download')} ${label}`);
+        await new Promise((r) => setTimeout(r, 800));
+      }
+    }
+    setDownloadNote(null);
   };
   const canDownload =
     getStatus() === 'finished' &&
@@ -517,6 +521,7 @@ export function Component() {
       {grouped && currentShow && (
         <h2 className={styles.showTitle}>{currentShow.title}</h2>
       )}
+      {downloadNote && <p className={styles.note}>{downloadNote}</p>}
       <div className={styles.recordings}>{renderRecordings()}</div>
       {!grouped && (
         <PaginationControls

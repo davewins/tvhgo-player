@@ -1,9 +1,11 @@
 package api
 
 import (
+	"mime"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/davidborzek/tvhgo/api/response"
 	"github.com/davidborzek/tvhgo/core"
@@ -84,7 +86,7 @@ func (s *router) PreparePlayback(w http.ResponseWriter, r *http.Request) {
 
 // PlayRecording godoc
 //
-//	@Summary	Play a recording in the browser (MP4, supports seeking via HTTP range requests)
+//	@Summary	Play a recording in the browser (MP4, supports seeking via HTTP range requests); with ?download=1 as an attachment
 //	@Tags		recordings
 //	@Param		id	path	string	true	"Recording id"
 //	@Produce	video/mp4
@@ -114,7 +116,23 @@ func (s *router) PlayRecording(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "video/mp4")
+	if r.URL.Query().Get("download") != "" {
+		w.Header().Set("Content-Disposition", mime.FormatMediaType("attachment", map[string]string{"filename": downloadName(rec)}))
+	}
 	http.ServeContent(w, r, filepath.Base(p), fi.ModTime(), f)
+}
+
+// downloadName names the MP4 download after the recording as Tvheadend named it ("Show - 2026-11-09 20.00.mp4").
+func downloadName(rec *core.Recording) string {
+	base := filepath.Base(rec.Filename)
+	name := strings.TrimSuffix(base, filepath.Ext(base))
+	if name == "" || name == "." || name == "/" {
+		name = strings.NewReplacer("/", "-", "\\", "-").Replace(rec.Title)
+	}
+	if name == "" {
+		name = "recording"
+	}
+	return name + ".mp4"
 }
 
 // GetRecordingThumb godoc
