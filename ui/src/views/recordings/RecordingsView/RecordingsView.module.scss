@@ -144,21 +144,21 @@
     padding: 0.3rem 0.7rem;
   }
 
-  // the (invisible) Delete button otherwise still takes room beside the controls and squeezes them into one column
+  // the select / Download / Delete actions get their own row under the controls, always there, so ticking a box
+  // never changes the height of the controls
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .headerLeft {
-    flex: 1;
+    flex: none;
   }
 
   .actions {
-    gap: 0.5rem;
-  }
-
-  .deleteButton {
-    display: none;
-
-    &.deleteButtonVisible {
-      display: inline-flex;
-    }
+    justify-content: flex-end;
+    gap: 0.75rem;
+    min-height: 2.25rem;
   }
 
   .showTitle {
