@@ -144,3 +144,17 @@
   overflow: visible;
   text-overflow: clip;
 }
+
+// no picture: the channel logo on the same-sized tile
+.thumbFallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    max-width: 70%;
+    max-height: 70%;
+    object-fit: contain;
+    opacity: 0.85;
+  }
+}

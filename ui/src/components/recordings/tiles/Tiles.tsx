@@ -12,14 +12,19 @@ function Thumb({
   id,
   className,
   onClick,
+  fallback,
 }: {
   id: string;
   className: string;
   onClick: () => void;
+  // shown when the recording has no picture (nothing recorded yet and no artwork match): the channel logo
+  fallback?: string;
 }) {
   const [noThumb, setNoThumb] = useState(false);
   return noThumb ? (
-    <div className={className} onClick={onClick} />
+    <div className={c(className, styles.thumbFallback)} onClick={onClick}>
+      {fallback && <img src={fallback} alt="" loading="lazy" />}
+    </div>
   ) : (
     <img
       className={className}
@@ -54,7 +59,12 @@ export function ShowTile({ show, layout, onOpen }: ShowProps) {
       }}
     >
       <div className={styles.thumbWrap}>
-        <Thumb id={show.latest.id} className={styles.thumb} onClick={onOpen} />
+        <Thumb
+          id={show.latest.id}
+          className={styles.thumb}
+          onClick={onOpen}
+          fallback={`/api/picon/${show.latest.piconId}`}
+        />
         {count > 1 && <span className={styles.badge}>{count}</span>}
       </div>
       <div className={styles.text}>
@@ -115,6 +125,7 @@ export function EpisodeTile({
           id={recording.id}
           className={c(styles.thumb, onPlay ? styles.playable : '')}
           onClick={onPlay ?? onOpen}
+          fallback={`/api/picon/${recording.piconId}`}
         />
         {onPlay && (
           <span className={styles.playIcon} aria-hidden="true">

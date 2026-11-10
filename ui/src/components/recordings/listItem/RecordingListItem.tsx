@@ -43,7 +43,16 @@ function RecordingListItem({
     <div className={styles.RecordingListItem} tabIndex={0}>
       <div className={styles.thumbWrap}>
         {noThumb ? (
-          <div className={styles.thumb} onClick={onPlay ?? onClick} />
+          <div
+            className={`${styles.thumb} ${styles.thumbFallback}`}
+            onClick={onPlay ?? onClick}
+          >
+            <img
+              src={`/api/picon/${recording.piconId}`}
+              alt=""
+              loading="lazy"
+            />
+          </div>
         ) : (
           <img
             className={styles.thumb}
