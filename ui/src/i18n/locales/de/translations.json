@@ -404,5 +404,7 @@
   "sort_title": "Titel A–Z",
   "sort_count": "Meiste Folgen",
   "episodes_count_one": "{{count}} Folge",
-  "episodes_count_other": "{{count}} Folgen"
+  "episodes_count_other": "{{count}} Folgen",
+  "show_more": "Mehr",
+  "show_less": "Weniger"
 }

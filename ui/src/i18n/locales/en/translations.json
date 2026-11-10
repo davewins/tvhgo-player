@@ -410,5 +410,7 @@
   "sort_title": "Title A–Z",
   "sort_count": "Most episodes",
   "episodes_count_one": "{{count}} episode",
-  "episodes_count_other": "{{count}} episodes"
+  "episodes_count_other": "{{count}} episodes",
+  "show_more": "More",
+  "show_less": "Less"
 }

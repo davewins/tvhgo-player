@@ -18,6 +18,11 @@ import userEvent from '@testing-library/user-event';
 vi.mock('@/contexts/LoadingContext');
 vi.mock('@/hooks/recording');
 vi.mock('react-router-dom');
+vi.mock('@/components/player/Player', () => ({
+  default: ({ title, recordingId }: { title: string; recordingId: string }) => (
+    <div data-testid="player-stub">{`${title}:${recordingId}`}</div>
+  ),
+}));
 
 const navigateMock = vi.fn();
 const setQueryParamsMock = vi.fn();
@@ -108,8 +113,43 @@ test('inside a show only its episodes are listed, newest first, and can be opene
   expect(doc.getAllByTestId(TestIds.SELECT_RECORDING_CHECKBOX)).toHaveLength(2);
   expect(doc.getByText('Ep 2')).toBeTruthy();
   expect(doc.queryByText('Coronation Street')).toBeNull();
-  await userEvent.click(doc.getByText('Ep 2'));
+  // the date line opens the recording's page
+  await userEvent.click(doc.getAllByText(/short_date/)[0]);
   expect(navigateMock).toHaveBeenCalledWith('/dvr/recordings/2');
+});
+
+test('clicking a thumbnail plays the recording straight away', async () => {
+  withParams('show=Emmerdale');
+  const doc = render(<RecordingsView />);
+  expect(doc.queryByTestId('player-stub')).toBeNull();
+  await userEvent.click(doc.container.querySelectorAll('img')[0]);
+  expect(doc.getByTestId('player-stub').textContent).toBe('Emmerdale:2');
+  expect(navigateMock).not.toHaveBeenCalled();
+});
+
+test('selecting recordings offers Download as well as Delete', async () => {
+  withParams('show=Emmerdale');
+  const doc = render(<RecordingsView />);
+  expect(doc.queryByTestId(TestIds.DOWNLOAD_RECORDINGS_BUTTON)).toBeNull();
+  await userEvent.click(
+    doc.getAllByTestId(TestIds.SELECT_RECORDING_CHECKBOX)[0]
+  );
+  expect(doc.getByTestId(TestIds.DOWNLOAD_RECORDINGS_BUTTON)).toBeTruthy();
+  expect(doc.getByTestId(TestIds.DELETE_CANCEL_RECORDINGS_BUTTON)).toBeTruthy();
+});
+
+test('no Download for upcoming recordings', async () => {
+  withParams('status=upcoming');
+  vi.mocked(useLoaderData).mockReturnValue({
+    entries: entries.map((e) => ({ ...e, status: 'scheduled' })),
+    offset: 0,
+    total: 3,
+  });
+  const doc = render(<RecordingsView />);
+  await userEvent.click(
+    doc.getAllByTestId(TestIds.SELECT_RECORDING_CHECKBOX)[0]
+  );
+  expect(doc.queryByTestId(TestIds.DOWNLOAD_RECORDINGS_BUTTON)).toBeNull();
 });
 
 test('back returns to the shows', async () => {

@@ -86,3 +86,61 @@
     flex-shrink: 0;
   }
 }
+
+.playable {
+  cursor: pointer;
+}
+
+.playIcon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 2.6rem;
+  height: 2.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 0.15rem;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 1rem;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.description {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  opacity: 0.9;
+  cursor: pointer;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  &.expanded {
+    display: block;
+  }
+}
+
+.more {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #58a6ff;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+// the time and channel line may wrap rather than being cut off
+.wrap {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}

@@ -125,6 +125,11 @@ On **DVR → Recordings → Finished**, recordings are grouped into **shows** (b
 
 - A **grid** (or list) of shows, each with the latest episode's picture, an episode count and the date of the latest
   episode. Click one to see its episodes, again as a grid or list; **‹ Shows** goes back.
+- **Click the picture to play** a recording straight away; click its date/text for the recording's page (details,
+  padding, delete). A play button is drawn on the picture. Each card shows the date, channel and time and up to three
+  lines of the programme description, with **More / Less** to read it all (hover also shows the full text).
+- **Tick the box** on one or more recordings to **Download** or **Delete** them. Downloading several starts one file
+  after another; your browser may ask permission to allow multiple downloads.
 - **Sort** by newest, oldest, title A-Z or (for shows) most episodes. The grid/list choice is remembered in the browser.
 - **All recordings** switches to the plain list (with the original sort and paging); **Shows** switches back.
 - Upcoming and Failed stay as plain lists.

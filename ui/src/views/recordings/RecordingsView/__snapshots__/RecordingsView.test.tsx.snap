@@ -172,14 +172,19 @@ exports[`should render multiple pages: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/1/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/1/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -208,14 +213,19 @@ exports[`should render multiple pages: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/2/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/2/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -244,14 +254,19 @@ exports[`should render multiple pages: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/3/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/3/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -280,14 +295,19 @@ exports[`should render multiple pages: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/4/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/4/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -316,14 +336,19 @@ exports[`should render multiple pages: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/5/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/5/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -566,14 +591,19 @@ exports[`should render multiple pages: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/1/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/1/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -602,14 +632,19 @@ exports[`should render multiple pages: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/2/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/2/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -638,14 +673,19 @@ exports[`should render multiple pages: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/3/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/3/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -674,14 +714,19 @@ exports[`should render multiple pages: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/4/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/4/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -710,14 +755,19 @@ exports[`should render multiple pages: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/5/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/5/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -960,14 +1010,19 @@ exports[`should render multiple pages: status=null 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/1/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/1/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -996,14 +1051,19 @@ exports[`should render multiple pages: status=null 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/2/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/2/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -1032,14 +1092,19 @@ exports[`should render multiple pages: status=null 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/3/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/3/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -1068,14 +1133,19 @@ exports[`should render multiple pages: status=null 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/4/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/4/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -1104,14 +1174,19 @@ exports[`should render multiple pages: status=null 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/5/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/5/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -1348,14 +1423,19 @@ exports[`should render multiple pages: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/1/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/1/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -1384,14 +1464,19 @@ exports[`should render multiple pages: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/2/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/2/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -1420,14 +1505,19 @@ exports[`should render multiple pages: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/3/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/3/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -1456,14 +1546,19 @@ exports[`should render multiple pages: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/4/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/4/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -1492,14 +1587,19 @@ exports[`should render multiple pages: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/5/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/5/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -1736,14 +1836,19 @@ exports[`should render single page: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/1/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/1/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -1772,14 +1877,19 @@ exports[`should render single page: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/2/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/2/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -1808,14 +1918,19 @@ exports[`should render single page: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/3/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/3/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -1844,14 +1959,19 @@ exports[`should render single page: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/4/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/4/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -1880,14 +2000,19 @@ exports[`should render single page: status=failed 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/5/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/5/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -2132,14 +2257,19 @@ exports[`should render single page: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/1/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/1/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -2168,14 +2298,19 @@ exports[`should render single page: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/2/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/2/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -2204,14 +2339,19 @@ exports[`should render single page: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/3/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/3/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -2240,14 +2380,19 @@ exports[`should render single page: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/4/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/4/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -2276,14 +2421,19 @@ exports[`should render single page: status=finished 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/5/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/5/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -2528,14 +2678,19 @@ exports[`should render single page: status=null 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/1/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/1/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -2564,14 +2719,19 @@ exports[`should render single page: status=null 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/2/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/2/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -2600,14 +2760,19 @@ exports[`should render single page: status=null 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/3/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/3/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -2636,14 +2801,19 @@ exports[`should render single page: status=null 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/4/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/4/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -2672,14 +2842,19 @@ exports[`should render single page: status=null 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/5/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/5/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -2918,14 +3093,19 @@ exports[`should render single page: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/1/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/1/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -2954,14 +3134,19 @@ exports[`should render single page: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/2/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/2/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -2990,14 +3175,19 @@ exports[`should render single page: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/3/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/3/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -3026,14 +3216,19 @@ exports[`should render single page: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/4/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/4/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"
@@ -3062,14 +3257,19 @@ exports[`should render single page: status=upcoming 1`] = `
         class="_RecordingListItem_566f12"
         tabindex="0"
       >
-        <img
-          alt=""
-          class="_thumb_566f12"
-          loading="lazy"
-          src="/api/recordings/5/thumb"
-        />
+        <div
+          class="_thumbWrap_566f12"
+        >
+          <img
+            alt=""
+            class="_thumb_566f12"
+            loading="lazy"
+            src="/api/recordings/5/thumb"
+          />
+        </div>
         <div
           class="_link_566f12"
+          title="Some Title (Some Subtitle)"
         >
           <span
             class="_title_566f12"

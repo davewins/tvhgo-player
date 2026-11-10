@@ -17,7 +17,11 @@ import {
   useRevalidator,
   useSearchParams,
 } from 'react-router-dom';
-import { RecordingStatus, getRecordings } from '@/clients/api/api';
+import {
+  RecordingStatus,
+  getRecordingUrl,
+  getRecordings,
+} from '@/clients/api/api';
 import { useEffect, useMemo, useState } from 'react';
 
 import Button from '@/components/common/button/Button';
@@ -27,6 +31,7 @@ import Dropdown from '@/components/common/dropdown/Dropdown';
 import EmptyState from '@/components/common/emptyState/EmptyState';
 import { LargeArrowLeftIcon } from '@/assets';
 import PaginationControls from '@/components/common/paginationControls/PaginationControls';
+import Player from '@/components/player/Player';
 import RecordingListItem from '@/components/recordings/listItem/RecordingListItem';
 import { TestIds } from '@/__test__/ids';
 import { c } from '@/utils/classNames';
@@ -93,6 +98,8 @@ export function Component() {
     new Set()
   );
   const clearSelection = () => setSelectedRecordings(new Set());
+  // the recording playing in the player (started from a thumbnail)
+  const [playing, setPlaying] = useState<Recording | null>(null);
   const [confirmationModalVisible, setConfirmationModalVisible] =
     useState<boolean>(false);
 
@@ -155,6 +162,28 @@ export function Component() {
       }
       return prev;
     });
+  const playHandler = (recording: Recording) =>
+    recording.status === 'completed' ? () => setPlaying(recording) : undefined;
+
+  // one file per selected recording; browsers need the downloads spaced out a little to allow several
+  const downloadSelected = () => {
+    [...selectedRecordings]
+      .filter((rec) => rec.status === 'completed')
+      .forEach((rec, i) => {
+        setTimeout(() => {
+          const a = document.createElement('a');
+          a.href = getRecordingUrl(rec.id);
+          a.download = '';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }, i * 700);
+      });
+  };
+  const canDownload =
+    getStatus() === 'finished' &&
+    [...selectedRecordings].some((rec) => rec.status === 'completed');
+
   const openShow = (title: string) => {
     clearSelection();
     setQueryParams((prev) => {
@@ -210,6 +239,7 @@ export function Component() {
               key={recording.id}
               recording={recording}
               onOpen={() => navigate(`/dvr/recordings/${recording.id}`)}
+              onPlay={playHandler(recording)}
               onSelection={(selected) =>
                 setSelectedRecordings((prv) =>
                   selected
@@ -231,6 +261,7 @@ export function Component() {
         onClick={() => {
           navigate(`/dvr/recordings/${recording.id}`);
         }}
+        onPlay={playHandler(recording)}
         onSelection={(selected) => {
           setSelectedRecordings((prv) =>
             selected
@@ -446,6 +477,14 @@ export function Component() {
         </div>
 
         <div className={styles.actions}>
+          {canDownload && (
+            <Button
+              label={t('download')}
+              onClick={downloadSelected}
+              quiet
+              testID={TestIds.DOWNLOAD_RECORDINGS_BUTTON}
+            />
+          )}
           <Button
             label={getDeleteOrCancelButtonLabel()}
             onClick={() => setConfirmationModalVisible(true)}
@@ -491,6 +530,14 @@ export function Component() {
           limit={limit}
           offset={getOffset()}
           total={total}
+        />
+      )}
+      {playing && (
+        <Player
+          visible
+          onClose={() => setPlaying(null)}
+          title={playing.title}
+          recordingId={playing.id}
         />
       )}
       <Outlet />

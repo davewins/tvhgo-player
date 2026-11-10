@@ -1,10 +1,11 @@
+import { useLayoutEffect, useRef, useState } from 'react';
+
 import Checkbox from '@/components/common/checkbox/Checkbox';
 import { Recording } from '@/clients/api/api.types';
 import { Show } from '@/utils/shows';
 import { TestIds } from '@/__test__/ids';
 import { c } from '@/utils/classNames';
 import styles from './Tiles.module.scss';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 function Thumb({
@@ -69,23 +70,57 @@ export function ShowTile({ show, layout, onOpen }: ShowProps) {
 
 type EpisodeProps = {
   recording: Recording;
+  // open the recording's page (details, padding, delete...)
   onOpen: () => void;
+  // play it right away (finished recordings)
+  onPlay?: () => void;
   selected: boolean;
   onSelection: (selected: boolean) => void;
 };
 
-// One recording as a card (the list layout reuses RecordingListItem).
+// The programme text of a recording: Freeview often puts the synopsis in the subtitle.
+export function describe(rec: Recording): string {
+  return [rec.subtitle, rec.description]
+    .filter((v, i, all) => v && all.indexOf(v) === i)
+    .join(' ')
+    .trim();
+}
+
+// One recording as a card: click the picture to play, the text for the details, the box to select.
 export function EpisodeTile({
   recording,
   onOpen,
+  onPlay,
   selected,
   onSelection,
 }: EpisodeProps) {
   const { t } = useTranslation();
+  const text = describe(recording);
+  const [expanded, setExpanded] = useState(false);
+  const [clamped, setClamped] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  // is the description cut off? (then it can be expanded; on a phone there is no hover)
+  useLayoutEffect(() => {
+    const el = textRef.current;
+    if (el && !expanded) {
+      setClamped(el.scrollHeight > el.clientHeight + 1);
+    }
+  }, [text, expanded]);
+
   return (
     <div className={styles.tile} tabIndex={0}>
       <div className={styles.thumbWrap}>
-        <Thumb id={recording.id} className={styles.thumb} onClick={onOpen} />
+        <Thumb
+          id={recording.id}
+          className={c(styles.thumb, onPlay ? styles.playable : '')}
+          onClick={onPlay ?? onOpen}
+        />
+        {onPlay && (
+          <span className={styles.playIcon} aria-hidden="true">
+            ▶
+          </span>
+        )}
         <div className={styles.check}>
           <Checkbox
             onChange={onSelection}
@@ -94,13 +129,34 @@ export function EpisodeTile({
           />
         </div>
       </div>
-      <div className={styles.text} onClick={onOpen}>
-        <span className={styles.title}>
-          {recording.subtitle || recording.title}
+      <div className={styles.text}>
+        <span className={styles.title} onClick={onOpen}>
+          {t('short_date', { ts: recording.startsAt })}
         </span>
-        <span className={styles.secondary}>
-          {recording.channelName} • {t('event_datetime', { event: recording })}
+        <span className={c(styles.secondary, styles.wrap)}>
+          {recording.channelName} • {t('event_time', { event: recording })}
         </span>
+        {text && (
+          <>
+            <p
+              ref={textRef}
+              className={c(styles.description, expanded ? styles.expanded : '')}
+              title={text}
+              onClick={() => setExpanded((e) => !e)}
+            >
+              {text}
+            </p>
+            {(clamped || expanded) && (
+              <button
+                type="button"
+                className={styles.more}
+                onClick={() => setExpanded((e) => !e)}
+              >
+                {expanded ? t('show_less') : t('show_more')}
+              </button>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

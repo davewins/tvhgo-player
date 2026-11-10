@@ -8,6 +8,8 @@ import { useTranslation } from 'react-i18next';
 type Props = {
   recording: Recording;
   onClick: () => void;
+  // play straight from the picture (finished recordings)
+  onPlay?: () => void;
   onSelection: (selected: boolean) => void;
   selected: boolean;
 };
@@ -20,6 +22,7 @@ function RecordingListItem({
   recording,
   selected,
   onClick,
+  onPlay,
   onSelection,
 }: Props) {
   const { t } = useTranslation();
@@ -38,19 +41,30 @@ function RecordingListItem({
 
   return (
     <div className={styles.RecordingListItem} tabIndex={0}>
-      {noThumb ? (
-        <div className={styles.thumb} onClick={onClick} />
-      ) : (
-        <img
-          className={styles.thumb}
-          src={`/api/recordings/${recording.id}/thumb`}
-          alt=""
-          loading="lazy"
-          onClick={onClick}
-          onError={() => setNoThumb(true)}
-        />
-      )}
-      <div className={styles.link} onClick={onClick}>
+      <div className={styles.thumbWrap}>
+        {noThumb ? (
+          <div className={styles.thumb} onClick={onPlay ?? onClick} />
+        ) : (
+          <img
+            className={styles.thumb}
+            src={`/api/recordings/${recording.id}/thumb`}
+            alt=""
+            loading="lazy"
+            onClick={onPlay ?? onClick}
+            onError={() => setNoThumb(true)}
+          />
+        )}
+        {onPlay && (
+          <span className={styles.playIcon} aria-hidden="true">
+            ▶
+          </span>
+        )}
+      </div>
+      <div
+        className={styles.link}
+        onClick={onClick}
+        title={renderTitle(recording.title, recording.subtitle)}
+      >
         <span className={styles.title}>
           {renderTitle(recording.title, recording.subtitle)}
         </span>
