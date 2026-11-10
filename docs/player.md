@@ -17,6 +17,12 @@ A player opens on top of the page.
 
 Your choice is remembered in the browser. The default is **720p**.
 
+**Safari and iPhone/iPad:** Apple's browsers cannot play an endless fragmented MP4, so there tvhgo serves the same
+transcode as **HLS** instead (rolling 2-second MPEG-TS segments, still H.264/AAC). It is automatic. *Auto* is not
+offered as a separate mode there (Tvheadend's Matroska/WebM streams are not playable in Safari): it uses 720p, or the
+highest quality you have enabled. HLS needs the live quality transcoding to be enabled. A session ends when you close
+the player, or 25 seconds after the browser stops fetching it, which frees the tuner.
+
 **Radio channels** play too. A radio channel has no video, so tvhgo detects the audio-only stream and the player shows
 the station logo, a "Radio" label and a plain audio bar instead of a black video area. This works on any quality
 setting, and with *Auto* as well. Radio *recordings* are converted to audio-only MP4 for playback in the same way.
@@ -109,6 +115,9 @@ All need a logged-in session (like the rest of the API).
 | `POST /api/recordings/{id}/playback` | Start converting if there is no playable copy (idempotent) |
 | `GET /api/recordings/{id}/play` | The MP4, with HTTP range support (seekable) |
 | `GET /api/recordings/{id}/thumb` | The thumbnail image |
+| `POST /api/channels/{n}/live/hls?quality=H` | Start a live HLS session (Safari/iOS); returns `{id, url}` of the playlist |
+| `GET /api/live/hls/{id}/index.m3u8` and `seg*.ts` | The session's playlist and segments |
+| `DELETE /api/live/hls/{id}` | End the session |
 
 ## Browser support
 
@@ -117,8 +126,10 @@ All need a logged-in session (like the rest of the API).
 - The numbered live qualities and recording playback need **H.264/AAC in MP4**, which every mainstream browser
   supports (Chromium builds without proprietary codecs, such as some Linux distributions' Chromium, do not - use
   *Auto* there, which falls back to WebM).
-- **Not tested:** Firefox, Safari (macOS and iOS), Edge. They *should* work with standard HTML5 video but have not
-  been verified, particularly for the live fragmented-MP4 stream.
+- **Safari / iOS live TV** uses HLS (above). The HLS stream was verified to be valid and to play with hls.js in
+  Chrome, and the server side was tested end to end, but it has **not been confirmed on a real iPhone or Safari by the
+  author**. Please report problems.
+- **Not tested:** Firefox, Edge, and recording playback on Safari/iOS. They *should* work with standard HTML5 video.
 
 ## Limitations
 

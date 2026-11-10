@@ -12,6 +12,7 @@ var (
 	ErrLiveDisabled               = errors.New("live transcoding is disabled")
 	ErrLiveBusy                   = errors.New("too many live streams")
 	ErrLiveQuality                = errors.New("unsupported quality")
+	ErrLiveStart                  = errors.New("the live stream did not start")
 )
 
 type (
@@ -41,6 +42,13 @@ type (
 		// StreamLive transcodes the raw MPEG-TS stream from src to a fragmented MP4 of the given height on dst
 		// until ctx is cancelled or src ends.
 		StreamLive(ctx context.Context, src io.Reader, dst io.Writer, height int) error
+		// StartHLS starts a live HLS session (for Safari / iOS) at the given height and returns its id once the first
+		// segments exist. open supplies the raw MPEG-TS stream; its context ends with the session.
+		StartHLS(open func(ctx context.Context) (io.ReadCloser, error), height int) (string, error)
+		// HLSFile returns the path of a session's playlist ("index.m3u8") or segment and counts as activity.
+		HLSFile(id, name string) (string, bool)
+		// StopHLS ends a live HLS session.
+		StopHLS(id string)
 		// Thumb returns the path of a thumbnail image for a recording: a frame from the recording itself if it
 		// is finished, otherwise (or if no frame can be made) TMDb artwork for the programme, if configured.
 		Thumb(ctx context.Context, rec *Recording) (string, bool)

@@ -128,6 +128,9 @@ func (s *router) Handler() http.Handler {
 	authenticated.Get("/channels/{id}", s.GetChannel)
 	authenticated.Get("/channels/{number}/stream", s.StreamChannel)
 	authenticated.Get("/channels/{number}/live", s.StreamChannelLive)
+	authenticated.Post("/channels/{number}/live/hls", s.StartChannelLiveHLS)
+	authenticated.Get("/live/hls/{id}/{file}", s.ServeLiveHLS)
+	authenticated.Delete("/live/hls/{id}", s.StopLiveHLS)
 	authenticated.Get("/playback/live", s.GetLiveQualities)
 
 	authenticated.Get("/picon/{id}", s.GetPicon)

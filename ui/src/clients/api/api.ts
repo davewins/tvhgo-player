@@ -216,6 +216,19 @@ export async function getLiveQualities(): Promise<number[]> {
   return response.data.qualities || [];
 }
 
+// Starts a live HLS session (what Safari / iOS play) and returns its playlist URL and id.
+export async function startLiveHLS(
+  channelNumber: number,
+  quality: number
+): Promise<{ id: string; url: string }> {
+  const response = await client.post<{ id: string; url: string }>(
+    `/channels/${channelNumber}/live/hls`,
+    undefined,
+    { params: { quality } }
+  );
+  return response.data;
+}
+
 export async function getPlayback(id: string): Promise<PlaybackInfo> {
   const response = await client.get<PlaybackInfo>(`/recordings/${id}/playback`);
   return response.data;

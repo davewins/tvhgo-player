@@ -2,6 +2,7 @@ import {
   getLiveQualities,
   getPlayback,
   preparePlayback,
+  startLiveHLS,
 } from '@/clients/api/api';
 import { useEffect, useRef, useState } from 'react';
 
@@ -23,6 +24,17 @@ const AUTO_PROFILES = [
   },
 ];
 
+// Safari and every browser on iOS (all WebKit) play HLS natively but not an endless fragmented MP4. Other browsers
+// keep the fragmented MP4 stream: some of them (recent Chrome) claim native HLS support but do not play ours.
+const HLS_MIME = 'application/vnd.apple.mpegurl';
+function wantsHLS(video: HTMLVideoElement): boolean {
+  const ua = navigator.userAgent;
+  const webkit =
+    /AppleWebKit/.test(ua) && !/Chrome|Chromium|Edg|Android/.test(ua);
+  const iPadOnMac =
+    navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+  return (webkit || iPadOnMac) && video.canPlayType(HLS_MIME) !== '';
+}
 const MP4_MIME = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
 const QUALITY_KEY = 'tvhgo.liveQuality';
 const AUTO = 'auto';
@@ -30,6 +42,15 @@ const AUTO = 'auto';
 function pickAutoProfile(video: HTMLVideoElement): string | null {
   const match = AUTO_PROFILES.find((p) => video.canPlayType(p.mime) !== '');
   return match ? match.profile : null;
+}
+
+function stopHLS(id: string) {
+  // keepalive lets the request finish even while the page is closing
+  fetch(`/api/live/hls/${id}`, {
+    method: 'DELETE',
+    keepalive: true,
+    credentials: 'same-origin',
+  }).catch(() => undefined);
 }
 
 function loadQuality(): string | null {
@@ -115,6 +136,40 @@ function Inner({
       return;
     }
     setError(null);
+
+    // HLS: ask the server for a session, play its playlist, and end the session when we leave
+    if (wantsHLS(video) && qualities.length > 0) {
+      const height =
+        quality !== AUTO
+          ? parseInt(quality)
+          : qualities.includes(720)
+            ? 720
+            : qualities[0];
+      let cancelled = false;
+      let sessionId: string | null = null;
+      const onCanPlay = () => video.play().catch(() => undefined);
+      video.addEventListener('canplay', onCanPlay, { once: true });
+      startLiveHLS(channelNumber, height)
+        .then(({ id, url }) => {
+          sessionId = id;
+          if (cancelled) {
+            stopHLS(id);
+            return;
+          }
+          video.src = url;
+        })
+        .catch(() => !cancelled && setError(t('player_live_error')));
+      return () => {
+        cancelled = true;
+        video.removeEventListener('canplay', onCanPlay);
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+        if (sessionId) {
+          stopHLS(sessionId);
+        }
+      };
+    }
 
     let url: string | null = null;
     if (quality !== AUTO && video.canPlayType(MP4_MIME) !== '') {
