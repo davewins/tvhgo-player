@@ -96,10 +96,14 @@ function Inner({
   // live: heights tvhgo can transcode to (null = still loading) and the current choice ("auto" or a height)
   const [qualities, setQualities] = useState<number[] | null>(null);
   const [quality, setQuality] = useState<string>(AUTO);
+  // live radio has its own play/pause button; resuming restarts the stream so it is live again, not stale
+  const [paused, setPaused] = useState(false);
+  const [restart, setRestart] = useState(0);
 
   // Radio has no video track. Safari (HLS) reports 0x0 until the first frame is decoded, so a zero size is only
   // believed once playback has had a moment to start; any real size at any time means it is video after all.
   const audioTimer = useRef<ReturnType<typeof setTimeout>>();
+  const liveRadio = audioOnly && channelNumber !== undefined;
   const checkVideo = (e: { currentTarget: HTMLVideoElement }) => {
     const v = e.currentTarget;
     clearTimeout(audioTimer.current);
@@ -220,7 +224,7 @@ function Inner({
       video.removeAttribute('src');
       video.load();
     };
-  }, [channelNumber, quality, qualities]);
+  }, [channelNumber, quality, qualities, restart]);
 
   // --- recording: play the MP4 copy, asking the server to prepare one first if needed
   useEffect(() => {
@@ -331,20 +335,40 @@ function Inner({
         <div className={styles.radio}>
           {picon && <img className={styles.radioLogo} src={picon} alt="" />}
           <span className={styles.radioLabel}>{t('radio')}</span>
-          <div className={styles.eq} aria-hidden="true">
+          <div className={styles.eq} data-paused={paused} aria-hidden="true">
             <span />
             <span />
             <span />
             <span />
             <span />
           </div>
+          {liveRadio && (
+            <button
+              type="button"
+              className={styles.radioButton}
+              aria-label={paused ? t('play') : t('pause')}
+              onClick={() => {
+                const v = videoRef.current;
+                if (!v) return;
+                if (paused) {
+                  setPaused(false);
+                  setRestart((n) => n + 1);
+                } else {
+                  v.pause();
+                  setPaused(true);
+                }
+              }}
+            >
+              {paused ? '▶' : '❚❚'}
+            </button>
+          )}
         </div>
       )}
       <video
         ref={videoRef}
         className={audioOnly ? styles.videoAudioOnly : styles.video}
         style={preparing ? { display: 'none' } : undefined}
-        controls
+        controls={!liveRadio}
         playsInline
         onLoadedMetadata={checkVideo}
         onLoadedData={checkVideo}

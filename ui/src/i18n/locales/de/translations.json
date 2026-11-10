@@ -376,6 +376,7 @@
   "yes": "Ja",
   "watch_live": "Live ansehen",
   "play": "Abspielen",
+  "pause": "Pause",
   "player_live_unsupported": "Live-Wiedergabe wird von diesem Browser nicht unterstützt.",
   "player_live_error": "Der Live-Stream wurde beendet oder konnte nicht gestartet werden.",
   "player_no_copy": "Diese Aufnahme kann nicht im Browser abgespielt werden: Es gibt keine abspielbare Kopie und die Konvertierung bei Bedarf ist nicht aktiviert.",

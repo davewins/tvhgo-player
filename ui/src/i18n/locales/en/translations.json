@@ -382,6 +382,7 @@
   "yes": "Yes",
   "watch_live": "Watch live",
   "play": "Play",
+  "pause": "Pause",
   "player_live_unsupported": "Live playback is not supported in this browser.",
   "player_live_error": "The live stream stopped or could not be started.",
   "player_no_copy": "This recording cannot be played in the browser: no playable copy exists and on-demand conversion is not enabled.",
