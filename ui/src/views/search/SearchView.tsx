@@ -71,6 +71,8 @@ export const Component = () => {
           channel={event.channelName}
           showProgress
           showDate
+          showThumb
+          fallbackImage={`/api/picon/${event.piconId}`}
         />
       ))}
 
