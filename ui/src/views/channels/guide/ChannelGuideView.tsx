@@ -132,7 +132,7 @@ function GuideRow({
                 left: px(start - axisStart),
                 width: px(end - start) - 2,
               }}
-              title={`${e.title}\n${moment.unix(e.startsAt).format('LT')} - ${moment.unix(e.endsAt).format('LT')}${detail ? '\n' + detail : ''}`}
+              title={`${e.title}\n${moment.unix(e.startsAt).format('LT')} - ${moment.unix(e.endsAt).format('LT')}${detail ? `\n${detail}` : ''}`}
               onClick={() => (live ? onPlay(channel) : onEvent(e))}
             >
               <span className={styles.title}>
@@ -265,9 +265,11 @@ export function Component() {
               className={`${styles.day} ${d.unix() === dayStart ? styles.active : ''}`}
               onClick={() =>
                 setSearchParams((prev) => {
-                  d.isSame(moment(), 'day')
-                    ? prev.delete('day')
-                    : prev.set('day', `${d.unix()}`);
+                  if (d.isSame(moment(), 'day')) {
+                    prev.delete('day');
+                  } else {
+                    prev.set('day', `${d.unix()}`);
+                  }
                   return prev;
                 })
               }

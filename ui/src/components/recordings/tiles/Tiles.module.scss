@@ -1,0 +1,86 @@
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background-color: var(--color-card-bg);
+  border-radius: 3px;
+  padding: 0.5rem;
+  cursor: pointer;
+  min-width: 0;
+
+  &:hover,
+  &:focus-visible {
+    outline: 1px solid var(--color-accent, #58a6ff);
+  }
+}
+
+.thumbWrap {
+  position: relative;
+}
+
+.thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 2px;
+  background-color: var(--color-border-subtle);
+}
+
+.badge {
+  position: absolute;
+  right: 0.4rem;
+  bottom: 0.4rem;
+  min-width: 1.4rem;
+  padding: 0.1rem 0.4rem;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+}
+
+.check {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  padding: 0.2rem;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.title {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.secondary {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// list layout of shows
+.row {
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+
+  .thumbWrap {
+    width: 6.5rem;
+    flex-shrink: 0;
+  }
+}

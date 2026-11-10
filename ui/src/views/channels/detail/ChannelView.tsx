@@ -59,7 +59,7 @@ export const Component = () => {
           picon={`/api/picon/${channel.piconId}`}
         />
         <Button
-          label={'▶ ' + t('watch_live')}
+          label={`▶ ${t('watch_live')}`}
           onClick={() => setPlaying(true)}
         />
         {playing && (

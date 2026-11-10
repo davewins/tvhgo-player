@@ -62,3 +62,73 @@
     transform: scale(1.5) rotate(270deg);
   }
 }
+
+.hidden {
+  display: none;
+}
+
+.layoutToggle {
+  display: flex;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.toggleButton {
+  padding: 0.45rem 0.9rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.toggleActive {
+  background: #58a6ff;
+  color: #0b1220;
+  font-weight: 600;
+  opacity: 1;
+}
+
+.showTitle {
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 1rem;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media screen and (max-width: 700px) {
+  .Recordings {
+    padding: 0 0.75rem 1.5rem 0.75rem;
+  }
+
+  .header {
+    padding: 1rem 0;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .headerLeft {
+    gap: 0.5rem;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+}

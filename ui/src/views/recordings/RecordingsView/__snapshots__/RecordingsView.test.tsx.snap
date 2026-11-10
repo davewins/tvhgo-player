@@ -475,6 +475,12 @@ exports[`should render multiple pages: status=finished 1`] = `
             </option>
           </select>
         </div>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _text_a7f9df"
+          data-testid="recordings-view-toggle"
+        >
+          shows
+        </button>
         <div
           class="_sort_58c8e0"
         >
@@ -863,6 +869,12 @@ exports[`should render multiple pages: status=null 1`] = `
             </option>
           </select>
         </div>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _text_a7f9df"
+          data-testid="recordings-view-toggle"
+        >
+          shows
+        </button>
         <div
           class="_sort_58c8e0"
         >
@@ -2029,6 +2041,12 @@ exports[`should render single page: status=finished 1`] = `
             </option>
           </select>
         </div>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _text_a7f9df"
+          data-testid="recordings-view-toggle"
+        >
+          shows
+        </button>
         <div
           class="_sort_58c8e0"
         >
@@ -2419,6 +2437,12 @@ exports[`should render single page: status=null 1`] = `
             </option>
           </select>
         </div>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _text_a7f9df"
+          data-testid="recordings-view-toggle"
+        >
+          shows
+        </button>
         <div
           class="_sort_58c8e0"
         >
@@ -3382,6 +3406,12 @@ exports[`should render with no recordings: status=finished 1`] = `
             </option>
           </select>
         </div>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _text_a7f9df"
+          data-testid="recordings-view-toggle"
+        >
+          shows
+        </button>
         <div
           class="_sort_58c8e0"
         >
@@ -3565,6 +3595,12 @@ exports[`should render with no recordings: status=null 1`] = `
             </option>
           </select>
         </div>
+        <button
+          class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _text_a7f9df"
+          data-testid="recordings-view-toggle"
+        >
+          shows
+        </button>
         <div
           class="_sort_58c8e0"
         >

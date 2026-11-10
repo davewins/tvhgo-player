@@ -1,3 +1,12 @@
+import {
+  EpisodeSort,
+  ShowSort,
+  findShow,
+  groupShows,
+  sortEpisodes,
+  sortShows,
+} from '@/utils/shows';
+import { EpisodeTile, ShowTile } from '@/components/recordings/tiles/Tiles';
 import { ListResponse, Recording } from '@/clients/api/api.types';
 import {
   LoaderFunctionArgs,
@@ -31,9 +40,37 @@ export enum RecordingsViewRefreshStates {
 }
 
 const defaultLimit = 50;
+// the shows view groups on the client, so it needs every finished recording, not one page
+const allLimit = 2000;
+const LAYOUT_KEY = 'tvhgo.recordingsLayout';
+
+type Layout = 'grid' | 'list';
+
+function loadLayout(): Layout {
+  try {
+    return localStorage.getItem(LAYOUT_KEY) === 'list' ? 'list' : 'grid';
+  } catch {
+    return 'grid';
+  }
+}
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const query = new URL(request.url).searchParams;
+
+  if (
+    (query.get('status') || 'finished') === 'finished' &&
+    query.get('view') !== 'list'
+  ) {
+    return getRecordings({
+      limit: allLimit,
+      offset: 0,
+      // eslint-disable-next-line camelcase
+      sort_key: 'startsAt',
+      // eslint-disable-next-line camelcase
+      sort_dir: 'desc',
+      status: 'finished',
+    });
+  }
 
   return getRecordings({
     limit: defaultLimit,
@@ -80,6 +117,52 @@ export function Component() {
 
   const { entries, total } = useLoaderData() as ListResponse<Recording>;
 
+  // finished recordings are shown grouped by show (like Sky Q) unless the flat list is asked for
+  const grouped =
+    getStatus() === 'finished' && queryParams.get('view') !== 'list';
+  const [layout, setLayoutState] = useState<Layout>(loadLayout);
+  const setLayout = (l: Layout) => {
+    setLayoutState(l);
+    try {
+      localStorage.setItem(LAYOUT_KEY, l);
+    } catch {
+      // ignore (private mode etc.)
+    }
+  };
+  const shows = useMemo(
+    () => (grouped ? groupShows(entries) : []),
+    [grouped, entries]
+  );
+  const currentShow = grouped
+    ? findShow(shows, queryParams.get('show'))
+    : undefined;
+  const groupSort = queryParams.get('sort') || 'newest';
+  const shownRecordings = useMemo(
+    () =>
+      grouped
+        ? currentShow
+          ? sortEpisodes(currentShow.episodes, groupSort as EpisodeSort)
+          : []
+        : entries,
+    [grouped, currentShow, groupSort, entries]
+  );
+  const setParam = (key: string, value: string | null) =>
+    setQueryParams((prev) => {
+      if (value === null) {
+        prev.delete(key);
+      } else {
+        prev.set(key, value);
+      }
+      return prev;
+    });
+  const openShow = (title: string) => {
+    clearSelection();
+    setQueryParams((prev) => {
+      prev.set('show', title);
+      return prev;
+    });
+  };
+
   useEffect(() => {
     switch (state) {
       case RecordingsViewRefreshStates.CREATED:
@@ -103,7 +186,45 @@ export function Component() {
       return <EmptyState title={t('no_recordings')} />;
     }
 
-    return entries.map((recording) => (
+    if (grouped && !currentShow) {
+      const sorted = sortShows(shows, groupSort as ShowSort);
+      return (
+        <div className={layout === 'grid' ? styles.grid : styles.stack}>
+          {sorted.map((show) => (
+            <ShowTile
+              key={show.title.toLowerCase()}
+              show={show}
+              layout={layout}
+              onOpen={() => openShow(show.title)}
+            />
+          ))}
+        </div>
+      );
+    }
+
+    if (grouped && layout === 'grid') {
+      return (
+        <div className={styles.grid}>
+          {shownRecordings.map((recording) => (
+            <EpisodeTile
+              key={recording.id}
+              recording={recording}
+              onOpen={() => navigate(`/dvr/recordings/${recording.id}`)}
+              onSelection={(selected) =>
+                setSelectedRecordings((prv) =>
+                  selected
+                    ? new Set([...prv, recording])
+                    : new Set([...prv].filter((v) => v.id !== recording.id))
+                )
+              }
+              selected={selectedRecordings.has(recording)}
+            />
+          ))}
+        </div>
+      );
+    }
+
+    return shownRecordings.map((recording) => (
       <RecordingListItem
         key={recording.id}
         recording={recording}
@@ -186,7 +307,78 @@ export function Component() {
             ]}
           />
 
-          <div className={styles.sort}>
+          {grouped && currentShow && (
+            <Button
+              label={t('back_to_shows')}
+              quiet
+              style="text"
+              onClick={() => {
+                clearSelection();
+                setParam('show', null);
+              }}
+              testID={TestIds.RECORDINGS_BACK_TO_SHOWS}
+            />
+          )}
+
+          {grouped && (
+            <>
+              <Dropdown
+                value={groupSort}
+                onChange={(value) => setParam('sort', value)}
+                testID={TestIds.RECORDINGS_SHOW_SORT_DROPDOWN}
+                options={[
+                  { title: t('sort_newest'), value: 'newest' },
+                  { title: t('sort_oldest'), value: 'oldest' },
+                  { title: t('sort_title'), value: 'title' },
+                  ...(currentShow
+                    ? []
+                    : [{ title: t('sort_count'), value: 'count' }]),
+                ]}
+              />
+              <div className={styles.layoutToggle} role="group">
+                {(['grid', 'list'] as Layout[]).map((l) => (
+                  <button
+                    key={l}
+                    type="button"
+                    className={c(
+                      styles.toggleButton,
+                      layout === l ? styles.toggleActive : ''
+                    )}
+                    aria-pressed={layout === l}
+                    data-testid={
+                      l === 'grid'
+                        ? TestIds.RECORDINGS_LAYOUT_GRID
+                        : TestIds.RECORDINGS_LAYOUT_LIST
+                    }
+                    onClick={() => setLayout(l)}
+                  >
+                    {t(l === 'grid' ? 'layout_grid' : 'layout_list')}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+
+          {!grouped && getStatus() === 'finished' && (
+            <Button
+              label={t('shows')}
+              quiet
+              style="text"
+              onClick={() => setParam('view', null)}
+              testID={TestIds.RECORDINGS_VIEW_TOGGLE}
+            />
+          )}
+          {grouped && !currentShow && (
+            <Button
+              label={t('all_recordings')}
+              quiet
+              style="text"
+              onClick={() => setParam('view', 'list')}
+              testID={TestIds.RECORDINGS_VIEW_TOGGLE}
+            />
+          )}
+
+          <div className={grouped ? styles.hidden : styles.sort}>
             <Dropdown
               value={sortKey}
               onChange={(value) => {
@@ -269,32 +461,38 @@ export function Component() {
           <Checkbox
             onChange={(checked) =>
               checked
-                ? setSelectedRecordings(new Set(entries))
+                ? setSelectedRecordings(new Set(shownRecordings))
                 : clearSelection()
             }
             className={styles.selectAll}
             checked={
-              entries.length > 0 && selectedRecordings.size === entries.length
+              shownRecordings.length > 0 &&
+              selectedRecordings.size === shownRecordings.length
             }
             indeterminate={selectedRecordings.size > 0}
-            disabled={entries.length < 1}
+            disabled={shownRecordings.length < 1}
             testId={TestIds.SELECT_ALL_RECORDINGS_CHECKBOX}
           />
         </div>
       </div>
+      {grouped && currentShow && (
+        <h2 className={styles.showTitle}>{currentShow.title}</h2>
+      )}
       <div className={styles.recordings}>{renderRecordings()}</div>
-      <PaginationControls
-        onNextPage={nextPage}
-        onPreviousPage={previousPage}
-        onFirstPage={firstPage}
-        onLastPage={() => lastPage(total)}
-        onPageChange={() => {
-          clearSelection();
-        }}
-        limit={limit}
-        offset={getOffset()}
-        total={total}
-      />
+      {!grouped && (
+        <PaginationControls
+          onNextPage={nextPage}
+          onPreviousPage={previousPage}
+          onFirstPage={firstPage}
+          onLastPage={() => lastPage(total)}
+          onPageChange={() => {
+            clearSelection();
+          }}
+          limit={limit}
+          offset={getOffset()}
+          total={total}
+        />
+      )}
       <Outlet />
     </div>
   );

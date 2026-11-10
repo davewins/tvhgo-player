@@ -393,5 +393,16 @@
   "guide_search": "Sender und Sendungen suchen",
   "guide_no_match": "Nichts gefunden für \"{{query}}\" an diesem Tag",
   "guide_no_match_hint": "Diese Ansicht zeigt einen Tag. Mit Enter oder dem Button wird der gesamte Programmführer durchsucht.",
-  "guide_search_all": "Alle Tage durchsuchen"
+  "guide_search_all": "Alle Tage durchsuchen",
+  "shows": "Sendungen",
+  "all_recordings": "Alle Aufnahmen",
+  "back_to_shows": "‹ Sendungen",
+  "layout_grid": "Raster",
+  "layout_list": "Liste",
+  "sort_newest": "Neueste zuerst",
+  "sort_oldest": "Älteste zuerst",
+  "sort_title": "Titel A–Z",
+  "sort_count": "Meiste Folgen",
+  "episodes_count_one": "{{count}} Folge",
+  "episodes_count_other": "{{count}} Folgen"
 }

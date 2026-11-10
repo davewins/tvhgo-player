@@ -399,5 +399,16 @@
   "guide_search": "Search channels and programmes",
   "guide_no_match": "Nothing matching \"{{query}}\" on this day",
   "guide_no_match_hint": "This guide shows one day at a time. Press Enter, or the button, to search the whole guide.",
-  "guide_search_all": "Search all days"
+  "guide_search_all": "Search all days",
+  "shows": "Shows",
+  "all_recordings": "All recordings",
+  "back_to_shows": "‹ Shows",
+  "layout_grid": "Grid",
+  "layout_list": "List",
+  "sort_newest": "Newest first",
+  "sort_oldest": "Oldest first",
+  "sort_title": "Title A–Z",
+  "sort_count": "Most episodes",
+  "episodes_count_one": "{{count}} episode",
+  "episodes_count_other": "{{count}} episodes"
 }

@@ -164,7 +164,7 @@ export function Component() {
   const renderPlayButton = () => {
     if (recording?.status === 'completed') {
       return (
-        <Button label={'▶ ' + t('play')} onClick={() => setPlaying(true)} />
+        <Button label={`▶ ${t('play')}`} onClick={() => setPlaying(true)} />
       );
     }
   };

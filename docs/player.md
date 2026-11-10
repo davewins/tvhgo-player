@@ -119,6 +119,19 @@ All need a logged-in session (like the rest of the API).
 | `GET /api/live/hls/{id}/index.m3u8` and `seg*.ts` | The session's playlist and segments |
 | `DELETE /api/live/hls/{id}` | End the session |
 
+## Recordings by show
+
+On **DVR → Recordings → Finished**, recordings are grouped into **shows** (by title, whatever the channel), like Sky Q:
+
+- A **grid** (or list) of shows, each with the latest episode's picture, an episode count and the date of the latest
+  episode. Click one to see its episodes, again as a grid or list; **‹ Shows** goes back.
+- **Sort** by newest, oldest, title A-Z or (for shows) most episodes. The grid/list choice is remembered in the browser.
+- **All recordings** switches to the plain list (with the original sort and paging); **Shows** switches back.
+- Upcoming and Failed stay as plain lists.
+
+This only changes how the list is displayed. It does not change how Tvheadend records or where files are stored, and
+it works alongside a Jellyfin-style folder-per-show layout (the grouping mirrors it).
+
 ## Browser support
 
 - **Tested:** Google Chrome on desktop - live TV at all qualities, recording playback and seeking, the guide, all

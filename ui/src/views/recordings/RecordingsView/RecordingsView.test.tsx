@@ -420,6 +420,7 @@ describe('change status', () => {
 const mockStatus = (status: string | null) => {
   const params = new URLSearchParams();
   if (status) params.set('status', status);
+  params.set('view', 'list'); // these tests cover the flat list; the shows view has its own tests
   vi.mocked(useSearchParams).mockReturnValue([params, setQueryParamsMock]);
 };
 
