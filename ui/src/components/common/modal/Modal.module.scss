@@ -6,6 +6,7 @@
   top: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh; // phones: the visible height, not the height behind the browser's toolbars
   background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;

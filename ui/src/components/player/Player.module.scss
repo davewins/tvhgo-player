@@ -169,3 +169,44 @@
     transform: scaleY(0.6);
   }
 }
+
+// Phones: use the full width, give the title its own line (clear of the close button) and tuck the quality picker below it
+@media screen and (max-width: 700px) {
+  .player {
+    width: 100%;
+    padding: 3.25rem 0.5rem 0.75rem 0.5rem;
+  }
+
+  .header {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding: 0 0.25rem;
+  }
+
+  .title {
+    flex: 1 1 100%;
+    min-width: 0;
+    font-size: 1.1rem;
+    // wrap long names/titles onto two lines rather than cutting them to "BB…"
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .quality {
+    margin-right: 0;
+    font-size: 0.85rem;
+
+    select {
+      padding: 0.4rem 0.5rem;
+      font-size: 1rem; // 16px+ stops iOS zooming the page when the picker is used
+    }
+  }
+
+  .video {
+    max-height: 60vh;
+  }
+}
