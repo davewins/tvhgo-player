@@ -32,8 +32,39 @@ type (
 		Blocked []string `json:"blocked"`
 	}
 
+	// ClashEntry is a recording that takes part in a clash.
+	ClashEntry struct {
+		// ID is the recording's id, or "new" for the programme being checked.
+		ID        string `json:"id"`
+		Title     string `json:"title"`
+		ChannelID string `json:"channelId"`
+		Channel   string `json:"channel"`
+		Start     int64  `json:"start"`
+		End       int64  `json:"end"`
+		// Mux is the multiplex the recording needs ("482MHz"); several are listed when the channel has more than one.
+		Mux string `json:"mux"`
+	}
+
+	// Clash is a period in which the recordings need more multiplexes than there are tuners.
+	Clash struct {
+		Start   int64        `json:"start"`
+		End     int64        `json:"end"`
+		Entries []ClashEntry `json:"entries"`
+	}
+
+	// ClashProbe is a programme that is not scheduled (yet): "would recording this clash?".
+	ClashProbe struct {
+		ChannelID string
+		Title     string
+		Start     int64
+		End       int64
+	}
+
 	// TunerService reports tuner usage.
 	TunerService interface {
 		Status(ctx context.Context) (*TunerStatus, error)
+		// Clashes looks through the scheduled recordings of the next two weeks, optionally with one more
+		// programme added, for times when there are more multiplexes to record than tuners.
+		Clashes(ctx context.Context, probe *ClashProbe) ([]Clash, error)
 	}
 )

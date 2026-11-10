@@ -136,6 +136,7 @@ func (s *router) Handler() http.Handler {
 	authenticated.Get("/playback/live", s.GetLiveQualities)
 
 	authenticated.Get("/tuners", s.GetTuners)
+	authenticated.Get("/tuners/clashes", s.GetTunerClashes)
 
 	authenticated.Get("/picon/{id}", s.GetPicon)
 

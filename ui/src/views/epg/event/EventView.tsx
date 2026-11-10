@@ -14,6 +14,7 @@ import {
 } from '@/clients/api/api';
 
 import Button from '@/components/common/button/Button';
+import ClashNotice from '@/components/clash/ClashNotice';
 import DVRProfileSelectModal from '@/modals/dvr/profile/DVRProfileSelectModal';
 import EventChannelInfo from '@/components/epg/event/channelInfo/EventChannelInfo';
 import EventInfo from '@/components/epg/event/info/EventInfo';
@@ -21,6 +22,7 @@ import EventRelated from '@/components/epg/event/related/EventRelated';
 import SeriesRecordModal from '@/modals/dvr/series/SeriesRecordModal';
 import { coveringRule } from '@/utils/autorec';
 import styles from './EventView.module.scss';
+import { useClashes } from '@/hooks/clashes';
 import { useManageRecordingByEvent } from '@/hooks/recording';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -68,6 +70,22 @@ export function Component() {
   const [seriesPending, setSeriesPending] = useState(false);
   const [seriesError, setSeriesError] = useState<string | null>(null);
   const seriesRule = coveringRule(autorecs || [], event);
+  // would recording this (or the recording already scheduled for it) need more multiplexes than there are tuners?
+  const upcoming = event.endsAt > Date.now() / 1000;
+  const clashes = useClashes(
+    event.dvrUuid
+      ? null
+      : {
+          channelId: event.channelId,
+          start: event.startsAt,
+          end: event.endsAt,
+          title: event.title,
+        },
+    upcoming
+  );
+  const eventClashes = event.dvrUuid
+    ? clashes.filter((c) => c.entries.some((e) => e.id === event.dvrUuid))
+    : clashes.filter((c) => c.entries.some((e) => e.id === 'new'));
 
   const handleCreateSeries = async (opts: {
     anyChannel: boolean;
@@ -147,6 +165,10 @@ export function Component() {
       <EventChannelInfo
         channelName={event.channelName}
         picon={`/api/picon/${event.piconId}`}
+      />
+      <ClashNotice
+        clashes={eventClashes}
+        title={event.dvrUuid ? undefined : t('clash_new')}
       />
       <EventInfo
         event={event}

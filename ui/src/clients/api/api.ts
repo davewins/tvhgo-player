@@ -3,6 +3,7 @@ import {
   Autorec,
   Channel,
   Chapter,
+  Clash,
   CreateAutorecOpts,
   CreateRecordingOpts,
   CreateTokenResponse,
@@ -153,6 +154,18 @@ export async function getEpg(
 
 export async function getTuners(): Promise<TunerStatus> {
   const response = await client.get<TunerStatus>('/tuners');
+  return response.data;
+}
+
+export async function getClashes(probe?: {
+  channelId: string;
+  start: number;
+  end: number;
+  title: string;
+}): Promise<Clash[]> {
+  const response = await client.get<Clash[]>('/tuners/clashes', {
+    params: probe,
+  });
   return response.data;
 }
 

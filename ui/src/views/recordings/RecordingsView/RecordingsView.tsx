@@ -22,6 +22,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import Button from '@/components/common/button/Button';
 import Checkbox from '@/components/common/checkbox/Checkbox';
+import ClashNotice from '@/components/clash/ClashNotice';
 import DeleteConfirmationModal from '@/components/common/deleteConfirmationModal/DeleteConfirmationModal';
 import Dropdown from '@/components/common/dropdown/Dropdown';
 import EmptyState from '@/components/common/emptyState/EmptyState';
@@ -33,6 +34,7 @@ import { TestIds } from '@/__test__/ids';
 import { c } from '@/utils/classNames';
 import { downloadRecording } from '@/utils/download';
 import styles from './RecordingsView.module.scss';
+import { useClashes } from '@/hooks/clashes';
 import { useManageRecordings } from '@/hooks/recording';
 import { usePagination } from '@/hooks/pagination';
 import { useTranslation } from 'react-i18next';
@@ -108,6 +110,8 @@ export function Component() {
 
   const getStatus = () =>
     (queryParams.get('status') as RecordingStatus) || 'finished';
+  // only looked up on the Upcoming list
+  const clashes = useClashes(null, getStatus() === 'upcoming');
 
   const sortKey = useMemo(
     () => queryParams.get('sortKey') || 'startsAt',
@@ -518,6 +522,8 @@ export function Component() {
           />
         </div>
       </div>
+
+      {getStatus() === 'upcoming' && <ClashNotice clashes={clashes} />}
       {grouped && currentShow && (
         <h2 className={styles.showTitle}>{currentShow.title}</h2>
       )}

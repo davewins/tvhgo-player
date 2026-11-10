@@ -2,6 +2,7 @@ package api
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/davidborzek/tvhgo/api/response"
 	"github.com/davidborzek/tvhgo/core"
@@ -34,4 +35,39 @@ func (s *router) GetTuners(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	response.JSON(w, st, 200)
+}
+
+// GetTunerClashes godoc
+//
+//	@Summary	Scheduled recordings that need more multiplexes than there are tuners
+//	@Tags		tuners
+//	@Param		channelId	query	string	false	"Also check recording this programme: channel id"
+//	@Param		start		query	int		false	"Programme start (unix seconds)"
+//	@Param		end			query	int		false	"Programme end (unix seconds)"
+//	@Param		title		query	string	false	"Programme title"
+//	@Produce	json
+//	@Success	200	{array}	core.Clash
+//	@Security	JWT
+//	@Router		/tuners/clashes [get]
+func (s *router) GetTunerClashes(w http.ResponseWriter, r *http.Request) {
+	if s.tuners == nil {
+		response.JSON(w, []core.Clash{}, 200)
+		return
+	}
+	var probe *core.ClashProbe
+	q := r.URL.Query()
+	if ch := q.Get("channelId"); ch != "" {
+		start, _ := strconv.ParseInt(q.Get("start"), 10, 64)
+		end, _ := strconv.ParseInt(q.Get("end"), 10, 64)
+		if start > 0 && end > start {
+			probe = &core.ClashProbe{ChannelID: ch, Title: q.Get("title"), Start: start, End: end}
+		}
+	}
+	clashes, err := s.tuners.Clashes(r.Context(), probe)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to check recording clashes")
+		response.InternalErrorCommon(w)
+		return
+	}
+	response.JSON(w, clashes, 200)
 }

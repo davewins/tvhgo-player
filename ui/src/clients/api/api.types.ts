@@ -309,3 +309,20 @@ export type TunerStatus = {
   // ids of the channels that cannot be tuned right now (all tuners busy, none on a multiplex that carries them)
   blocked: string[];
 };
+
+export type ClashEntry = {
+  // the recording's id, or "new" for the programme being checked
+  id: string;
+  title: string;
+  channelId: string;
+  channel: string;
+  start: number;
+  end: number;
+  mux: string;
+};
+
+export type Clash = {
+  start: number;
+  end: number;
+  entries: ClashEntry[];
+};

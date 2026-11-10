@@ -3,6 +3,7 @@ package tuners
 import (
 	"testing"
 
+	"github.com/davidborzek/tvhgo/core"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -61,4 +62,31 @@ func TestChannelWithAnotherReachableServiceIsNotBlocked(t *testing.T) {
 func TestNoTunersOrIdle(t *testing.T) {
 	assert.Empty(t, compute(nil, nil, svcs).Blocked)
 	assert.Equal(t, 0, compute([]input{{Input: "a"}, {Input: "b"}}, nil, svcs).Busy)
+}
+
+func need1(id string, start, end int64, opts ...string) need {
+	return need{entry: core.ClashEntry{ID: id, Start: start, End: end}, options: opts}
+}
+
+func TestClashes(t *testing.T) {
+	a, b, c := "482 in F", "498 in F", "506 in F"
+
+	// two on the same multiplex plus one on another: fits in two tuners
+	assert.Empty(t, findClashes([]need{need1("1", 0, 100, a), need1("2", 0, 100, a), need1("3", 0, 100, b)}, 2))
+
+	// three different multiplexes at once: clash for the shared period only
+	got := findClashes([]need{need1("1", 0, 100, a), need1("2", 50, 150, b), need1("3", 80, 120, c)}, 2)
+	assert.Len(t, got, 1)
+	assert.Equal(t, int64(80), got[0].Start)
+	assert.Equal(t, int64(100), got[0].End)
+	assert.Len(t, got[0].Entries, 3)
+
+	// back to back on different multiplexes never overlap
+	assert.Empty(t, findClashes([]need{need1("1", 0, 100, a), need1("2", 100, 200, b), need1("3", 100, 200, c)}, 2))
+
+	// a channel with two possible multiplexes can use one that is already needed
+	assert.Empty(t, findClashes([]need{need1("1", 0, 100, a), need1("2", 0, 100, b), need1("3", 0, 100, c, a)}, 2))
+
+	// no tuners known: nothing to say
+	assert.Empty(t, findClashes([]need{need1("1", 0, 10, a)}, 0))
 }
