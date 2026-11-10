@@ -90,3 +90,31 @@ func (s *router) WithPipeline(p *pipeline.Reader) *router {
 func (s *router) GetPipeline(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, s.pipe.Status(), 200)
 }
+
+// WithStorage adds the storage status service (optional).
+func (s *router) WithStorage(st core.StorageService) *router {
+	s.storage = st
+	return s
+}
+
+// GetStorage godoc
+//
+//	@Summary	How much disk the recordings use compared with Tvheadend's limits
+//	@Tags		recordings
+//	@Produce	json
+//	@Success	200	{object}	core.StorageStatus
+//	@Security	JWT
+//	@Router		/recordings/storage [get]
+func (s *router) GetStorage(w http.ResponseWriter, r *http.Request) {
+	if s.storage == nil {
+		response.JSON(w, core.StorageStatus{}, 200)
+		return
+	}
+	st, err := s.storage.Status(r.Context())
+	if err != nil {
+		log.Error().Err(err).Msg("failed to get storage status")
+		response.InternalErrorCommon(w)
+		return
+	}
+	response.JSON(w, st, 200)
+}

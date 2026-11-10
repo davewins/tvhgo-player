@@ -1,3 +1,5 @@
+import { formatBytes, recordingBytes } from '@/utils/storage';
+
 import Checkbox from '@/components/common/checkbox/Checkbox';
 import PipelineChip from '@/components/pipeline/PipelineChip';
 import { Recording } from '@/clients/api/api.types';
@@ -84,6 +86,8 @@ function RecordingListItem({
           <span>
             {recording.channelName} |{' '}
             {t('event_datetime', { event: recording })}
+            {recordingBytes(recording) > 0 &&
+              ` | ${formatBytes(recordingBytes(recording))}`}
           </span>
         </div>
       </div>

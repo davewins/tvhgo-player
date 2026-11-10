@@ -85,6 +85,9 @@ export type Recording = {
   startPadding: number;
   endPadding: number;
   status: string;
+  // bytes: the recording file, and its browser-friendly MP4 copy (0 if none)
+  size?: number;
+  playableSize?: number;
 };
 
 export type UpdateRecording = {
@@ -348,4 +351,20 @@ export type PipelineStatus = {
     attempts: number;
     retry_at: number | null;
   }[];
+};
+
+export type StorageStatus = {
+  available: boolean;
+  disk: { totalBytes: number; usedBytes: number; freeBytes: number };
+  recordings: {
+    count: number;
+    masterBytes: number;
+    playableBytes: number;
+    hours: number;
+  };
+  // the limits in Tvheadend's DVR profile (0 = not set)
+  limits: { minFreeBytes: number; maxUsedBytes: number };
+  // what the recordings may take before Tvheadend cleans up or refuses new ones
+  allowanceBytes: number;
+  hoursLeft: number;
 };

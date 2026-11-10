@@ -1,3 +1,4 @@
+import { formatBytes, recordingBytes, totalBytes } from '@/utils/storage';
 import { useLayoutEffect, useRef, useState } from 'react';
 
 import Checkbox from '@/components/common/checkbox/Checkbox';
@@ -73,6 +74,8 @@ export function ShowTile({ show, layout, onOpen }: ShowProps) {
         <span className={styles.secondary}>
           {count > 1 ? `${t('episodes_count', { count })} • ` : ''}
           {t('short_date', { ts: show.latest.startsAt })}
+          {totalBytes(show.episodes) > 0 &&
+            ` • ${formatBytes(totalBytes(show.episodes))}`}
         </span>
       </div>
     </div>
@@ -148,6 +151,8 @@ export function EpisodeTile({
         </span>
         <span className={c(styles.secondary, styles.wrap)}>
           {recording.channelName} • {t('event_time', { event: recording })}
+          {recordingBytes(recording) > 0 &&
+            ` • ${formatBytes(recordingBytes(recording))}`}
         </span>
         {text && (
           <>

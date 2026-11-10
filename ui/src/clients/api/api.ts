@@ -17,6 +17,7 @@ import {
   PlaybackInfo,
   Recording,
   Session,
+  StorageStatus,
   Token,
   TunerStatus,
   TwoFactorAuthSettings,
@@ -150,6 +151,11 @@ export async function getEpg(
   const response = await client.get<Array<EpgChannel>>('/epg', {
     params: q,
   });
+  return response.data;
+}
+
+export async function getStorage(): Promise<StorageStatus> {
+  const response = await client.get<StorageStatus>('/recordings/storage');
   return response.data;
 }
 

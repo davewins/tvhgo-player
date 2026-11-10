@@ -1,0 +1,72 @@
+.panel {
+  margin: 0 0 1rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid rgba(128, 128, 128, 0.35);
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.bar {
+  display: flex;
+  height: 0.7rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(128, 128, 128, 0.25);
+
+  &.warn .originals,
+  &.warn .copies {
+    filter: hue-rotate(150deg) saturate(1.4);
+  }
+
+  &.high .originals,
+  &.high .copies {
+    filter: hue-rotate(-60deg) saturate(1.6);
+  }
+}
+
+.originals {
+  background: #58a6ff;
+  min-width: 2px;
+}
+
+.copies {
+  background: #3fb950;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+
+  i {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    margin-right: 0.35rem;
+    border-radius: 50%;
+  }
+}
+
+.originalsDot {
+  background: #58a6ff;
+}
+
+.copiesDot {
+  background: #3fb950;
+}
+
+.foot {
+  margin-top: 0.3rem;
+  font-size: 0.78rem;
+  opacity: 0.75;
+}

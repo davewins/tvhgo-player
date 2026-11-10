@@ -145,6 +145,18 @@ func safeID(id string) string {
 	}, id)
 }
 
+// PlayableSize is the size of the recording's MP4 copy in the library (0 if there is none).
+func (s *service) PlayableSize(rec *core.Recording) int64 {
+	p, ok := s.sourceFile(rec)
+	if !ok {
+		return 0
+	}
+	if fi, err := os.Stat(p); err == nil {
+		return fi.Size()
+	}
+	return 0
+}
+
 func (s *service) File(rec *core.Recording) (string, bool) {
 	if p, ok := s.sourceFile(rec); ok {
 		return p, true

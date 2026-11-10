@@ -48,7 +48,17 @@ func (s *router) GetRecordings(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	s.fillPlayableSizes(recordings.Entries)
 	response.JSON(w, recordings, 200)
+}
+
+// fillPlayableSizes adds the size of each recording's MP4 copy.
+func (s *router) fillPlayableSizes(entries []*core.Recording) {
+	if sizer, ok := s.playback.(core.PlayableSizer); ok {
+		for _, r := range entries {
+			r.PlayableSize = sizer.PlayableSize(r)
+		}
+	}
 }
 
 // GetRecording godoc
@@ -82,6 +92,7 @@ func (s *router) GetRecording(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	s.fillPlayableSizes([]*core.Recording{recordings})
 	response.JSON(w, recordings, 200)
 }
 

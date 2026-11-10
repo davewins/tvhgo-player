@@ -62,6 +62,15 @@ type (
 		// after the recording ends.
 		EndPadding int    `json:"endPadding"`
 		Status     string `json:"status"`
+		// Size is the size of the recording file in bytes (0 until something has been recorded).
+		Size int64 `json:"size"`
+		// PlayableSize is the size of the browser-friendly MP4 copy in bytes, 0 if there is none (filled in by the API).
+		PlayableSize int64 `json:"playableSize"`
+	}
+
+	// PlayableSizer reports the size of a recording's playable MP4 copy.
+	PlayableSizer interface {
+		PlayableSize(rec *Recording) int64
 	}
 
 	// GetRecordingsParams defines query params
@@ -274,6 +283,7 @@ func MapToTvheadendDvrGridEntryToRecording(entry tvheadend.DvrGridEntry) Recordi
 		Description:      entry.DispDescription,
 		EventID:          entry.Broadcast,
 		PiconID:          MapTvheadendIconUrlToPiconID(entry.ChannelIcon),
+		Size:             int64(entry.Filesize),
 	}
 }
 

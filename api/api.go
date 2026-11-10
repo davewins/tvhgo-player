@@ -32,6 +32,7 @@ type router struct {
 	profileService        core.ProfileService
 	tuners                core.TunerService
 	pipe                  *pipeline.Reader
+	storage               core.StorageService
 }
 
 var corsOpts = cors.Options{
@@ -144,6 +145,7 @@ func (s *router) Handler() http.Handler {
 	authenticated.Get("/picon/{id}", s.GetPicon)
 
 	authenticated.Get("/recordings", s.GetRecordings)
+	authenticated.Get("/recordings/storage", s.GetStorage)
 	authenticated.Post("/recordings", s.CreateRecording)
 
 	authenticated.Delete("/recordings", s.BatchRemoveRecordings)

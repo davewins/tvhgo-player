@@ -6,6 +6,7 @@ import (
 
 	"github.com/davidborzek/tvhgo/api"
 	"github.com/davidborzek/tvhgo/config"
+	"github.com/davidborzek/tvhgo/core"
 	"github.com/davidborzek/tvhgo/db"
 	"github.com/davidborzek/tvhgo/health"
 	"github.com/davidborzek/tvhgo/metrics"
@@ -23,6 +24,7 @@ import (
 	"github.com/davidborzek/tvhgo/services/playback"
 	profiles "github.com/davidborzek/tvhgo/services/profile"
 	"github.com/davidborzek/tvhgo/services/recording"
+	"github.com/davidborzek/tvhgo/services/storage"
 	"github.com/davidborzek/tvhgo/services/streaming"
 	"github.com/davidborzek/tvhgo/services/tuners"
 	"github.com/davidborzek/tvhgo/tvheadend"
@@ -139,7 +141,8 @@ func start(ctx *cli.Context) error {
 		twoFactorService,
 		dvrConfigService,
 		profileService,
-	).WithTuners(tunerService).WithPipeline(pipeline.New(cfg.Playback.PipelineStatus))
+	).WithTuners(tunerService).WithPipeline(pipeline.New(cfg.Playback.PipelineStatus)).
+		WithStorage(storage.New(recordingService, dvrConfigService, playbackSizer(playbackService), cfg.Playback.RecordingsDir))
 
 	healthRouter := health.New(tvhClient, dbConn)
 
@@ -170,4 +173,10 @@ func start(ctx *cli.Context) error {
 	}
 
 	return nil
+}
+
+// playbackSizer is the playback service as a PlayableSizer (nil if it cannot report sizes).
+func playbackSizer(p core.PlaybackService) core.PlayableSizer {
+	s, _ := p.(core.PlayableSizer)
+	return s
 }

@@ -18,6 +18,7 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 import { RecordingStatus, getRecordings } from '@/clients/api/api';
+import { formatBytes, totalBytes } from '@/utils/storage';
 import { useEffect, useMemo, useState } from 'react';
 
 import Button from '@/components/common/button/Button';
@@ -30,6 +31,7 @@ import { LargeArrowLeftIcon } from '@/assets';
 import PaginationControls from '@/components/common/paginationControls/PaginationControls';
 import Player from '@/components/player/Player';
 import RecordingListItem from '@/components/recordings/listItem/RecordingListItem';
+import StorageBar from '@/components/storage/StorageBar';
 import { TestIds } from '@/__test__/ids';
 import { c } from '@/utils/classNames';
 import { downloadRecording } from '@/utils/download';
@@ -524,8 +526,14 @@ export function Component() {
       </div>
 
       {getStatus() === 'upcoming' && <ClashNotice clashes={clashes} />}
+      {grouped && !currentShow && <StorageBar />}
       {grouped && currentShow && (
-        <h2 className={styles.showTitle}>{currentShow.title}</h2>
+        <h2 className={styles.showTitle}>
+          {currentShow.title}
+          <span className={styles.showSize}>
+            {` · ${t('episodes_count', { count: currentShow.episodes.length })} · ${formatBytes(totalBytes(currentShow.episodes))}`}
+          </span>
+        </h2>
       )}
       {downloadNote && <p className={styles.note}>{downloadNote}</p>}
       <div className={styles.recordings}>{renderRecordings()}</div>
