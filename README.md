@@ -51,6 +51,9 @@
 - **Thumbnails for recordings.** A frame from the recording itself (a pipeline's `<name>-thumb.jpg` if there is
   one, otherwise extracted and cached), with optional **TMDb artwork** as the fallback - e.g. for upcoming
   recordings. Only exact title matches are used.
+- **Channel groups** (HD, +1, News, Kids, Shopping, Radio) above the guide, **tuner warnings** (how many tuners are in
+  use, which channels cannot be tuned, and clashes between scheduled recordings), and **background conversion
+  progress** from a recording pipeline - see [docs/player.md](docs/player.md).
 - **Recordings page** opens on *Finished*; the *Removed* filter is gone from the dropdown.
 - Fixes: closing the browser now ends the Tvheadend stream (the original kept it open and held a tuner), and the
   guide includes programmes that began before the visible window.

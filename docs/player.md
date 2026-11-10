@@ -111,7 +111,7 @@ All need a logged-in session (like the rest of the API).
 | --- | --- |
 | `GET /api/channels/{number}/live?quality=720` | Live TV transcoded by tvhgo (fragmented MP4) |
 | `GET /api/playback/live` | The selectable live qualities (`{"qualities":[1080,720,...]}`; empty if disabled) |
-| `GET /api/recordings/{id}/playback` | Playback state: `none`, `queued`, `converting` (with `progress`), `ready` (`source`: library/cache), `failed` |
+| `GET /api/recordings/{id}/playback` | Playback state: `none`, `queued`, `converting` (with `progress`), `ready` (`source`: library/cache), `failed`; `source: "pipeline"` while the recording pipeline is converting it, and `ahead` for a queued conversion |
 | `POST /api/recordings/{id}/playback` | Start converting if there is no playable copy (idempotent) |
 | `GET /api/recordings/{id}/play` | The MP4, with HTTP range support (seekable) |
 | `GET /api/recordings/{id}/thumb` | The thumbnail image |
@@ -123,6 +123,9 @@ All need a logged-in session (like the rest of the API).
 | `GET /api/epg/events/{id}/thumb` | TMDb artwork for the programme's title (404 if none) |
 | `GET/POST /api/dvr/autorec` | List series rules / create one from a programme (`eventId`, `anyChannel`, `recordRepeats`) |
 | `PATCH/DELETE /api/dvr/autorec/{id}` | Enable or disable / delete a series rule |
+| `GET /api/tuners` | Tuner usage (`total`, `busy`, what each tuner is doing) and `blocked`, the channel ids that cannot be tuned while every tuner is busy; `available: false` without a status account |
+| `GET /api/tuners/clashes` | Periods in the next 14 days needing more multiplexes than tuners, with the recordings involved. Optional `channelId`, `start`, `end`, `title` add one more programme ("would recording this clash?") |
+| `GET /api/pipeline` | The recording pipeline's status (`current`, `queue`, `failed`); `available: false` if not configured or not running |
 
 ## Recordings by show
 
@@ -188,6 +191,30 @@ Comskip in a throwaway container, converts the break times to chapters ("Commerc
 programme, the lead-in before the programme included), checks the new file (same duration, same streams, size within
 1%) and only then replaces the MP4. BBC channels are skipped because they have no adverts. Comskip is accurate on ITV and
 Channel 4 recordings but not perfect, so the job refuses a result where almost half the recording would be "adverts".
+
+## Channel groups (Channels page)
+A row of chips above the guide (All, HD, +1, News, Kids, Shopping, Radio) filters the channel list. The groups are worked
+out from the channel number and name using UK Freeview numbering (HD 101-199, news 231-236, radio 700 and up,
+names ending in `+1`, ...), so nothing needs setting up in Tvheadend. A group with no channels is not shown; the
+choice is kept in the URL (`?group=radio`). The rules are in `ui/src/utils/channelGroups.ts`.
+
+## Tuner warnings (optional)
+Tvheadend ties a tuner to a whole **multiplex**, so recordings and streams on the same multiplex share one tuner. With
+a second account configured (`status_username`, see [configuration](configuration.md#tvheadend-config-tvheadend)):
+- A header badge shows how many tuners are in use ("Tuners in use 1/2"), amber when none is free; hovering lists what is
+  using them.
+- When every tuner is busy, the guide shows a banner naming what holds them and which multiplexes are reachable.
+  Channels on other multiplexes are dimmed and tapping one explains why instead of failing to play.
+- **Clash warnings:** scheduled recordings in the next 14 days are checked (including the recording padding) for times
+  that need more distinct multiplexes than there are tuners. The Upcoming list shows each clash with the recordings
+  involved, and a programme's page says "Recording this would clash" before you press Record. A channel carried on
+  several multiplexes is assumed to use one that is already needed. Live viewing is not predicted.
+
+## Background pipeline progress (optional)
+With `pipeline_status` set, tvhgo reads the status file of a recording pipeline. A header badge shows
+"Converting <title> 41%" (plus how many are waiting or failed), recordings being processed get a chip with a progress
+bar, and pressing Play on a recording the pipeline is already converting shows its progress instead of starting a
+second conversion. A status file older than about 90 seconds means the pipeline is not running and nothing is shown.
 
 ## Browser support
 

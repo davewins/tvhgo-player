@@ -112,6 +112,8 @@ log:
 | port      | int    | false    | 9981    | Port of the tvheadend server.                                                                    |
 | username  | string | false    |         | Username of the tvheadend server.                                                                |
 | password  | string | false    |         | Password of the tvheadend server. It is recommended to configure it via an environment variable. |
+| status_username | string | false |         | Optional second account used **only** to read tuner status and the channel-to-multiplex map (`TVHGO_TVHEADEND_STATUS_USERNAME`). Tvheadend gives those only to admin users, and scheduled recordings need *Video recorder: View all*, so keep it separate from the main account. Without it the tuner display and clash warnings are simply off. |
+| status_password | string | false |         | Password for `status_username` (`TVHGO_TVHEADEND_STATUS_PASSWORD`). Use an environment variable.   |
 
 > NOTE: Currently only plain text authentication is supported. Set the authentication type in tvheadent either to `Plain (insecure)` or `Both plain and digest`.
 
@@ -251,6 +253,7 @@ those; the `webtv-h264-aac-matroska` profile is used where the browser supports 
 | `cache_max_age_days` | `TVHGO_PLAYBACK_CACHE_MAX_AGE_DAYS`| `30`               | Files not played for this long are removed.                                                           |
 | `max_jobs`           | `TVHGO_PLAYBACK_MAX_JOBS`          | `1`                | Number of conversions running at the same time (others wait in a queue).                              |
 | `ffmpeg` / `ffprobe` | `TVHGO_PLAYBACK_FFMPEG` / `_FFPROBE` | `ffmpeg` / `ffprobe` | Binaries to use.                                                                                  |
+| `pipeline_status`    | `TVHGO_PLAYBACK_PIPELINE_STATUS`   | _(empty)_          | Optional path of the `status.json` written by a recording pipeline ([tvh-pipeline](https://github.com/davewins/tvh-freeview-stack)): shows what it is converting, how far, what waits and what failed. Mount its state folder read-only. |
 | `tmdb_api_key`       | `TVHGO_PLAYBACK_TMDB_API_KEY`      | _(empty)_          | Optional [TMDb](https://www.themoviedb.org) v3 API key: programme artwork for recordings without a frame (e.g. upcoming ones). Programme titles are sent to TMDb; only exact title matches are used, and if several shows share a title the UK-made one is preferred (otherwise the most popular); results are cached in `cache_dir`. |
 | `tmdb_language`      | `TVHGO_PLAYBACK_TMDB_LANGUAGE`     | `en-GB`            | Language for TMDb lookups.                                                                            |
 | `preset`             | `TVHGO_PLAYBACK_PRESET`            | `veryfast`         | x264 speed preset.                                                                                    |
