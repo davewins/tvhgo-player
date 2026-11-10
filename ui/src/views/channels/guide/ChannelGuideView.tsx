@@ -38,9 +38,11 @@ export async function loader({
     ? Math.max(parseInt(day, 10) || todayStart, todayStart)
     : todayStart;
   const isToday = dayStart === todayStart;
-  // today starts at the previous half hour (the programme on now overlaps it); other days at midnight
+  // today starts one half hour before the previous half hour: the programme on now overlaps it, and the now line is
+  // always 30-60 minutes in, never hidden under the sticky channel column (as it was exactly on the half hour).
+  // Other days start at midnight.
   const axisStart = isToday
-    ? Math.floor(moment().unix() / 1800) * 1800
+    ? Math.floor(moment().unix() / 1800) * 1800 - 1800
     : dayStart;
   const axisEnd = dayStart + SPAN_HOURS * 3600;
   // tvheadend filters by programme START, so ask from a day earlier to include programmes that began before the

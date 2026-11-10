@@ -11,6 +11,10 @@
 
 .dropdown {
   padding: 0.5rem;
+  // as for inputs: under 16px makes iOS Safari zoom in on focus
+  @media (hover: none) and (pointer: coarse) {
+    font-size: 16px;
+  }
   border: 1px solid var(--color-border-subtle);
   border-radius: 3px;
   color: var(--color-text-primary);
