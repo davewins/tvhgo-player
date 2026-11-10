@@ -6,6 +6,11 @@ import {
   useRevalidator,
   useSearchParams,
 } from 'react-router-dom';
+import {
+  openingScrollPx,
+  scrollForMinutes,
+  viewedMinutes,
+} from '@/utils/guideScroll';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import Button from '@/components/common/button/Button';
@@ -13,7 +18,6 @@ import EmptyState from '@/components/common/emptyState/EmptyState';
 import Player from '@/components/player/Player';
 import { getEpg } from '@/clients/api/api';
 import moment from 'moment';
-import { openingScrollPx } from '@/utils/guideScroll';
 import styles from './ChannelGuideView.module.scss';
 import { useTranslation } from 'react-i18next';
 
@@ -170,6 +174,8 @@ export function Component() {
     useLoaderData() as LoaderData;
 
   const scroller = useRef<HTMLDivElement>(null);
+  // the time of day being looked at when another day is chosen: the new day opens at the same time
+  const carriedMinutes = useRef<number | null>(null);
   const [now, setNow] = useState(moment().unix());
   const search = searchParams.get('q') || '';
   const [playing, setPlaying] = useState<EpgChannel | null>(null);
@@ -191,17 +197,28 @@ export function Component() {
     };
   }, [isToday, playing]);
 
-  // initial scroll: today opens with "now" just right of the channel column (a little of the past in view); another
-  // day opens at the same time of day as it is now
+  // Choosing another day keeps the time of day being looked at (scroll today to 7pm, then pick tomorrow: 7pm tomorrow,
+  // and back to today: 7pm today). Without that, today opens with "now" just right of the channel column (a little of
+  // the past in view) and another day at the current time of day. The Now button forgets the carried time.
   useEffect(() => {
     if (scroller.current) {
-      scroller.current.scrollLeft = openingScrollPx({
-        isToday,
-        axisStart,
-        now: new Date(),
-        pxPerMin: PX_PER_MIN,
-        leadMin: NOW_LEAD_MIN,
-      });
+      const minutes = carriedMinutes.current;
+      carriedMinutes.current = null;
+      scroller.current.scrollLeft =
+        minutes !== null
+          ? scrollForMinutes({
+              minutes,
+              dayStart,
+              axisStart,
+              pxPerMin: PX_PER_MIN,
+            })
+          : openingScrollPx({
+              isToday,
+              axisStart,
+              now: new Date(),
+              pxPerMin: PX_PER_MIN,
+              leadMin: NOW_LEAD_MIN,
+            });
     }
   }, [dayStart]);
 
@@ -275,7 +292,18 @@ export function Component() {
               key={d.unix()}
               type="button"
               className={`${styles.day} ${d.unix() === dayStart ? styles.active : ''}`}
-              onClick={() =>
+              onClick={() => {
+                const target = d.isSame(moment(), 'day')
+                  ? moment().startOf('day').unix()
+                  : d.unix();
+                if (target !== dayStart && scroller.current) {
+                  carriedMinutes.current = viewedMinutes({
+                    scrollLeft: scroller.current.scrollLeft,
+                    axisStart,
+                    dayStart,
+                    pxPerMin: PX_PER_MIN,
+                  });
+                }
                 setSearchParams((prev) => {
                   if (d.isSame(moment(), 'day')) {
                     prev.delete('day');
@@ -283,8 +311,8 @@ export function Component() {
                     prev.set('day', `${d.unix()}`);
                   }
                   return prev;
-                })
-              }
+                });
+              }}
             >
               <span>{d.format('ddd')}</span>
               <span>{d.format('D')}</span>
@@ -305,6 +333,7 @@ export function Component() {
             onClick={() => {
               if (!isToday) {
                 // "now" is not on this day's grid: go back to today (which opens at the current time)
+                carriedMinutes.current = null;
                 setSearchParams((prev) => {
                   prev.delete('day');
                   return prev;

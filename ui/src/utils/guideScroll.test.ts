@@ -1,6 +1,9 @@
 import { describe, expect, test } from 'vitest';
-
-import { openingScrollPx } from './guideScroll';
+import {
+  openingScrollPx,
+  scrollForMinutes,
+  viewedMinutes,
+} from './guideScroll';
 
 const at = (h: number, m = 0) => new Date(2026, 10, 10, h, m, 0);
 
@@ -34,5 +37,66 @@ describe('openingScrollPx', () => {
     expect(openingScrollPx({ ...base, isToday: true, axisStart, now })).toBe(
       (45 - 10) * 5
     );
+  });
+});
+
+describe('carrying the viewed time to another day', () => {
+  const pxPerMin = 5;
+  const todayMidnight = new Date(2026, 10, 10, 0, 0).getTime() / 1000;
+  const tomorrowMidnight = todayMidnight + 86400;
+
+  test('7pm viewed on today (whose timeline starts at 15:30) is 7pm on tomorrow (whose starts at midnight)', () => {
+    const axisStart = todayMidnight + (15 * 60 + 30) * 60;
+    // scrolled so 19:00 is at the left edge: 3.5 h = 210 min from the timeline start
+    const minutes = viewedMinutes({
+      scrollLeft: 210 * pxPerMin,
+      axisStart,
+      dayStart: todayMidnight,
+      pxPerMin,
+    });
+    expect(minutes).toBe(19 * 60);
+    expect(
+      scrollForMinutes({
+        minutes,
+        dayStart: tomorrowMidnight,
+        axisStart: tomorrowMidnight,
+        pxPerMin,
+      })
+    ).toBe(19 * 60 * pxPerMin);
+  });
+
+  test('and back again: 7pm on tomorrow is 7pm on today, not "now"', () => {
+    const axisStart = todayMidnight + (15 * 60 + 30) * 60;
+    const back = scrollForMinutes({
+      minutes: 19 * 60,
+      dayStart: todayMidnight,
+      axisStart,
+      pxPerMin,
+    });
+    expect(back).toBe(210 * pxPerMin);
+  });
+
+  test("a time before the start of today's timeline stops at the start rather than going negative", () => {
+    const axisStart = todayMidnight + (15 * 60 + 30) * 60;
+    expect(
+      scrollForMinutes({
+        minutes: 9 * 60,
+        dayStart: todayMidnight,
+        axisStart,
+        pxPerMin,
+      })
+    ).toBe(0);
+  });
+
+  test('a timeline that starts before midnight counts as the start of the day', () => {
+    const axisStart = todayMidnight - 30 * 60; // 23:30 the evening before
+    expect(
+      viewedMinutes({
+        scrollLeft: 0,
+        axisStart,
+        dayStart: todayMidnight,
+        pxPerMin,
+      })
+    ).toBe(0);
   });
 });
