@@ -72,10 +72,17 @@ export function ShowTile({ show, layout, onOpen }: ShowProps) {
       <div className={styles.text}>
         <span className={styles.title}>{show.title}</span>
         <span className={styles.secondary}>
-          {count > 1 ? `${t('episodes_count', { count })} • ` : ''}
+          {[
+            count > 1 ? t('episodes_count', { count }) : '',
+            totalBytes(show.episodes) > 0
+              ? formatBytes(totalBytes(show.episodes))
+              : '',
+          ]
+            .filter(Boolean)
+            .join(' • ')}
+        </span>
+        <span className={styles.secondary}>
           {t('short_date', { ts: show.latest.startsAt })}
-          {totalBytes(show.episodes) > 0 &&
-            ` • ${formatBytes(totalBytes(show.episodes))}`}
         </span>
       </div>
     </div>

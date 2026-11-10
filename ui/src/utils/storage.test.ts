@@ -1,15 +1,17 @@
 import { describe, expect, test } from 'vitest';
 import { formatBytes, hoursLabel, percentUsed, totalBytes } from './storage';
 
+const nb = (s: string) => s.replace(' ', '\u00a0');
+
 describe('formatBytes', () => {
   test('picks a sensible unit', () => {
-    expect(formatBytes(0)).toBe('0 B');
-    expect(formatBytes(512)).toBe('512 B');
-    expect(formatBytes(1536)).toBe('1.5 KB');
-    expect(formatBytes(959391448)).toBe('915 MB');
-    expect(formatBytes(1.5 * 1024 ** 3)).toBe('1.5 GB');
-    expect(formatBytes(23 * 1024 ** 3)).toBe('23 GB');
-    expect(formatBytes(1024 ** 4)).toBe('1.0 TB');
+    expect(formatBytes(0)).toBe(nb('0 B'));
+    expect(formatBytes(512)).toBe(nb('512 B'));
+    expect(formatBytes(1536)).toBe(nb('1.5 KB'));
+    expect(formatBytes(959391448)).toBe(nb('915 MB'));
+    expect(formatBytes(1.5 * 1024 ** 3)).toBe(nb('1.5 GB'));
+    expect(formatBytes(23 * 1024 ** 3)).toBe(nb('23 GB'));
+    expect(formatBytes(1024 ** 4)).toBe(nb('1.0 TB'));
   });
 });
 

@@ -5,7 +5,7 @@ const UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
 // 1536 -> "1.5 KB"; one decimal below 10, none above (1.5 GB, 23 GB, 412 MB)
 export function formatBytes(bytes: number): string {
   if (!bytes || bytes < 0) {
-    return '0 B';
+    return '0\u00a0B';
   }
   let value = bytes;
   let unit = 0;
@@ -14,7 +14,8 @@ export function formatBytes(bytes: number): string {
     unit++;
   }
   const digits = value < 10 && unit > 0 ? 1 : 0;
-  return `${value.toFixed(digits)} ${UNITS[unit]}`;
+  // a non-breaking space keeps the number and its unit on one line
+  return `${value.toFixed(digits)}\u00a0${UNITS[unit]}`;
 }
 
 // what a recording takes on disk: the recording itself plus its MP4 copy
