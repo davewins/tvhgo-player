@@ -45,7 +45,7 @@ exports[`should render multiple pages: status=failed 1`] = `
             <h3
               class="_headline_ee1e54"
             >
-              confirm_delete_recordings
+              confirm_delete_selected
             </h3>
             <button
               class="_button_a7f9df _medium_a7f9df _red_a7f9df"
@@ -458,7 +458,7 @@ exports[`should render multiple pages: status=finished 1`] = `
             <h3
               class="_headline_ee1e54"
             >
-              confirm_delete_recordings
+              confirm_delete_selected
             </h3>
             <button
               class="_button_a7f9df _medium_a7f9df _red_a7f9df"
@@ -877,7 +877,7 @@ exports[`should render multiple pages: status=null 1`] = `
             <h3
               class="_headline_ee1e54"
             >
-              confirm_delete_recordings
+              confirm_delete_selected
             </h3>
             <button
               class="_button_a7f9df _medium_a7f9df _red_a7f9df"
@@ -1709,7 +1709,7 @@ exports[`should render single page: status=failed 1`] = `
             <h3
               class="_headline_ee1e54"
             >
-              confirm_delete_recordings
+              confirm_delete_selected
             </h3>
             <button
               class="_button_a7f9df _medium_a7f9df _red_a7f9df"
@@ -2124,7 +2124,7 @@ exports[`should render single page: status=finished 1`] = `
             <h3
               class="_headline_ee1e54"
             >
-              confirm_delete_recordings
+              confirm_delete_selected
             </h3>
             <button
               class="_button_a7f9df _medium_a7f9df _red_a7f9df"
@@ -2545,7 +2545,7 @@ exports[`should render single page: status=null 1`] = `
             <h3
               class="_headline_ee1e54"
             >
-              confirm_delete_recordings
+              confirm_delete_selected
             </h3>
             <button
               class="_button_a7f9df _medium_a7f9df _red_a7f9df"
@@ -3381,7 +3381,7 @@ exports[`should render with no recordings: status=failed 1`] = `
             <h3
               class="_headline_ee1e54"
             >
-              confirm_delete_recordings
+              confirm_delete_selected
             </h3>
             <button
               class="_button_a7f9df _medium_a7f9df _red_a7f9df"
@@ -3564,7 +3564,7 @@ exports[`should render with no recordings: status=finished 1`] = `
             <h3
               class="_headline_ee1e54"
             >
-              confirm_delete_recordings
+              confirm_delete_selected
             </h3>
             <button
               class="_button_a7f9df _medium_a7f9df _red_a7f9df"
@@ -3753,7 +3753,7 @@ exports[`should render with no recordings: status=null 1`] = `
             <h3
               class="_headline_ee1e54"
             >
-              confirm_delete_recordings
+              confirm_delete_selected
             </h3>
             <button
               class="_button_a7f9df _medium_a7f9df _red_a7f9df"
@@ -3942,7 +3942,7 @@ exports[`should render with no recordings: status=removed 1`] = `
             <h3
               class="_headline_ee1e54"
             >
-              confirm_delete_recordings
+              confirm_delete_selected
             </h3>
             <button
               class="_button_a7f9df _medium_a7f9df _red_a7f9df"

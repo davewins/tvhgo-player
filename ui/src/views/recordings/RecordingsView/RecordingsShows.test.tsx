@@ -138,6 +138,51 @@ test('selecting recordings offers Download as well as Delete', async () => {
   expect(doc.getByTestId(TestIds.DELETE_CANCEL_RECORDINGS_BUTTON)).toBeTruthy();
 });
 
+test('a show can be selected on the shows page, selecting all its recordings', async () => {
+  withParams('');
+  const removeRecordings = vi.fn().mockResolvedValue(undefined);
+  vi.mocked(useManageRecordings).mockReturnValue({
+    pending: false,
+    removeRecordings,
+    stopAndCancelRecordings: vi.fn(),
+  });
+  const doc = render(<RecordingsView />);
+  const boxes = doc.getAllByTestId(TestIds.SELECT_SHOW_CHECKBOX);
+  expect(boxes).toHaveLength(2);
+
+  // shows are sorted newest first: Emmerdale (2 recordings) is first
+  await userEvent.click(boxes[0]);
+  expect(boxes[0]).toBeChecked();
+  expect(boxes[1]).not.toBeChecked();
+
+  await userEvent.click(
+    doc.getByTestId(TestIds.DELETE_CANCEL_RECORDINGS_BUTTON)
+  );
+  await userEvent.click(doc.getByTestId(TestIds.CONFIRM_DELETE_BUTTON));
+  expect(removeRecordings.mock.calls[0][0].sort()).toEqual(['1', '2']);
+});
+
+test('select all on the shows page selects every show, and un-selecting works', async () => {
+  withParams('');
+  const doc = render(<RecordingsView />);
+  await userEvent.click(
+    doc.getByTestId(TestIds.SELECT_ALL_RECORDINGS_CHECKBOX)
+  );
+  for (const box of doc.getAllByTestId(TestIds.SELECT_SHOW_CHECKBOX)) {
+    expect(box).toBeChecked();
+  }
+  await userEvent.click(doc.getAllByTestId(TestIds.SELECT_SHOW_CHECKBOX)[1]);
+  expect(doc.getAllByTestId(TestIds.SELECT_SHOW_CHECKBOX)[1]).not.toBeChecked();
+  expect(doc.getAllByTestId(TestIds.SELECT_SHOW_CHECKBOX)[0]).toBeChecked();
+});
+
+test('selecting a show does not open it', async () => {
+  withParams('');
+  const doc = render(<RecordingsView />);
+  await userEvent.click(doc.getAllByTestId(TestIds.SELECT_SHOW_CHECKBOX)[0]);
+  expect(setQueryParamsMock).not.toHaveBeenCalled();
+});
+
 test('no Download for upcoming recordings', async () => {
   withParams('status=upcoming');
   vi.mocked(useLoaderData).mockReturnValue({

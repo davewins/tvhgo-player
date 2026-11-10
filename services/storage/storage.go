@@ -43,30 +43,32 @@ func disk(dir string) (core.DiskUsage, bool) {
 }
 
 // compute is the pure part: given what is on disk and the limits, how much room is there for recordings?
+//
+// Tvheadend's "maintain free space" is about the disk as a whole. Its "maintain used space" counts only the
+// recordings it keeps (the originals), not the MP4 copies the pipeline makes next to them, so the total those two
+// limits allow is the cap times (1 + the MP4 copies' size relative to the originals).
 func compute(d core.DiskUsage, rec core.RecordingsUsage, lim core.StorageLimits) (allowance int64, hoursLeft float64) {
 	used := rec.MasterBytes + rec.PlayableBytes
-	// headroom before the free-space limit bites
 	room := d.FreeBytes - lim.MinFreeBytes
 	if room < 0 {
 		room = 0
 	}
-	allowance = used + room
 	if lim.MaxUsedBytes > 0 {
-		// the "used space" limit counts the recordings themselves
-		maxRoom := lim.MaxUsedBytes - rec.MasterBytes
+		ratio := 1.0 // until there is something to measure, assume an MP4 copy is as big as its original
+		if rec.MasterBytes > 0 {
+			ratio = float64(rec.PlayableBytes) / float64(rec.MasterBytes)
+		}
+		maxRoom := int64(float64(lim.MaxUsedBytes-rec.MasterBytes) * (1 + ratio))
 		if maxRoom < 0 {
 			maxRoom = 0
-		}
-		if lim.MaxUsedBytes < allowance {
-			allowance = lim.MaxUsedBytes
 		}
 		if maxRoom < room {
 			room = maxRoom
 		}
 	}
+	allowance = used + room
 	if rec.Hours > 0 && used > 0 {
-		perHour := float64(used) / rec.Hours
-		hoursLeft = float64(room) / perHour
+		hoursLeft = float64(room) / (float64(used) / rec.Hours)
 	}
 	return allowance, hoursLeft
 }

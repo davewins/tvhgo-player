@@ -432,6 +432,8 @@
   "storage_max_used": "at most {{size}} for recordings",
   "storage_no_limit": "No storage limit set in Tvheadend",
   "storage_hours_left": "room for about {{hours}} more hours",
+  "confirm_delete_selected_one": "Do you really want to delete the selected recording{{size}}? This cannot be undone.",
+  "confirm_delete_selected_other": "Do you really want to delete the {{count}} selected recordings{{size}}? This cannot be undone.",
   "guide_now": "Now",
   "channel_programmes": "Programmes on this channel",
   "radio": "Radio",

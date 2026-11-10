@@ -99,6 +99,10 @@ export function Component() {
     new Set()
   );
   const clearSelection = () => setSelectedRecordings(new Set());
+  const selectedIds = useMemo(
+    () => new Set([...selectedRecordings].map((r) => r.id)),
+    [selectedRecordings]
+  );
   // the recording playing in the player (started from a thumbnail)
   const [playing, setPlaying] = useState<Recording | null>(null);
   const [confirmationModalVisible, setConfirmationModalVisible] =
@@ -152,7 +156,7 @@ export function Component() {
       grouped
         ? currentShow
           ? sortEpisodes(currentShow.episodes, groupSort as EpisodeSort)
-          : []
+          : entries // the shows page: select-all means every recording
         : entries,
     [grouped, currentShow, groupSort, entries]
   );
@@ -215,9 +219,15 @@ export function Component() {
   };
 
   const getConfirmationModalTitle = () => {
-    return getStatus() === 'upcoming'
-      ? t('confirm_cancel_recordings')
-      : t('confirm_delete_recordings');
+    if (getStatus() === 'upcoming') {
+      return t('confirm_cancel_recordings');
+    }
+    const list = [...selectedRecordings];
+    const size = totalBytes(list);
+    return t('confirm_delete_selected', {
+      count: list.length,
+      size: size > 0 ? ` (${formatBytes(size)})` : '',
+    });
   };
 
   const renderRecordings = () => {
@@ -235,6 +245,18 @@ export function Component() {
               show={show}
               layout={layout}
               onOpen={() => openShow(show.title)}
+              selected={show.episodes.every((e) => selectedIds.has(e.id))}
+              partial={
+                !show.episodes.every((e) => selectedIds.has(e.id)) &&
+                show.episodes.some((e) => selectedIds.has(e.id))
+              }
+              onSelection={(checked) =>
+                setSelectedRecordings((prv) => {
+                  const ids = new Set(show.episodes.map((e) => e.id));
+                  const rest = [...prv].filter((v) => !ids.has(v.id));
+                  return new Set(checked ? [...rest, ...show.episodes] : rest);
+                })
+              }
             />
           ))}
         </div>

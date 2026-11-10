@@ -39,10 +39,26 @@ function Thumb({
   );
 }
 
-type ShowProps = { show: Show; layout: 'grid' | 'list'; onOpen: () => void };
+type ShowProps = {
+  show: Show;
+  layout: 'grid' | 'list';
+  onOpen: () => void;
+  // selecting a show selects all of its recordings
+  selected?: boolean;
+  // some, but not all, of its recordings are selected
+  partial?: boolean;
+  onSelection?: (selected: boolean) => void;
+};
 
 // A show: the latest episode's picture, the title and how many episodes there are.
-export function ShowTile({ show, layout, onOpen }: ShowProps) {
+export function ShowTile({
+  show,
+  layout,
+  onOpen,
+  selected = false,
+  partial = false,
+  onSelection,
+}: ShowProps) {
   const { t } = useTranslation();
   const count = show.episodes.length;
   return (
@@ -68,6 +84,20 @@ export function ShowTile({ show, layout, onOpen }: ShowProps) {
           fallback={`/api/picon/${show.latest.piconId}`}
         />
         {count > 1 && <span className={styles.badge}>{count}</span>}
+        {onSelection && (
+          <div
+            className={styles.check}
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+          >
+            <Checkbox
+              onChange={onSelection}
+              checked={selected}
+              indeterminate={partial}
+              testId={TestIds.SELECT_SHOW_CHECKBOX}
+            />
+          </div>
+        )}
       </div>
       <div className={styles.text}>
         <span className={styles.title}>{show.title}</span>

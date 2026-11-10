@@ -426,6 +426,8 @@
   "storage_max_used": "höchstens {{size}} für Aufnahmen",
   "storage_no_limit": "In Tvheadend ist kein Speicherlimit gesetzt",
   "storage_hours_left": "Platz für etwa {{hours}} weitere Stunden",
+  "confirm_delete_selected_one": "Soll die ausgewählte Aufnahme{{size}} wirklich gelöscht werden? Das kann nicht rückgängig gemacht werden.",
+  "confirm_delete_selected_other": "Sollen die {{count}} ausgewählten Aufnahmen{{size}} wirklich gelöscht werden? Das kann nicht rückgängig gemacht werden.",
   "guide_now": "Jetzt",
   "channel_programmes": "Sendungen dieses Senders",
   "radio": "Radio",

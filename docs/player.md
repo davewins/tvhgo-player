@@ -177,9 +177,13 @@ it works alongside a folder-per-show layout such as a media server uses (the gro
 The Recordings page (shows view) opens with a **Storage** bar: what the recordings take (the broadcast originals plus
 the MP4 copies) against the room Tvheadend allows for them. That room is worked out from the DVR profile's limits:
 "maintain free disk space" (Tvheadend removes old recordings to keep at least that much free) and, if set,
-"maintain used disk space". Below the bar are the disk's total, used and free space, the limits, and an estimate of how
+"maintain used disk space". The used-space limit counts only the recordings Tvheadend keeps (the originals), not the MP4
+copies made next to them, so tvhgo allows for the copies on top: with a 500 GB limit and copies about as big as the
+originals the bar's allowance is about 1 TB in all. Below the bar are the disk's total, used and free space, the limits, and an estimate of how
 many more hours could be recorded at the average size so far. A show shows its total size, and each recording its own
-(original + MP4 copy), in the show's page and in the list. `GET /api/recordings/storage` returns the same numbers; the
+(original + MP4 copy), in the show's page and in the list. Each show tile has a checkbox that selects all of its
+recordings, so whole shows can be deleted (or downloaded) at once; the confirmation says how many recordings and how much
+space that is. `GET /api/recordings/storage` returns the same numbers; the
 recordings list includes `size` and `playableSize` (bytes).
 
 ## Programme pages and series rules

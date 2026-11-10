@@ -20,13 +20,21 @@ func TestFreeSpaceLimit(t *testing.T) {
 	assert.InDelta(t, 417.4, hours, 0.5)
 }
 
-func TestUsedSpaceLimitWinsWhenTighter(t *testing.T) {
+func TestUsedSpaceLimitCountsOnlyOriginalsSoMP4CopiesAreAddedOnTop(t *testing.T) {
 	d := core.DiskUsage{TotalBytes: 8000 * gb, FreeBytes: 6000 * gb}
+	// originals 100 GB, MP4 copies 50 GB (half the size), cap on originals 500 GB
 	rec := core.RecordingsUsage{MasterBytes: 100 * gb, PlayableBytes: 50 * gb, Hours: 30}
 	allowance, hours := compute(d, rec, core.StorageLimits{MinFreeBytes: 100 * gb, MaxUsedBytes: 500 * gb})
-	assert.Equal(t, 500*gb, allowance)
-	// 400 GB of room under the used-space limit at 5 GB/h = 80 hours
-	assert.InDelta(t, 80, hours, 0.5)
+	// originals may grow to 500 GB, MP4 copies to 250 GB: 750 GB in all
+	assert.Equal(t, 750*gb, allowance)
+	// 600 GB of room (400 GB of originals + 200 GB of copies) at 5 GB per hour = 120 hours
+	assert.InDelta(t, 120, hours, 0.5)
+}
+
+func TestUsedSpaceLimitWithNothingRecordedAssumesCopiesAreAsBig(t *testing.T) {
+	d := core.DiskUsage{TotalBytes: 8000 * gb, FreeBytes: 6000 * gb}
+	allowance, _ := compute(d, core.RecordingsUsage{}, core.StorageLimits{MaxUsedBytes: 500 * gb})
+	assert.Equal(t, 1000*gb, allowance)
 }
 
 func TestAlreadyBelowTheFreeSpaceLimit(t *testing.T) {
