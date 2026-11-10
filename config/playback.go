@@ -45,6 +45,11 @@ type (
 		LiveQualities []int `yaml:"live_qualities" env:"LIVE_QUALITIES"`
 		// LiveMaxStreams limits concurrent live transcodes.
 		LiveMaxStreams int `yaml:"live_max_streams" env:"LIVE_MAX_STREAMS"`
+		// LiveEncoder chooses how live TV is encoded: "cpu" (x264, the default) or "vaapi" (Intel/AMD GPU via VAAPI: far less
+		// CPU per stream). If the GPU is missing or fails, tvhgo falls back to the CPU on its own.
+		LiveEncoder string `yaml:"live_encoder" env:"LIVE_ENCODER"`
+		// LiveVAAPIDevice is the render node used when live_encoder is "vaapi" (must be passed into the container).
+		LiveVAAPIDevice string `yaml:"live_vaapi_device" env:"LIVE_VAAPI_DEVICE"`
 		// TMDBAPIKey (v3 key from themoviedb.org) enables programme artwork from TMDb as a fallback for recordings
 		// without a frame. Programme titles are sent to TMDb to look them up. Empty disables it.
 		TMDBAPIKey string `yaml:"tmdb_api_key" env:"TMDB_API_KEY"`
@@ -87,6 +92,12 @@ func (c *PlaybackConfig) SetDefaults() {
 	}
 	if len(c.LiveQualities) == 0 {
 		c.LiveQualities = []int{1080, 720, 480, 360}
+	}
+	if c.LiveEncoder != "vaapi" {
+		c.LiveEncoder = "cpu"
+	}
+	if c.LiveVAAPIDevice == "" {
+		c.LiveVAAPIDevice = "/dev/dri/renderD128"
 	}
 	if c.LiveMaxStreams < 1 {
 		c.LiveMaxStreams = 3

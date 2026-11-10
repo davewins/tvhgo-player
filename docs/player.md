@@ -35,6 +35,31 @@ Things to know:
 - Watching live uses a tuner like any other viewer. If both tuners are recording on other multiplexes Tvheadend
   will refuse another service.
 
+### GPU live encoding (optional)
+By default live TV is encoded on the CPU with x264, which costs roughly 0.25 of a core per SD stream and 0.7 per HD
+stream. With `TVHGO_PLAYBACK_LIVE_ENCODER=vaapi` the deinterlacing, scaling and H.264 encoding run on the GPU
+(decoding stays on the CPU, which copes better with the damaged packets of a live broadcast). Measured on an Intel UHD 730
+(i5-14400) with three simultaneous streams at 720p: about 0.9 of a core in total, against 4.8 cores for x264, with
+comparable picture quality and bitrate (the GPU uses constant-quality mode, `ICQ`, matched to the x264 CRF values).
+
+To use it:
+1. Pass the render node into the container and let the container's user open it:
+   ```yaml
+   devices: ["/dev/dri/renderD128:/dev/dri/renderD128"]
+   group_add: ["<gid of the host 'render' group>"]    # getent group render
+   ```
+2. Set `TVHGO_PLAYBACK_LIVE_ENCODER=vaapi` (and `TVHGO_PLAYBACK_LIVE_VAAPI_DEVICE` if it is not `renderD128`).
+3. The image includes the Intel media driver (`intel-media-driver`). For an AMD GPU add `mesa-va-gallium` to the
+   Dockerfile instead.
+
+On first use tvhgo encodes a few test frames; if that fails (no device, no permission, no driver) it logs a warning and
+uses the CPU. If the GPU later fails on a stream before producing any output, GPU encoding is switched off until
+tvhgo restarts. The Recording conversion (MP4 for playback) always uses the CPU: broadcast TV compresses noticeably
+better with x264 than with a hardware encoder, and that file is the one you keep.
+
+Both the fragmented-MP4 stream (Chrome, Firefox) and the HLS stream (Safari, iOS) use the GPU. The GPU is shared with
+anything else using it (for example Frigate), so keep `live_max_streams` modest.
+
 ## Recordings
 
 On a finished recording, press **Play**. tvhgo looks for a browser-friendly MP4 in this order:

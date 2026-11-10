@@ -15,6 +15,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/davidborzek/tvhgo/config"
@@ -44,6 +45,9 @@ type service struct {
 	tmdbImg  string
 	// the recording pipeline's progress (nil without a status file)
 	pipe *pipeline.Reader
+	// GPU live encoding: probed once, switched off for good if it fails
+	vaapiOnce   sync.Once
+	vaapiBroken atomic.Bool
 }
 
 // New creates the playback service. With conversion enabled it also starts the cache cleanup.

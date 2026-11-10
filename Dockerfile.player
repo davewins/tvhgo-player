@@ -18,7 +18,9 @@ RUN go build -o tvhgo -tags prod main.go
 
 FROM alpine:3.22 AS prod
 # ffmpeg is only used for on-demand conversion of recordings for browser playback (TVHGO_PLAYBACK_CONVERT=true)
-RUN apk upgrade --no-cache && apk add --no-cache ffmpeg
+# intel-media-driver: VAAPI GPU encoding of live TV on Intel (Broadwell and newer), used only with TVHGO_PLAYBACK_LIVE_ENCODER=vaapi
+# (the container also needs /dev/dri passed in). AMD GPUs use mesa-va-gallium instead: add it here if you have one.
+RUN apk upgrade --no-cache && apk add --no-cache ffmpeg intel-media-driver
 COPY --from=build /build/tvhgo /bin/tvhgo
 RUN adduser -D -H tvhgo
 WORKDIR /tvhgo

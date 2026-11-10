@@ -39,7 +39,11 @@ var (
 // hlsArgs builds the ffmpeg arguments that turn a raw MPEG-TS stream on stdin into a rolling HLS playlist
 // (MPEG-TS segments, H.264 + AAC) in dir. Safari and iOS play HLS natively but not an endless fragmented MP4.
 func hlsArgs(height int, preset, dir string) []string {
-	args := liveArgs(height, preset)
+	return hlsArgsFor(liveEncoder{}, height, preset, dir)
+}
+
+func hlsArgsFor(enc liveEncoder, height int, preset, dir string) []string {
+	args := liveArgsFor(enc, height, preset)
 	// keep everything up to the output options; drop the "-f mp4 ... pipe:1" tail
 	cut := len(args)
 	for i, a := range args {
@@ -100,7 +104,9 @@ func (s *service) StartHLS(open func(ctx context.Context) (io.ReadCloser, error)
 		pre = []string{"-n", "5", bin}
 		bin = nice
 	}
-	cmd := exec.CommandContext(ctx, bin, append(pre, hlsArgs(height, s.cfg.Preset, dir)...)...)
+	enc := s.encoder()
+	cmd := exec.CommandContext(ctx, bin, append(pre, hlsArgsFor(enc, height, s.cfg.Preset, dir)...)...)
+	started := time.Now()
 	cmd.Stdin = src
 	if err := cmd.Start(); err != nil {
 		src.Close()
@@ -116,7 +122,10 @@ func (s *service) StartHLS(open func(ctx context.Context) (io.ReadCloser, error)
 	hlsMu.Unlock()
 
 	go func() { // end of ffmpeg: clean up
-		_ = cmd.Wait()
+		werr := cmd.Wait()
+		if enc.vaapi && werr != nil && ctx.Err() == nil && time.Since(started) < 10*time.Second {
+			s.vaapiFailed(werr)
+		}
 		src.Close()
 		cancel()
 		hlsMu.Lock()

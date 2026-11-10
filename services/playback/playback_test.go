@@ -457,3 +457,54 @@ func TestTMDbIgnoresTheBroadcastTag(t *testing.T) {
 		t.Fatalf("expected one search for the clean title, got %v", queries)
 	}
 }
+
+func TestLiveArgsVAAPI(t *testing.T) {
+	enc := liveEncoder{vaapi: true, device: "/dev/dri/renderD128"}
+	args := liveArgsFor(enc, 720, "veryfast")
+	joined := strings.Join(args, " ")
+	for _, want := range []string{"-vaapi_device /dev/dri/renderD128", "hwupload", "deinterlace_vaapi=auto=1", "scale_vaapi=w=trunc(min(720\\,ih)*dar/2)*2",
+		"-c:v h264_vaapi", "-rc_mode ICQ", "-global_quality 24", "-maxrate 4M", "n_forced*1", "-map 0:v:0?", "frag_keyframe+empty_moov"} {
+		if !strings.Contains(joined, want) {
+			t.Errorf("missing %q in %s", want, joined)
+		}
+	}
+	for _, not := range []string{"libx264", "yadif", "-pix_fmt"} {
+		if strings.Contains(joined, not) {
+			t.Errorf("GPU args should not contain %q: %s", not, joined)
+		}
+	}
+	// the device must be given before the input
+	if strings.Index(joined, "-vaapi_device") > strings.Index(joined, "-i pipe:0") {
+		t.Error("-vaapi_device must come before -i")
+	}
+	// the CPU variant is unchanged
+	cpu := strings.Join(liveArgsFor(liveEncoder{}, 720, "veryfast"), " ")
+	if !strings.Contains(cpu, "libx264") || strings.Contains(cpu, "vaapi") {
+		t.Errorf("CPU args wrong: %s", cpu)
+	}
+}
+
+func TestHLSArgsVAAPIKeepEncoderOptions(t *testing.T) {
+	joined := strings.Join(hlsArgsFor(liveEncoder{vaapi: true, device: "/dev/dri/renderD128"}, 720, "veryfast", "/tmp/x"), " ")
+	for _, want := range []string{"-f hls", "-c:v h264_vaapi", "/tmp/x/index.m3u8", "-vaapi_device"} {
+		if !strings.Contains(joined, want) {
+			t.Errorf("missing %q in %s", want, joined)
+		}
+	}
+	if strings.Contains(joined, "pipe:1") || strings.Contains(joined, "-f mp4") {
+		t.Errorf("mp4 tail not removed: %s", joined)
+	}
+}
+
+func TestEncoderFallsBackToCPUWithoutGPU(t *testing.T) {
+	s, _ := testService(t)
+	s.cfg.LiveEncoder = "vaapi"
+	s.cfg.LiveVAAPIDevice = "/nonexistent/renderD999"
+	if s.encoder().vaapi {
+		t.Error("a missing GPU device must fall back to the CPU")
+	}
+	s.cfg.LiveEncoder = "cpu"
+	if s.encoder().vaapi {
+		t.Error("cpu is the default")
+	}
+}
