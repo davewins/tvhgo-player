@@ -141,7 +141,7 @@ On **DVR → Recordings → Finished**, recordings are grouped into **shows** (b
 - Upcoming and Failed stay as plain lists.
 
 This only changes how the list is displayed. It does not change how Tvheadend records or where files are stored, and
-it works alongside a Jellyfin-style folder-per-show layout (the grouping mirrors it).
+it works alongside a folder-per-show layout such as a media server uses (the grouping mirrors it).
 
 ## Programme pages and series rules
 
@@ -164,7 +164,8 @@ On a programme's page, **Record** records that one broadcast. **Record series** 
 
 **DVR → Series rules** lists every rule (including ones made in Tvheadend itself), with **Disable / Enable** and
 **Delete**. Deleting a rule keeps recordings it already made and removes its not-yet-recorded entries. Rules only
-schedule ordinary recordings, so the conversion pipeline and Jellyfin folders work as for any other recording.
+schedule ordinary recordings, so anything that processes your recordings afterwards (a conversion script, a media
+server) works as for any other recording.
 
 ## Browser support
 

@@ -420,7 +420,7 @@
   "series_channel_only": "This channel only",
   "series_any_channel": "Any channel",
   "series_skip_repeats": "Skip repeats (don't record a broadcast whose description was already recorded)",
-  "series_create_hint": "Records every upcoming “{{title}}”. Recordings are made as usual and converted for Jellyfin.",
+  "series_create_hint": "Records every upcoming “{{title}}”. Recordings are made as usual.",
   "series_created": "Series rule created.",
   "series_exists": "A series rule for this programme already exists.",
   "series_failed": "Could not create the series rule.",

@@ -14,7 +14,7 @@ export type ShowSort = 'newest' | 'oldest' | 'title' | 'count';
 export type EpisodeSort = 'newest' | 'oldest' | 'title';
 
 // Shows are told apart by title only, whatever the channel: the conversion pipeline files recordings into one
-// folder per title for Jellyfin, so this view mirrors that.
+// folder per title (the usual media server layout), so this view mirrors that.
 // (without the broadcaster's tag: "New: Lingo" and "Lingo" are one show).
 const keyOf = (title: string) => cleanTitle(title).toLowerCase();
 

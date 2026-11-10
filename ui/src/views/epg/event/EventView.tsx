@@ -13,6 +13,7 @@ import {
   getRelatedEpgEvents,
 } from '@/clients/api/api';
 
+import Button from '@/components/common/button/Button';
 import DVRProfileSelectModal from '@/modals/dvr/profile/DVRProfileSelectModal';
 import EventChannelInfo from '@/components/epg/event/channelInfo/EventChannelInfo';
 import EventInfo from '@/components/epg/event/info/EventInfo';
@@ -132,6 +133,15 @@ export function Component() {
         pending={seriesPending}
         error={seriesError}
         onCreate={handleCreateSeries}
+      />
+
+      <Button
+        label={`‹ ${t('go_back')}`}
+        quiet
+        style="text"
+        className={styles.back}
+        onClick={() => navigate(-1)}
+        testID="event-back-button"
       />
 
       <EventChannelInfo

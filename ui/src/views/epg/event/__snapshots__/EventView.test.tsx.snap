@@ -200,6 +200,12 @@ exports[`should open profile selection 1`] = `
         </div>
       </div>
     </div>
+    <button
+      class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _text_a7f9df _back_6a4861"
+      data-testid="event-back-button"
+    >
+      ‹ go_back
+    </button>
     <div
       class="_EventChannelInfo_e37c34"
     >
@@ -495,6 +501,12 @@ exports[`should render with pending button 1`] = `
         </div>
       </div>
     </div>
+    <button
+      class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _text_a7f9df _back_6a4861"
+      data-testid="event-back-button"
+    >
+      ‹ go_back
+    </button>
     <div
       class="_EventChannelInfo_e37c34"
     >
@@ -790,6 +802,12 @@ exports[`should render with recording 1`] = `
         </div>
       </div>
     </div>
+    <button
+      class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _text_a7f9df _back_6a4861"
+      data-testid="event-back-button"
+    >
+      ‹ go_back
+    </button>
     <div
       class="_EventChannelInfo_e37c34"
     >
@@ -1085,6 +1103,12 @@ exports[`should render with related events 1`] = `
         </div>
       </div>
     </div>
+    <button
+      class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _text_a7f9df _back_6a4861"
+      data-testid="event-back-button"
+    >
+      ‹ go_back
+    </button>
     <div
       class="_EventChannelInfo_e37c34"
     >
@@ -1419,6 +1443,12 @@ exports[`should render without related events 1`] = `
         </div>
       </div>
     </div>
+    <button
+      class="_button_a7f9df _quiet_a7f9df _medium_a7f9df _text_a7f9df _back_6a4861"
+      data-testid="event-back-button"
+    >
+      ‹ go_back
+    </button>
     <div
       class="_EventChannelInfo_e37c34"
     >

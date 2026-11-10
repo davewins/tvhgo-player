@@ -409,3 +409,20 @@ test('a programme already covered shows the rule and no record series button', (
   expect(document.getByTestId('series-covered')).toBeTruthy();
   expect(document.queryByTestId('record-series-button')).toBeNull();
 });
+
+test('the programme page has a back button', async () => {
+  vi.mocked(useLoaderData).mockReturnValue([
+    buildEvent(),
+    [],
+    [buildDvrProfile('p')],
+    [],
+  ]);
+  vi.mocked(useManageRecordingByEvent).mockReturnValue({
+    pending: false,
+    createRecording: vi.fn(),
+  } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+
+  const document = render(<EventView />);
+  await userEvent.click(document.getByTestId('event-back-button'));
+  expect(navigateMock).toHaveBeenCalledWith(-1);
+});

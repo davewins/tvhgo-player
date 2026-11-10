@@ -1,6 +1,8 @@
 .EventChannelInfo {
   display: flex;
   justify-content: space-between;
+  // room between the channel logo and whatever follows (the programme's artwork)
+  margin-bottom: 1.5rem;
 }
 
 .channelName {
