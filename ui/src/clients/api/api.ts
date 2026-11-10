@@ -2,6 +2,7 @@ import {
   AuthInfo,
   Autorec,
   Channel,
+  Chapter,
   CreateAutorecOpts,
   CreateRecordingOpts,
   CreateTokenResponse,
@@ -404,4 +405,9 @@ export async function setAutorecEnabled(
 
 export async function deleteAutorec(id: string): Promise<void> {
   await client.delete(`/dvr/autorec/${id}`);
+}
+
+export async function getChapters(id: string): Promise<Chapter[]> {
+  const response = await client.get<Chapter[]>(`/recordings/${id}/chapters`);
+  return response.data || [];
 }

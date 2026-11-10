@@ -49,6 +49,8 @@ type (
 		HLSFile(id, name string) (string, bool)
 		// StopHLS ends a live HLS session.
 		StopHLS(id string)
+		// Chapters returns the chapters of the recording's playable MP4, advert breaks flagged.
+		Chapters(ctx context.Context, rec *Recording) ([]Chapter, error)
 		// Thumb returns the path of a thumbnail image for a recording: a frame from the recording itself if it
 		// is finished, otherwise (or if no frame can be made) TMDb artwork for the programme, if configured.
 		Thumb(ctx context.Context, rec *Recording) (string, bool)
@@ -59,6 +61,14 @@ type (
 		File(rec *Recording) (string, bool)
 	}
 )
+
+// Chapter is a named stretch of a recording; Advert is true for an advert break (written by the pipeline's Comskip job).
+type Chapter struct {
+	Start  float64 `json:"start"`
+	End    float64 `json:"end"`
+	Title  string  `json:"title"`
+	Advert bool    `json:"advert"`
+}
 
 const (
 	PlaybackNone       PlaybackStatus = "none"

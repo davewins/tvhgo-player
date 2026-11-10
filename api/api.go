@@ -160,6 +160,7 @@ func (s *router) Handler() http.Handler {
 
 	authenticated.Get("/recordings/{id}/playback", s.GetPlaybackStatus)
 	authenticated.Get("/recordings/{id}/thumb", s.GetRecordingThumb)
+	authenticated.Get("/recordings/{id}/chapters", s.GetRecordingChapters)
 	authenticated.Post("/recordings/{id}/playback", s.PreparePlayback)
 
 	authenticated.Get("/profiles/stream", s.GetStreamProfiles)

@@ -118,6 +118,7 @@ All need a logged-in session (like the rest of the API).
 | `POST /api/channels/{n}/live/hls?quality=H` | Start a live HLS session (Safari/iOS); returns `{id, url}` of the playlist |
 | `GET /api/live/hls/{id}/index.m3u8` and `seg*.ts` | The session's playlist and segments |
 | `DELETE /api/live/hls/{id}` | End the session |
+| `GET /api/recordings/{id}/chapters` | The MP4's chapters, advert breaks flagged (`advert: true`) |
 | `GET /api/recordings/{id}/play?download=1` | The MP4 as a named download (attachment) |
 | `GET /api/epg/events/{id}/thumb` | TMDb artwork for the programme's title (404 if none) |
 | `GET/POST /api/dvr/autorec` | List series rules / create one from a programme (`eventId`, `anyChannel`, `recordRepeats`) |
@@ -166,6 +167,27 @@ On a programme's page, **Record** records that one broadcast. **Record series** 
 **Delete**. Deleting a rule keeps recordings it already made and removes its not-yet-recorded entries. Rules only
 schedule ordinary recordings, so anything that processes your recordings afterwards (a conversion script, a media
 server) works as for any other recording.
+
+## Skipping adverts
+
+Recordings from commercial channels contain the adverts. If the MP4 has chapters named **Commercial** (or Ad, Advert,
+Intermission), the player shows a **Skip ad break** button over the picture while a break is playing; one click jumps
+to the end of the break. It reads the chapters from the MP4 itself (`GET /api/recordings/{id}/chapters`), so it works on
+any browser and phone. On an iPhone it is shown in the normal player, but not while the video is in Apple's own
+full-screen view, which only shows the system controls.
+
+tvhgo does not find the breaks itself. They come from whatever writes the chapters; the author's setup runs
+[Comskip](https://github.com/erikkaashoek/Comskip) on each new recording and writes the breaks into the MP4 as chapters
+(see *Finding adverts with Comskip* below). Media servers that read chapters, such as Jellyfin with the Intro Skipper
+plugin, can then offer their own skip buttons from the same chapters.
+
+### Finding adverts with Comskip (optional, outside tvhgo)
+
+A small example job is in the author's repository (`scripts/tvh-comskip-sync.py`): for every finished recording it runs
+Comskip in a throwaway container, converts the break times to chapters ("Commercial" for each break, "Part N" for the
+programme, the lead-in before the programme included), checks the new file (same duration, same streams, size within
+1%) and only then replaces the MP4. BBC channels are skipped because they have no adverts. Comskip is accurate on ITV and
+Channel 4 recordings but not perfect, so the job refuses a result where almost half the recording would be "adverts".
 
 ## Browser support
 

@@ -433,5 +433,6 @@
   "series_delete_confirm": "Diese Serienregel löschen? Bereits gemachte Aufnahmen bleiben erhalten.",
   "series_manage": "Serienregeln verwalten",
   "series_intro": "Jede Regel nimmt jede kommende passende Sendung auf.",
-  "event_weekday_date": "{{ ts, moment(format: ddd D. MMM) }}"
+  "event_weekday_date": "{{ ts, moment(format: ddd D. MMM) }}",
+  "skip_ad_break": "Werbepause überspringen"
 }

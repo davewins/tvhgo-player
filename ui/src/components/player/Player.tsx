@@ -1,4 +1,6 @@
+import { Chapter, PlaybackInfo } from '@/clients/api/api.types';
 import {
+  getChapters,
   getLiveQualities,
   getPlayback,
   preparePlayback,
@@ -7,7 +9,6 @@ import {
 import { useEffect, useRef, useState } from 'react';
 
 import Modal from '@/components/common/modal/Modal';
-import { PlaybackInfo } from '@/clients/api/api.types';
 import styles from './Player.module.scss';
 import { useTranslation } from 'react-i18next';
 
@@ -93,6 +94,9 @@ function Inner({
   const [preparing, setPreparing] = useState<PlaybackInfo | null>(null);
   // radio: the stream has no video, only audio
   const [audioOnly, setAudioOnly] = useState(false);
+  // recordings: the advert breaks (chapters marked by the pipeline) and the one being played right now, if any
+  const [adBreaks, setAdBreaks] = useState<Chapter[]>([]);
+  const [currentBreak, setCurrentBreak] = useState<Chapter | null>(null);
   // live: heights tvhgo can transcode to (null = still loading) and the current choice ("auto" or a height)
   const [qualities, setQualities] = useState<number[] | null>(null);
   const [quality, setQuality] = useState<string>(AUTO);
@@ -241,6 +245,10 @@ function Inner({
       setPreparing(null);
       video.src = `/api/recordings/${recordingId}/play`;
       video.play().catch(() => undefined);
+      // the advert breaks are an extra: playback never waits for them
+      getChapters(recordingId)
+        .then((list) => !cancelled && setAdBreaks(list.filter((c) => c.advert)))
+        .catch(() => undefined);
     };
 
     // ready -> play; otherwise ask the server to prepare a playable copy and poll its progress
@@ -288,6 +296,28 @@ function Inner({
       video.load();
     };
   }, [recordingId]);
+
+  // "Skip ad break" is shown while the playhead is inside a break (not in its last second)
+  const onTimeUpdate = (e: { currentTarget: HTMLVideoElement }) => {
+    if (adBreaks.length === 0) {
+      return;
+    }
+    const time = e.currentTarget.currentTime;
+    const inside = adBreaks.find(
+      (c) => time >= c.start - 0.25 && time < c.end - 1
+    );
+    setCurrentBreak((prev) =>
+      prev === (inside ?? null) ? prev : (inside ?? null)
+    );
+  };
+
+  const skipBreak = () => {
+    const video = videoRef.current;
+    if (video && currentBreak) {
+      video.currentTime = currentBreak.end;
+      setCurrentBreak(null);
+    }
+  };
 
   const onQualityChange = (q: string) => {
     saveQuality(q);
@@ -379,31 +409,46 @@ function Inner({
           )}
         </div>
       )}
-      <video
-        ref={videoRef}
-        className={audioOnly ? styles.videoAudioOnly : styles.video}
-        style={preparing ? { display: 'none' } : undefined}
-        controls={!liveRadio}
-        playsInline
-        onLoadedMetadata={checkVideo}
-        onLoadedData={checkVideo}
-        onPlaying={checkVideo}
-        onResize={checkVideo}
-        onError={() => {
-          // "Auto" uses tvheadend's own video profiles, which cannot carry a radio stream: retry with tvhgo's
-          // own transcoder (it handles audio-only channels)
-          if (
-            channelNumber !== undefined &&
-            quality === AUTO &&
-            qualities &&
-            qualities.length > 0
-          ) {
-            setQuality(String(qualities.includes(720) ? 720 : qualities[0]));
-            return;
-          }
-          setError(recordingId ? t('player_no_copy') : t('player_live_error'));
-        }}
-      />
+      <div className={styles.videoWrap}>
+        <video
+          ref={videoRef}
+          className={audioOnly ? styles.videoAudioOnly : styles.video}
+          style={preparing ? { display: 'none' } : undefined}
+          controls={!liveRadio}
+          playsInline
+          onLoadedMetadata={checkVideo}
+          onLoadedData={checkVideo}
+          onPlaying={checkVideo}
+          onResize={checkVideo}
+          onTimeUpdate={onTimeUpdate}
+          onError={() => {
+            // "Auto" uses tvheadend's own video profiles, which cannot carry a radio stream: retry with tvhgo's
+            // own transcoder (it handles audio-only channels)
+            if (
+              channelNumber !== undefined &&
+              quality === AUTO &&
+              qualities &&
+              qualities.length > 0
+            ) {
+              setQuality(String(qualities.includes(720) ? 720 : qualities[0]));
+              return;
+            }
+            setError(
+              recordingId ? t('player_no_copy') : t('player_live_error')
+            );
+          }}
+        />
+        {currentBreak && (
+          <button
+            type="button"
+            className={styles.skipAd}
+            onClick={skipBreak}
+            data-testid="skip-ad-break"
+          >
+            {t('skip_ad_break')} ›
+          </button>
+        )}
+      </div>
       {error && <p className={styles.error}>{error}</p>}
     </div>
   );

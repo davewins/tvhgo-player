@@ -247,6 +247,14 @@ export type CreateRecordingOpts = {
   configId?: string;
 };
 
+// A named stretch of a recording; advert is true for an advert break.
+export type Chapter = {
+  start: number;
+  end: number;
+  title: string;
+  advert: boolean;
+};
+
 export type PlaybackInfo = {
   status: 'none' | 'queued' | 'converting' | 'ready' | 'failed';
   progress: number;

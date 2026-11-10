@@ -136,6 +136,29 @@ func downloadName(rec *core.Recording) string {
 	return name + ".mp4"
 }
 
+// GetRecordingChapters godoc
+//
+//	@Summary	Get the chapters of a recording's MP4 (advert breaks are flagged)
+//	@Tags		recordings
+//	@Param		id	path	string	true	"Recording id"
+//	@Produce	json
+//	@Success	200	{array}		core.Chapter
+//	@Failure	404	{object}	response.ErrorResponse
+//	@Security	JWT
+//	@Router		/recordings/{id}/chapters [get]
+func (s *router) GetRecordingChapters(w http.ResponseWriter, r *http.Request) {
+	rec := s.recordingForPlayback(w, r)
+	if rec == nil {
+		return
+	}
+	list, err := s.playback.Chapters(r.Context(), rec)
+	if err != nil {
+		log.Debug().Str("id", rec.ID).Err(err).Msg("chapters: could not read")
+		list = []core.Chapter{} // chapters are an extra: never fail playback over them
+	}
+	response.JSON(w, list, http.StatusOK)
+}
+
 // GetRecordingThumb godoc
 //
 //	@Summary	Get a thumbnail for a recording (a frame from the recording, else TMDb artwork)
