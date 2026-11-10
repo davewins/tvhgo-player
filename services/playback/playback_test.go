@@ -355,3 +355,65 @@ func TestProgrammeArtUsesTMDb(t *testing.T) {
 		t.Fatal("expected artwork for an exact title match")
 	}
 }
+
+func TestTMDbPrefersTheUKShowWithTheSameTitle(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case strings.HasPrefix(r.URL.Path, "/search/tv"):
+			// the American drama is the more popular "Countdown"; the UK game show is the one broadcast here
+			_, _ = w.Write([]byte(`{"results":[
+				{"name":"Countdown","origin_country":["US"],"backdrop_path":"/us.jpg","popularity":11.2},
+				{"name":"Countdown","origin_country":["GB"],"backdrop_path":"/gb.jpg","popularity":10.9},
+				{"name":"Countdown","origin_country":["KR"],"backdrop_path":"/kr.jpg","popularity":29}]}`))
+		case strings.HasPrefix(r.URL.Path, "/search/movie"):
+			_, _ = w.Write([]byte(`{"results":[]}`))
+		case r.URL.Path == "/img/gb.jpg":
+			_, _ = w.Write([]byte("GBIMG"))
+		case r.URL.Path == "/img/us.jpg", r.URL.Path == "/img/kr.jpg":
+			_, _ = w.Write([]byte("WRONGIMG"))
+		default:
+			w.WriteHeader(404)
+		}
+	}))
+	defer srv.Close()
+	s, _ := testService(t)
+	s.cfg.TMDBAPIKey, s.cfg.TMDBLanguage = "k", "en-GB"
+	s.tmdbAPI, s.tmdbImg = srv.URL, srv.URL+"/img"
+
+	p, ok := s.tmdbImage(context.Background(), "Countdown")
+	if !ok {
+		t.Fatal("expected artwork")
+	}
+	if b, _ := os.ReadFile(p); string(b) != "GBIMG" {
+		t.Fatalf("expected the UK show's picture, got %q", b)
+	}
+}
+
+func TestTMDbFallsBackToMostPopularWhenNoUKShow(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case strings.HasPrefix(r.URL.Path, "/search/tv"):
+			_, _ = w.Write([]byte(`{"results":[
+				{"name":"American Pickers","origin_country":["US"],"backdrop_path":"/ap.jpg","popularity":30},
+				{"name":"American Pickers","origin_country":["CA"],"backdrop_path":"/ca.jpg","popularity":2}]}`))
+		case strings.HasPrefix(r.URL.Path, "/search/movie"):
+			_, _ = w.Write([]byte(`{"results":[]}`))
+		case r.URL.Path == "/img/ap.jpg":
+			_, _ = w.Write([]byte("APIMG"))
+		default:
+			w.WriteHeader(404)
+		}
+	}))
+	defer srv.Close()
+	s, _ := testService(t)
+	s.cfg.TMDBAPIKey, s.cfg.TMDBLanguage = "k", "en-GB"
+	s.tmdbAPI, s.tmdbImg = srv.URL, srv.URL+"/img"
+
+	p, ok := s.tmdbImage(context.Background(), "American Pickers")
+	if !ok {
+		t.Fatal("expected artwork")
+	}
+	if b, _ := os.ReadFile(p); string(b) != "APIMG" {
+		t.Fatalf("expected the most popular match, got %q", b)
+	}
+}

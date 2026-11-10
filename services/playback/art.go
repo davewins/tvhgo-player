@@ -154,6 +154,21 @@ type tmdbResult struct {
 	Backdrop     string  `json:"backdrop_path"`
 	Poster       string  `json:"poster_path"`
 	Popularity   float64 `json:"popularity"`
+	// OriginCountry is where a TV show comes from ("GB", "US"...); movies do not have it
+	OriginCountry []string `json:"origin_country"`
+}
+
+// ukBonus puts a UK-made show ahead of any other with the same title, however popular: this is UK television, and
+// "Countdown" means the Channel 4 game show, not the American drama of that name.
+const ukBonus = 1e6
+
+func (r tmdbResult) score() float64 {
+	for _, c := range r.OriginCountry {
+		if c == "GB" {
+			return r.Popularity + ukBonus
+		}
+	}
+	return r.Popularity
 }
 
 func (s *service) tmdbSearch(ctx context.Context, kind, title string) (string, error) {
@@ -181,7 +196,7 @@ func (s *service) tmdbSearch(ctx context.Context, kind, title string) (string, e
 		return "", err
 	}
 	want := normTitle(title)
-	best, bestPop := "", -1.0
+	best, bestScore := "", -1.0
 	for _, r := range body.Results {
 		// only accept an exact (normalised) title match: a wrong picture is worse than none
 		match := normTitle(r.Name) == want || normTitle(r.OriginalName) == want ||
@@ -190,8 +205,8 @@ func (s *service) tmdbSearch(ctx context.Context, kind, title string) (string, e
 		if img == "" {
 			img = r.Poster
 		}
-		if match && img != "" && r.Popularity > bestPop {
-			best, bestPop = img, r.Popularity
+		if match && img != "" && r.score() > bestScore {
+			best, bestScore = img, r.score()
 		}
 	}
 	return best, nil
@@ -203,7 +218,8 @@ func (s *service) tmdbImage(ctx context.Context, title string) (string, bool) {
 	if key == "" || len(key) > 120 {
 		return "", false
 	}
-	dir := s.artDir("art")
+	// "art2": pictures cached before UK shows were preferred could be the wrong show with the same title
+	dir := s.artDir("art2")
 	img := filepath.Join(dir, key+".jpg")
 	miss := filepath.Join(dir, key+".none")
 	if fileOK(img) {
