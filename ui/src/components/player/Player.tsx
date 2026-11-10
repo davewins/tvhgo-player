@@ -98,6 +98,8 @@ function Inner({
   const [quality, setQuality] = useState<string>(AUTO);
   // live radio has its own play/pause button; resuming restarts the stream so it is live again, not stale
   const [paused, setPaused] = useState(false);
+  // the channel logo in the header (hidden if the channel has none)
+  const [logoFailed, setLogoFailed] = useState(false);
   const [restart, setRestart] = useState(0);
 
   // Radio has no video track. Safari (HLS) reports 0x0 until the first frame is decoded, so a zero size is only
@@ -295,7 +297,20 @@ function Inner({
   return (
     <div className={styles.player}>
       <div className={styles.header}>
-        <h3 className={styles.title}>{title}</h3>
+        <div className={styles.titleRow}>
+          {picon &&
+            channelNumber !== undefined &&
+            !audioOnly &&
+            !logoFailed && (
+              <img
+                className={styles.headerLogo}
+                src={picon}
+                alt=""
+                onError={() => setLogoFailed(true)}
+              />
+            )}
+          <h3 className={styles.title}>{title}</h3>
+        </div>
         {channelNumber !== undefined &&
           !audioOnly &&
           qualities &&
