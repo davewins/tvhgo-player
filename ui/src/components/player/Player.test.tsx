@@ -150,3 +150,29 @@ test('a recording watched to the end starts from the top, without a banner', asy
   expect(time).toBe(0);
   expect(doc.queryByTestId('resume-banner')).toBeNull();
 });
+
+test('the break bar under the video shows the ad breaks and seeks when used', async () => {
+  const doc = await open();
+  const video = doc.container.querySelector('video') as HTMLVideoElement;
+  Object.defineProperty(video, 'duration', { configurable: true, value: 1800 });
+  fireEvent.durationChange(video);
+  at(doc, 100);
+  await waitFor(() => expect(doc.getByTestId('break-bar')).toBeTruthy());
+  expect(doc.getAllByTestId('break-segment')).toHaveLength(2);
+
+  fireEvent.click(doc.getByText(/break_next/));
+  expect(time).toBe(663);
+  at(doc, 700);
+  fireEvent.click(doc.getByText(/break_prev/));
+  expect(time).toBe(663);
+});
+
+test('no break bar for a recording without ad breaks', async () => {
+  vi.mocked(getChapters).mockResolvedValue([]);
+  const doc = render(
+    <Player visible onClose={() => undefined} title="Show" recordingId="r1" />
+  );
+  await waitFor(() => expect(getChapters).toHaveBeenCalled());
+  await new Promise((r) => setTimeout(r, 0));
+  expect(doc.queryByTestId('break-bar')).toBeNull();
+});

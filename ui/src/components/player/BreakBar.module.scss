@@ -1,0 +1,73 @@
+.root {
+  margin-top: 0.6rem;
+}
+
+.bar {
+  position: relative;
+  height: 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  cursor: pointer;
+  touch-action: none; // dragging on a touch screen seeks instead of scrolling the page
+  user-select: none;
+
+  &:focus-visible {
+    outline: 2px solid #58a6ff;
+    outline-offset: 2px;
+  }
+}
+
+.played {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(88, 166, 255, 0.45);
+}
+
+// the ad breaks, drawn over the played part so they stay visible
+.ad {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  min-width: 3px;
+  background: #e8a33d;
+}
+
+.head {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  margin-left: -1px;
+  background: #fff;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+
+  button {
+    padding: 0.35rem 0.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 3px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+  }
+}
+
+.count {
+  opacity: 0.7;
+}

@@ -505,5 +505,10 @@
   "confirm_delete_protected_note_one": "It is protected: deleting it removes it for good.",
   "confirm_delete_protected_note_other": "{{count}} of them are protected: deleting them removes them for good.",
   "storage_protected": "{{size}} protected ({{count}})",
-  "storage_protected_warn": "Protected recordings use a large part of the allowance, Tvheadend cannot free that space."
+  "storage_protected_warn": "Protected recordings use a large part of the allowance, Tvheadend cannot free that space.",
+  "break_bar_label": "Ad breaks",
+  "break_prev": "Previous break",
+  "break_next": "Next break",
+  "break_count_one": "1 ad break",
+  "break_count_other": "{{count}} ad breaks"
 }

@@ -65,6 +65,12 @@
   border-radius: 2px;
 }
 
+.videoWithBreaks {
+  // the break bar and its buttons sit under the video: leave room for them
+  max-height: calc(75vh - 12.5rem);
+  max-height: calc(75dvh - 12.5rem);
+}
+
 .error {
   margin: 0.75rem 0 0 0;
   color: var(--color-danger-bg);

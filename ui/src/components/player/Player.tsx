@@ -12,7 +12,9 @@ import { dropProgress, setProgress } from '@/hooks/progress';
 import { formatClock, resumePoint } from '@/utils/progress';
 import { useEffect, useRef, useState } from 'react';
 
+import BreakBar from './BreakBar';
 import Modal from '@/components/common/modal/Modal';
+import { c } from '@/utils/classNames';
 import styles from './Player.module.scss';
 import { useTranslation } from 'react-i18next';
 
@@ -122,6 +124,8 @@ function Inner({
   // recordings: the advert breaks (chapters marked by the pipeline) and the one being played right now, if any
   const [adBreaks, setAdBreaks] = useState<Chapter[]>([]);
   const [currentBreak, setCurrentBreak] = useState<Chapter | null>(null);
+  // for the break bar under the video
+  const [clock, setClock] = useState({ time: 0, duration: 0 });
   // live: heights tvhgo can transcode to (null = still loading) and the current choice ("auto" or a height)
   const [qualities, setQualities] = useState<number[] | null>(null);
   const [quality, setQuality] = useState<string>(AUTO);
@@ -399,6 +403,10 @@ function Inner({
     if (adBreaks.length === 0) {
       return;
     }
+    setClock({
+      time: e.currentTarget.currentTime,
+      duration: e.currentTarget.duration,
+    });
     const time = e.currentTarget.currentTime;
     const inside = adBreaks.find(
       (c) => time >= c.start - 0.25 && time < c.end - 1
@@ -513,12 +521,23 @@ function Inner({
       <div className={styles.videoWrap}>
         <video
           ref={videoRef}
-          className={audioOnly ? styles.videoAudioOnly : styles.video}
+          className={
+            audioOnly
+              ? styles.videoAudioOnly
+              : c(
+                  styles.video,
+                  adBreaks.length > 0 ? styles.videoWithBreaks : ''
+                )
+          }
           style={preparing ? { display: 'none' } : undefined}
           controls={!liveRadio}
           playsInline
           onLoadedMetadata={onMetadata}
           onPause={(e) => trackProgress(e.currentTarget, true)}
+          onDurationChange={(e) => {
+            const d = e.currentTarget.duration;
+            setClock((c) => ({ ...c, duration: d }));
+          }}
           onLoadedData={checkVideo}
           onPlaying={checkVideo}
           onResize={checkVideo}
@@ -559,6 +578,20 @@ function Inner({
           </button>
         )}
       </div>
+      {recordingId && !preparing && (
+        <BreakBar
+          breaks={adBreaks}
+          duration={clock.duration}
+          time={clock.time}
+          onSeek={(seconds) => {
+            const video = videoRef.current;
+            if (video) {
+              video.currentTime = seconds;
+              setClock((c) => ({ ...c, time: seconds }));
+            }
+          }}
+        />
+      )}
       {error && <p className={styles.error}>{error}</p>}
     </div>
   );

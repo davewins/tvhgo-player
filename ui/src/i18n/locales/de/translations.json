@@ -499,5 +499,10 @@
   "confirm_delete_protected_note_one": "Sie ist geschützt: Löschen entfernt sie endgültig.",
   "confirm_delete_protected_note_other": "{{count}} davon sind geschützt: Löschen entfernt sie endgültig.",
   "storage_protected": "{{size}} geschützt ({{count}})",
-  "storage_protected_warn": "Geschützte Aufnahmen belegen einen großen Teil des Kontingents, Tvheadend kann diesen Platz nicht freigeben."
+  "storage_protected_warn": "Geschützte Aufnahmen belegen einen großen Teil des Kontingents, Tvheadend kann diesen Platz nicht freigeben.",
+  "break_bar_label": "Werbepausen",
+  "break_prev": "Vorherige Pause",
+  "break_next": "Nächste Pause",
+  "break_count_one": "1 Werbepause",
+  "break_count_other": "{{count}} Werbepausen"
 }

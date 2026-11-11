@@ -218,6 +218,12 @@ to the end of the break. It reads the chapters from the MP4 itself (`GET /api/re
 any browser and phone. On an iPhone it is shown in the normal player, but not while the video is in Apple's own
 full-screen view, which only shows the system controls.
 
+Under the video a **break bar** shows the whole recording as a timeline with the ad breaks as orange stretches and the
+playhead moving along it. Tap or drag the bar to seek (arrow keys move 10 seconds), and use **Previous break / Next break**
+to jump between breaks. It is ordinary page content rather than part of the video's own controls, so it looks and works the
+same in every browser, while the native controls (AirPlay, picture-in-picture, full screen) stay untouched. As with the
+skip button it is not shown inside Apple's full-screen view on an iPhone.
+
 tvhgo does not find the breaks itself. They come from whatever writes the chapters; the author's setup runs
 [Comskip](https://github.com/erikkaashoek/Comskip) on each new recording and writes the breaks into the MP4 as chapters
 (see *Finding adverts with Comskip* below). Media servers that read chapters, such as Jellyfin with the Intro Skipper
