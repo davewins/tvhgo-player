@@ -27,9 +27,30 @@
   margin-top: 3.5rem;
 }
 
+// tablets: a slim icon rail that the burger button widens to the full menu (overlaying the page)
 @media screen and (min-width: 700px) {
   .navigation {
     display: block;
+    width: 3.5rem;
+    transition: width 0.15s ease;
+
+    &.expanded {
+      width: 14rem;
+      box-shadow: 4px 0 12px rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  .main {
+    margin-left: 3.5rem;
+  }
+}
+
+// wide screens: the full menu is always shown
+@media screen and (min-width: 1200px) {
+  .navigation,
+  .navigation.expanded {
+    width: 14rem;
+    box-shadow: none;
   }
 
   .main {

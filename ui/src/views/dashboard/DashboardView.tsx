@@ -57,7 +57,12 @@ export function Component() {
     <div className={c(styles.root)}>
       <ScrollRestoration />
       <Header onToggle={() => setExpanded(!expanded)} />
-      <div className={c(styles.navigation, expanded ? styles.expanded : '')}>
+      <div
+        className={c(
+          styles.navigation,
+          expanded ? styles.expanded : 'nav-rail'
+        )}
+      >
         <NavigationBar
           items={navigationItems}
           roles={[...(user?.isAdmin ? ['admin'] : [])]}

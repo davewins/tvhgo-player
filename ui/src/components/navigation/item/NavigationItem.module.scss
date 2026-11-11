@@ -64,3 +64,28 @@
 .subItems {
   padding-left: 2rem;
 }
+
+// icon rail (tablets, menu not expanded): icons only
+@media screen and (min-width: 700px) and (max-width: 1199.98px) {
+  :global(.nav-rail) {
+    .root {
+      padding-left: 0;
+      padding-right: 0;
+      justify-content: center;
+
+      span {
+        display: none;
+      }
+
+      svg {
+        margin-right: 0;
+        width: 1.2rem;
+        height: 1.2rem;
+      }
+    }
+
+    .subItems {
+      display: none;
+    }
+  }
+}

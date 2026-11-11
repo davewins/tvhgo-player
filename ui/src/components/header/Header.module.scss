@@ -71,8 +71,12 @@
   width: 1rem;
 }
 
-@media screen and (min-width: 700px) {
+@media screen and (min-width: 1200px) {
   .menuIcon {
     display: none;
   }
+}
+
+.menuIcon {
+  cursor: pointer;
 }
