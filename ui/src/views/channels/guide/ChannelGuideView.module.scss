@@ -166,7 +166,7 @@ $row: 68px;
 
 .logo {
   flex: 1;
-  height: 2.8rem;
+  height: 100%; // as tall as the programme blocks beside it
   min-width: 0;
   overflow: hidden;
   padding: 0.25rem;
