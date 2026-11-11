@@ -160,7 +160,7 @@ function Inner({
     if (resumedAt === null) {
       return;
     }
-    const timer = setTimeout(() => setResumedAt(null), 15000);
+    const timer = setTimeout(() => setResumedAt(null), 6000);
     return () => clearTimeout(timer);
   }, [resumedAt]);
 
