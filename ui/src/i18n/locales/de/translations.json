@@ -477,5 +477,8 @@
   "series_manage": "Serienregeln verwalten",
   "series_intro": "Jede Regel nimmt jede kommende passende Sendung auf.",
   "event_weekday_date": "{{ ts, moment(format: ddd D. MMM) }}",
-  "skip_ad_break": "Werbepause überspringen"
+  "skip_ad_break": "Werbepause überspringen",
+  "player_resumed": "Fortgesetzt bei {{time}}",
+  "player_start_over": "Von vorn beginnen",
+  "recording_watched": "Gesehen"
 }

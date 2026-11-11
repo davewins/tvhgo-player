@@ -33,6 +33,7 @@ type router struct {
 	tuners                core.TunerService
 	pipe                  *pipeline.Reader
 	storage               core.StorageService
+	watch                 core.WatchProgressRepository
 }
 
 var corsOpts = cors.Options{
@@ -146,6 +147,7 @@ func (s *router) Handler() http.Handler {
 
 	authenticated.Get("/recordings", s.GetRecordings)
 	authenticated.Get("/recordings/storage", s.GetStorage)
+	authenticated.Get("/recordings/progress", s.GetWatchProgress)
 	authenticated.Post("/recordings", s.CreateRecording)
 
 	authenticated.Delete("/recordings", s.BatchRemoveRecordings)
@@ -170,6 +172,8 @@ func (s *router) Handler() http.Handler {
 	authenticated.Get("/recordings/{id}/playback", s.GetPlaybackStatus)
 	authenticated.Get("/recordings/{id}/thumb", s.GetRecordingThumb)
 	authenticated.Get("/recordings/{id}/chapters", s.GetRecordingChapters)
+	authenticated.Put("/recordings/{id}/progress", s.SaveWatchProgress)
+	authenticated.Delete("/recordings/{id}/progress", s.DeleteWatchProgress)
 	authenticated.Post("/recordings/{id}/playback", s.PreparePlayback)
 
 	authenticated.Get("/profiles/stream", s.GetStreamProfiles)

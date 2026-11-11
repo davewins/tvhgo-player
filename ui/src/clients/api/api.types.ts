@@ -368,3 +368,11 @@ export type StorageStatus = {
   allowanceBytes: number;
   hoursLeft: number;
 };
+
+export type WatchProgress = {
+  recordingId: string;
+  // seconds
+  position: number;
+  duration: number;
+  updatedAt: number;
+};

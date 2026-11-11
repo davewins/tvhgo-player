@@ -231,6 +231,17 @@ programme, the lead-in before the programme included), checks the new file (same
 1%) and only then replaces the MP4. BBC channels are skipped because they have no adverts. Comskip is accurate on ITV and
 Channel 4 recordings but not perfect, so the job refuses a result where almost half the recording would be "adverts".
 
+## Resume where you left off
+
+The player remembers, per user, how far you got in each recording (saved every 10 seconds, when you pause and when you
+close the player; stored in tvhgo's own database, table `watch_progress`). Opening the recording again continues about
+5 seconds before where you stopped, with a "Resumed at 23:10 · Start from beginning" notice. Less than 15 seconds in, or
+within the last minute, counts as not started / watched and plays from the top. Episode tiles show a thin progress bar
+(dimmed and full once watched).
+
+API: `GET /api/recordings/progress`, `PUT /api/recordings/{id}/progress` (`{"position": s, "duration": s}`),
+`DELETE /api/recordings/{id}/progress`. This is separate from Jellyfin's own resume position.
+
 ## Channel groups (Channels page)
 A row of chips above the guide (All, HD, +1, News, Kids, Shopping, Radio) filters the channel list. The groups are worked
 out from the channel number and name using UK Freeview numbering (HD 101-199, news 231-236, radio 700 and up,

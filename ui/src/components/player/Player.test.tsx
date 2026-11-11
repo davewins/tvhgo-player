@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
-import { getChapters, getPlayback } from '@/clients/api/api';
+import { getChapters, getPlayback, getWatchProgress } from '@/clients/api/api';
 
 import Player from './Player';
 
@@ -8,14 +8,19 @@ vi.mock('@/clients/api/api', async (orig) => ({
   ...(await orig<typeof import('@/clients/api/api')>()),
   getChapters: vi.fn(),
   getPlayback: vi.fn(),
+  getWatchProgress: vi.fn().mockResolvedValue([]),
+  clearWatchProgress: vi.fn().mockResolvedValue(undefined),
   getLiveQualities: vi.fn().mockResolvedValue([]),
   preparePlayback: vi.fn(),
 }));
 
 let time = 0;
+const fetchMock = vi.fn().mockResolvedValue({});
 
 beforeEach(() => {
   time = 0;
+  vi.stubGlobal('fetch', fetchMock);
+  vi.mocked(getWatchProgress).mockResolvedValue([]);
   // jsdom has no media playback: stand in for the bits the player uses
   Object.defineProperty(HTMLMediaElement.prototype, 'currentTime', {
     configurable: true,
@@ -111,4 +116,37 @@ test('a recording without chapters, or a failed lookup, never shows it', async (
   await waitFor(() => expect(getChapters).toHaveBeenCalled());
   at(doc, 10);
   expect(doc.queryByTestId('skip-ad-break')).toBeNull();
+});
+
+const progress = (position: number, duration = 1800) => [
+  { recordingId: 'r1', position, duration, updatedAt: 0 },
+];
+
+test('resumes a little before where the last viewing stopped, and says so', async () => {
+  vi.mocked(getWatchProgress).mockResolvedValue(progress(900));
+  const doc = await open();
+  const video = doc.container.querySelector('video') as HTMLVideoElement;
+  fireEvent.loadedMetadata(video);
+  expect(time).toBe(895);
+  expect(doc.getByTestId('resume-banner')).toBeTruthy();
+});
+
+test('"start from beginning" goes back to 0', async () => {
+  vi.mocked(getWatchProgress).mockResolvedValue(progress(900));
+  const doc = await open();
+  const video = doc.container.querySelector('video') as HTMLVideoElement;
+  fireEvent.loadedMetadata(video);
+  fireEvent.click(doc.getByText(/beginning|player_start_over/i));
+  expect(time).toBe(0);
+  expect(doc.queryByTestId('resume-banner')).toBeNull();
+});
+
+test('a recording watched to the end starts from the top, without a banner', async () => {
+  vi.mocked(getWatchProgress).mockResolvedValue(progress(1790));
+  const doc = await open();
+  fireEvent.loadedMetadata(
+    doc.container.querySelector('video') as HTMLVideoElement
+  );
+  expect(time).toBe(0);
+  expect(doc.queryByTestId('resume-banner')).toBeNull();
 });

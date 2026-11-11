@@ -1,11 +1,15 @@
 import { Chapter, PlaybackInfo } from '@/clients/api/api.types';
 import {
+  clearWatchProgress,
   getChapters,
   getLiveQualities,
   getPlayback,
+  getWatchProgress,
   preparePlayback,
   startLiveHLS,
 } from '@/clients/api/api';
+import { dropProgress, setProgress } from '@/hooks/progress';
+import { formatClock, resumePoint } from '@/utils/progress';
 import { useEffect, useRef, useState } from 'react';
 
 import Modal from '@/components/common/modal/Modal';
@@ -53,6 +57,27 @@ function stopHLS(id: string) {
     credentials: 'same-origin',
   }).catch(() => undefined);
 }
+
+// remember where the viewer is in a recording (keepalive lets the request finish while the player is closing)
+function saveProgress(id: string, position: number, duration: number) {
+  if (
+    !Number.isFinite(position) ||
+    !Number.isFinite(duration) ||
+    duration <= 0
+  ) {
+    return;
+  }
+  setProgress({ recordingId: id, position, duration, updatedAt: 0 });
+  fetch(`/api/recordings/${id}/progress`, {
+    method: 'PUT',
+    keepalive: true,
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ position, duration }),
+  }).catch(() => undefined);
+}
+
+const SAVE_EVERY_MS = 10000;
 
 function loadQuality(): string | null {
   try {
@@ -105,6 +130,11 @@ function Inner({
   // the channel logo in the header (hidden if the channel has none)
   const [logoFailed, setLogoFailed] = useState(false);
   const [restart, setRestart] = useState(0);
+  // recordings: where the previous viewing stopped (offered as "start from the beginning"), and bookkeeping for saving
+  const [resumedAt, setResumedAt] = useState<number | null>(null);
+  const seekTo = useRef<number | null>(null);
+  const lastPos = useRef<{ position: number; duration: number } | null>(null);
+  const lastSave = useRef(0);
 
   // Radio has no video track. Safari (HLS) reports 0x0 until the first frame is decoded, so a zero size is only
   // believed once playback has had a moment to start; any real size at any time means it is video after all.
@@ -124,6 +154,25 @@ function Inner({
     }, 3000);
   };
   useEffect(() => () => clearTimeout(audioTimer.current), []);
+
+  // the "resumed at" notice only needs to be there for a moment
+  useEffect(() => {
+    if (resumedAt === null) {
+      return;
+    }
+    const timer = setTimeout(() => setResumedAt(null), 15000);
+    return () => clearTimeout(timer);
+  }, [resumedAt]);
+
+  // --- recording: remember where the viewer stopped when the player closes
+  useEffect(() => {
+    return () => {
+      const pos = lastPos.current;
+      if (recordingId && pos) {
+        saveProgress(recordingId, pos.position, pos.duration);
+      }
+    };
+  }, [recordingId]);
 
   // --- live: find out which qualities are available and pick the remembered / a sensible default
   useEffect(() => {
@@ -241,8 +290,17 @@ function Inner({
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
 
-    const play = () => {
+    const play = async () => {
       setPreparing(null);
+      // where did the last viewing stop? (an extra: playback never waits long for it, nor fails because of it)
+      const saved = await getWatchProgress()
+        .then((list) => list.find((p) => p.recordingId === recordingId))
+        .catch(() => undefined);
+      if (cancelled) {
+        return;
+      }
+      seekTo.current = resumePoint(saved);
+      setResumedAt(seekTo.current);
       video.src = `/api/recordings/${recordingId}/play`;
       video.play().catch(() => undefined);
       // the advert breaks are an extra: playback never waits for them
@@ -297,8 +355,47 @@ function Inner({
     };
   }, [recordingId]);
 
+  // recordings: jump to where the viewer stopped once the video knows its length
+  const onMetadata = (e: { currentTarget: HTMLVideoElement }) => {
+    checkVideo(e);
+    const video = e.currentTarget;
+    if (recordingId && seekTo.current !== null) {
+      video.currentTime = seekTo.current;
+      seekTo.current = null;
+    }
+  };
+
+  const startOver = () => {
+    const video = videoRef.current;
+    if (!video || !recordingId) {
+      return;
+    }
+    video.currentTime = 0;
+    video.play().catch(() => undefined);
+    setResumedAt(null);
+    lastPos.current = null;
+    dropProgress(recordingId);
+    clearWatchProgress(recordingId).catch(() => undefined);
+  };
+
+  const trackProgress = (video: HTMLVideoElement, force = false) => {
+    if (!recordingId || seekTo.current !== null || !isFinite(video.duration)) {
+      return;
+    }
+    lastPos.current = {
+      position: video.currentTime,
+      duration: video.duration,
+    };
+    const now = Date.now();
+    if (force || now - lastSave.current >= SAVE_EVERY_MS) {
+      lastSave.current = now;
+      saveProgress(recordingId, video.currentTime, video.duration);
+    }
+  };
+
   // "Skip ad break" is shown while the playhead is inside a break (not in its last second)
   const onTimeUpdate = (e: { currentTarget: HTMLVideoElement }) => {
+    trackProgress(e.currentTarget);
     if (adBreaks.length === 0) {
       return;
     }
@@ -420,7 +517,8 @@ function Inner({
           style={preparing ? { display: 'none' } : undefined}
           controls={!liveRadio}
           playsInline
-          onLoadedMetadata={checkVideo}
+          onLoadedMetadata={onMetadata}
+          onPause={(e) => trackProgress(e.currentTarget, true)}
           onLoadedData={checkVideo}
           onPlaying={checkVideo}
           onResize={checkVideo}
@@ -442,6 +540,14 @@ function Inner({
             );
           }}
         />
+        {resumedAt !== null && !preparing && (
+          <div className={styles.resume} data-testid="resume-banner">
+            <span>{t('player_resumed', { time: formatClock(resumedAt) })}</span>
+            <button type="button" onClick={startOver}>
+              {t('player_start_over')}
+            </button>
+          </div>
+        )}
         {currentBreak && (
           <button
             type="button"

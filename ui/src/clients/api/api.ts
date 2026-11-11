@@ -26,6 +26,7 @@ import {
   UpdateUser,
   UpdateUserPassword,
   UserResponse,
+  WatchProgress,
 } from './api.types';
 
 import axios from 'axios';
@@ -441,4 +442,13 @@ export async function deleteAutorec(id: string): Promise<void> {
 export async function getChapters(id: string): Promise<Chapter[]> {
   const response = await client.get<Chapter[]>(`/recordings/${id}/chapters`);
   return response.data || [];
+}
+
+export async function getWatchProgress(): Promise<WatchProgress[]> {
+  const response = await client.get<WatchProgress[]>('/recordings/progress');
+  return response.data || [];
+}
+
+export async function clearWatchProgress(id: string): Promise<void> {
+  await client.delete(`/recordings/${id}/progress`);
 }

@@ -158,3 +158,23 @@
     opacity: 0.85;
   }
 }
+
+.watch {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 0 0 2px 2px;
+  overflow: hidden;
+
+  div {
+    height: 100%;
+    background: #58a6ff;
+  }
+
+  &.watched div {
+    background: rgba(255, 255, 255, 0.45);
+  }
+}

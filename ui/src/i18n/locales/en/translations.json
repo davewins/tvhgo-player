@@ -483,5 +483,8 @@
   "series_manage": "Manage series rules",
   "series_intro": "Each rule records every upcoming programme that matches it.",
   "event_weekday_date": "{{ ts, moment(format: ddd D MMM) }}",
-  "skip_ad_break": "Skip ad break"
+  "skip_ad_break": "Skip ad break",
+  "player_resumed": "Resumed at {{time}}",
+  "player_start_over": "Start from beginning",
+  "recording_watched": "Watched"
 }

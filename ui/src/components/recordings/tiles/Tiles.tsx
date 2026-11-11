@@ -1,4 +1,5 @@
 import { formatBytes, recordingBytes, totalBytes } from '@/utils/storage';
+import { fraction, isWatched } from '@/utils/progress';
 import { useLayoutEffect, useRef, useState } from 'react';
 
 import Checkbox from '@/components/common/checkbox/Checkbox';
@@ -9,6 +10,7 @@ import { TestIds } from '@/__test__/ids';
 import { c } from '@/utils/classNames';
 import styles from './Tiles.module.scss';
 import { useTranslation } from 'react-i18next';
+import { useWatchProgress } from '@/hooks/progress';
 
 function Thumb({
   id,
@@ -51,6 +53,26 @@ type ShowProps = {
 };
 
 // A show: the latest episode's picture, the title and how many episodes there are.
+// thin bar along the bottom of the picture: how far you have watched (full and dimmed once watched)
+function WatchBar({ recordingId }: { recordingId: string }) {
+  const { t } = useTranslation();
+  const progress = useWatchProgress().get(recordingId);
+  const f = fraction(progress);
+  if (!progress || f <= 0) {
+    return null;
+  }
+  const watched = isWatched(progress);
+  return (
+    <div
+      className={c(styles.watch, watched ? styles.watched : '')}
+      title={watched ? t('recording_watched') : undefined}
+      data-testid="watch-bar"
+    >
+      <div style={{ width: `${watched ? 100 : f * 100}%` }} />
+    </div>
+  );
+}
+
 export function ShowTile({
   show,
   layout,
@@ -169,6 +191,7 @@ export function EpisodeTile({
           fallback={`/api/picon/${recording.piconId}`}
         />
         <PipelineChip recordingId={recording.id} />
+        <WatchBar recordingId={recording.id} />
         {onPlay && (
           <span className={styles.playIcon} aria-hidden="true">
             ▶

@@ -14,6 +14,7 @@ import (
 	"github.com/davidborzek/tvhgo/repository/token"
 	twofactorsettings "github.com/davidborzek/tvhgo/repository/two_factor_settings"
 	"github.com/davidborzek/tvhgo/repository/user"
+	"github.com/davidborzek/tvhgo/repository/watch"
 	"github.com/davidborzek/tvhgo/services/auth"
 	"github.com/davidborzek/tvhgo/services/channel"
 	"github.com/davidborzek/tvhgo/services/clock"
@@ -142,7 +143,8 @@ func start(ctx *cli.Context) error {
 		dvrConfigService,
 		profileService,
 	).WithTuners(tunerService).WithPipeline(pipeline.New(cfg.Playback.PipelineStatus)).
-		WithStorage(storage.New(recordingService, dvrConfigService, playbackSizer(playbackService), cfg.Playback.RecordingsDir))
+		WithStorage(storage.New(recordingService, dvrConfigService, playbackSizer(playbackService), cfg.Playback.RecordingsDir)).
+		WithWatchProgress(watch.New(dbConn))
 
 	healthRouter := health.New(tvhClient, dbConn)
 
