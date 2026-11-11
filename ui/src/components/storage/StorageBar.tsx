@@ -6,12 +6,29 @@ import { getStorage } from '@/clients/api/api';
 import styles from './StorageBar.module.scss';
 import { useTranslation } from 'react-i18next';
 
+const OPEN_KEY = 'tvhgo.storageOpen';
+
 // How much of the space Tvheadend allows for recordings is used, with the disk and the limits that decide it.
 export default function StorageBar() {
   const { t } = useTranslation();
   const [s, setS] = useState<StorageStatus | null>(null);
-  // the detail line is long: open on a wide screen, folded away on a phone
-  const [open, setOpen] = useState(window.innerWidth > 700);
+  // collapsed to one line by default; the choice is remembered on this device
+  const [open, setOpen] = useState(() => {
+    try {
+      return localStorage.getItem(OPEN_KEY) === '1';
+    } catch {
+      return false;
+    }
+  });
+  const toggle = () => {
+    const next = !open;
+    setOpen(next);
+    try {
+      localStorage.setItem(OPEN_KEY, next ? '1' : '0');
+    } catch {
+      // ignore (private mode etc.)
+    }
+  };
 
   useEffect(() => {
     let live = true;
@@ -49,64 +66,72 @@ export default function StorageBar() {
 
   return (
     <div className={styles.panel} data-testid="storage-bar">
-      <div className={styles.head}>
+      <button
+        type="button"
+        className={styles.summary}
+        aria-expanded={open}
+        onClick={toggle}
+      >
         <strong>{t('storage')}</strong>
-        <span>
-          {t('storage_used_of', {
-            used: formatBytes(used),
-            allowance: formatBytes(s.allowanceBytes),
-            percent: pct,
-          })}
-        </span>
-      </div>
-      <div
-        className={`${styles.bar} ${level}`}
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={pct}
-        aria-label={t('storage')}
-      >
         <div
-          className={styles.originals}
-          style={{
-            width: `${(s.recordings.masterBytes / s.allowanceBytes) * 100}%`,
-          }}
-          title={`${t('storage_originals')}: ${formatBytes(s.recordings.masterBytes)}`}
-        />
-        <div
-          className={styles.copies}
-          style={{
-            width: `${(s.recordings.playableBytes / s.allowanceBytes) * 100}%`,
-          }}
-          title={`${t('storage_copies')}: ${formatBytes(s.recordings.playableBytes)}`}
-        />
-      </div>
-      <div className={styles.legend}>
-        <span>
-          <i className={styles.originalsDot} />
-          {t('storage_originals')} {formatBytes(s.recordings.masterBytes)}
+          className={`${styles.bar} ${level}`}
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={pct}
+          aria-label={t('storage')}
+        >
+          <div
+            className={styles.originals}
+            style={{
+              width: `${(s.recordings.masterBytes / s.allowanceBytes) * 100}%`,
+            }}
+            title={`${t('storage_originals')}: ${formatBytes(s.recordings.masterBytes)}`}
+          />
+          <div
+            className={styles.copies}
+            style={{
+              width: `${(s.recordings.playableBytes / s.allowanceBytes) * 100}%`,
+            }}
+            title={`${t('storage_copies')}: ${formatBytes(s.recordings.playableBytes)}`}
+          />
+        </div>
+        <span className={styles.percent}>{pct}%</span>
+        <span className={styles.chevron} aria-hidden="true">
+          {open ? '▴' : '▾'}
         </span>
-        <span>
-          <i className={styles.copiesDot} />
-          {t('storage_copies')} {formatBytes(s.recordings.playableBytes)}
-        </span>
-      </div>
-      <details
-        className={styles.foot}
-        open={open}
-        onToggle={(e) => setOpen(e.currentTarget.open)}
-      >
-        <summary>{t('storage_details')}</summary>
-        {t('storage_disk', {
-          used: formatBytes(s.disk.usedBytes),
-          total: formatBytes(s.disk.totalBytes),
-          free: formatBytes(s.disk.freeBytes),
-        })}
-        {' · '}
-        {limit}
-        {hours && ` · ${t('storage_hours_left', { hours })}`}
-      </details>
+      </button>
+      {open && (
+        <div className={styles.details} data-testid="storage-details">
+          <div>
+            {t('storage_used_of', {
+              used: formatBytes(used),
+              allowance: formatBytes(s.allowanceBytes),
+              percent: pct,
+            })}
+          </div>
+          <div className={styles.legend}>
+            <span>
+              <i className={styles.originalsDot} />
+              {t('storage_originals')} {formatBytes(s.recordings.masterBytes)}
+            </span>
+            <span>
+              <i className={styles.copiesDot} />
+              {t('storage_copies')} {formatBytes(s.recordings.playableBytes)}
+            </span>
+          </div>
+          <div className={styles.foot}>
+            {t('storage_disk', {
+              used: formatBytes(s.disk.usedBytes),
+              total: formatBytes(s.disk.totalBytes),
+              free: formatBytes(s.disk.freeBytes),
+            })}
+            {' · '}
+            {limit}
+            {hours && ` · ${t('storage_hours_left', { hours })}`}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
