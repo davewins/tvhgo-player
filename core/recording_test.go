@@ -576,3 +576,29 @@ func TestBuildTvheadendDvrUpdateRecording(t *testing.T) {
 	assert.Equal(t, mergedEndPadding, merged.StopExtra)
 	assert.Equal(t, id, merged.UUID)
 }
+
+func TestProtectedSetsRemovalToForeverAndBack(t *testing.T) {
+	idnode := tvheadend.Idnode{UUID: "u", Params: []tvheadend.InodeParams{{ID: "removal", Value: float64(0)}}}
+
+	yes, no := true, false
+	protected, err := core.BuildTvheadendDvrUpdateRecordingOpts(idnode, core.UpdateRecording{Protected: &yes})
+	assert.Nil(t, err)
+	assert.Equal(t, 2147483647, protected.Removal)
+
+	released, err := core.BuildTvheadendDvrUpdateRecordingOpts(idnode, core.UpdateRecording{Protected: &no})
+	assert.Nil(t, err)
+	assert.Equal(t, 0, released.Removal)
+
+	untouched, err := core.BuildTvheadendDvrUpdateRecordingOpts(idnode, core.UpdateRecording{})
+	assert.Nil(t, err)
+	assert.Equal(t, 0, untouched.Removal)
+}
+
+func TestRecordingIsProtectedWhenRemovalIsForever(t *testing.T) {
+	assert.True(t, core.MapToTvheadendDvrGridEntryToRecording(tvheadend.DvrGridEntry{Removal: 2147483647}).Protected)
+	assert.False(t, core.MapToTvheadendDvrGridEntryToRecording(tvheadend.DvrGridEntry{Removal: 0}).Protected)
+
+	node, err := core.MapTvheadendIdnodeToRecording(tvheadend.Idnode{UUID: "u", Params: []tvheadend.InodeParams{{ID: "removal", Value: float64(2147483647)}}})
+	assert.Nil(t, err)
+	assert.True(t, node.Protected)
+}

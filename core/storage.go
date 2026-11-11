@@ -31,8 +31,11 @@ type (
 		// MasterBytes is the broadcast recordings (.ts) Tvheadend keeps.
 		MasterBytes int64 `json:"masterBytes"`
 		// PlayableBytes is the MP4 copies made for playback.
-		PlayableBytes int64   `json:"playableBytes"`
-		Hours         float64 `json:"hours"`
+		PlayableBytes int64 `json:"playableBytes"`
+		// ProtectedBytes is the part of MasterBytes that is protected (kept forever): Tvheadend cannot free it.
+		ProtectedBytes int64   `json:"protectedBytes"`
+		ProtectedCount int     `json:"protectedCount"`
+		Hours          float64 `json:"hours"`
 	}
 
 	StorageLimits struct {

@@ -193,6 +193,12 @@ exports[`with status completed > should render recording 1`] = `
       >
         download
       </button>
+      <button
+        class="_button_a7f9df _quiet_a7f9df _medium_a7f9df"
+        type="button"
+      >
+        protect
+      </button>
     </div>
   </div>
 </DocumentFragment>

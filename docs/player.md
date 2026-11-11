@@ -258,6 +258,19 @@ description, as JSON) because Tvheadend forgets them once the original is gone.
 - Needs the library folder mounted read-write in tvhgo's container. Kept recordings are not Tvheadend recordings, so
   they do not count towards Tvheadend's space limit or the storage bar (they do use disk space).
 
+## Protect (keep both files)
+
+**Protect** keeps a recording forever without deleting anything: tvhgo sets the recording's *file removal* in
+Tvheadend to "Forever" (`PATCH /api/recordings/{id}` with `{"protected": true}`; unprotect sets it back to "DVR
+configuration", i.e. the profile's rules). Tvheadend then never expires it or removes it to make space, and because the
+original stays, the pipeline keeps its MP4 too. There is a Protect/Unprotect button on the recording page and for a
+selection of recordings, and protected recordings carry a lock badge (also if protection was set in Tvheadend itself).
+Deleting a protected recording still works; the dialog warns that it is protected.
+
+Protected originals still count towards Tvheadend's used-space limit, and Tvheadend cannot free them, so the storage
+box lists how much is protected and turns amber when protected recordings take 60% or more of the allowance. For
+long-term keeping, *Delete, keeping the MP4 copy* uses far less space.
+
 ## Channel groups (Channels page)
 A row of chips above the guide (All, HD, +1, News, Kids, Shopping, Radio) filters the channel list. The groups are worked
 out from the channel number and name using UK Freeview numbering (HD 101-199, news 231-236, radio 700 and up,

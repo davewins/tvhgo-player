@@ -22,6 +22,7 @@ vi.mock('react-router-dom');
 const navigateMock = vi.fn();
 const stopAndCancelRecordingsMock = vi.fn();
 const removeRecordingsMock = vi.fn();
+const setProtectedMock = vi.fn();
 const setQueryParamsMock = vi.fn();
 
 beforeEach(() => {
@@ -33,8 +34,10 @@ beforeEach(() => {
   vi.mocked(useManageRecordings).mockReturnValue({
     pending: false,
     removeRecordings: removeRecordingsMock,
+    setProtected: setProtectedMock,
     stopAndCancelRecordings: stopAndCancelRecordingsMock,
   });
+  setProtectedMock.mockResolvedValue(true);
 
   vi.mocked(useSearchParams).mockReturnValue([
     new URLSearchParams(),
@@ -368,6 +371,32 @@ describe('delete recordings', () => {
     expect(removeRecordingsMock).toHaveBeenCalledWith(
       [recordings[0].id, recordings[1].id],
       false
+    );
+  });
+
+  test('can protect the selected recordings', async () => {
+    mockStatus('finished');
+    const recordings = buildRecordings('completed', 3);
+    vi.mocked(useLoaderData).mockReturnValue({
+      entries: recordings,
+      offset: 0,
+      total: 3,
+    });
+
+    const document = render(<RecordingsView />);
+    expect(
+      document.queryByTestId(TestIds.PROTECT_RECORDINGS_BUTTON)
+    ).toBeNull();
+    const boxes = document.getAllByTestId(TestIds.SELECT_RECORDING_CHECKBOX);
+    await userEvent.click(boxes[0]);
+    await userEvent.click(boxes[1]);
+    await userEvent.click(
+      document.getByTestId(TestIds.PROTECT_RECORDINGS_BUTTON)
+    );
+
+    expect(setProtectedMock).toHaveBeenCalledWith(
+      [recordings[0].id, recordings[1].id],
+      true
     );
   });
 

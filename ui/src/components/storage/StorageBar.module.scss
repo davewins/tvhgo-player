@@ -19,6 +19,12 @@
   text-align: left;
   cursor: pointer;
 
+  .protectedWarn {
+    margin-top: 0.3rem;
+    font-size: 0.78rem;
+    color: #d29922;
+  }
+
   .bar {
     flex: 1;
     min-width: 0;

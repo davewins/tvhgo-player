@@ -104,7 +104,9 @@ export function Component() {
       case 'completed':
         return recording.kept
           ? t('confirm_delete_kept_recording')
-          : t('confirm_delete_recording');
+          : recording.protected
+            ? `${t('confirm_delete_recording')} ${t('confirm_delete_protected_note_one')}`
+            : t('confirm_delete_recording');
     }
     return '';
   };
@@ -166,6 +168,26 @@ export function Component() {
           label={getCancelButtonLabel()}
           style="red"
           onClick={() => setConfirmationModalVisible(true)}
+        />
+      );
+    }
+  };
+
+  const renderProtectButton = () => {
+    if (recording?.status === 'completed' && !recording.kept) {
+      return (
+        <Button
+          type="button"
+          quiet
+          label={
+            recording.protected ? `🔒 ${t('unprotect')}` : `${t('protect')}`
+          }
+          disabled={pending}
+          onClick={() =>
+            updateRecording(recording.id, {
+              protected: !recording.protected,
+            }).then(() => revalidate())
+          }
         />
       );
     }
@@ -284,6 +306,7 @@ export function Component() {
       )}
       <h2>{recording.title}</h2>
       {recording.kept && <p>{t('kept_hint')}</p>}
+      {recording.protected && <p>{t('protected_hint')}</p>}
       <PairList>
         <Pair>
           <PairKey>{t('subtitle')}</PairKey>
@@ -307,6 +330,7 @@ export function Component() {
         {renderPlayButton()}
         {renderCancelButton()}
         {renderDownloadButton()}
+        {renderProtectButton()}
       </div>
       {playing && (
         <Player

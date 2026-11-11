@@ -6,6 +6,7 @@ import {
   recordByEvent,
   removeRecording,
   removeRecordings,
+  setProtected,
   stopRecording,
   stopRecordings,
   updateRecording,
@@ -181,7 +182,28 @@ export const useManageRecordings = () => {
       });
   };
 
+  // resolves to true when the recordings were (un)protected
+  const _setProtected = async (ids: string[], value: boolean) => {
+    dismissNotification();
+    setPending(true);
+    return await setProtected(ids, value)
+      .then(() => {
+        notifySuccess(
+          t(value ? 'recordings_protected' : 'recordings_unprotected')
+        );
+        return true;
+      })
+      .catch(() => {
+        notifyError(t('unexpected'));
+        return false;
+      })
+      .finally(() => {
+        setPending(false);
+      });
+  };
+
   return {
+    setProtected: _setProtected,
     stopAndCancelRecordings,
     removeRecordings: _removeRecordings,
     pending,

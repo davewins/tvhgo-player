@@ -101,6 +101,10 @@ func (s *service) Status(ctx context.Context) (*core.StorageStatus, error) {
 	for _, r := range list.Entries {
 		st.Recordings.Count++
 		st.Recordings.MasterBytes += r.Size
+		if r.Protected {
+			st.Recordings.ProtectedBytes += r.Size
+			st.Recordings.ProtectedCount++
+		}
 		st.Recordings.Hours += float64(r.Duration) / 3600
 		if s.sizer != nil {
 			st.Recordings.PlayableBytes += s.sizer.PlayableSize(r)

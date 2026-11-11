@@ -113,7 +113,7 @@ export function Component() {
   const { limit, nextPage, previousPage, getOffset, firstPage, lastPage } =
     usePagination(defaultLimit, queryParams, setQueryParams);
 
-  const { stopAndCancelRecordings, removeRecordings, pending } =
+  const { stopAndCancelRecordings, removeRecordings, setProtected, pending } =
     useManageRecordings();
 
   const getStatus = () =>
@@ -196,6 +196,23 @@ export function Component() {
     }
     setDownloadNote(null);
   };
+  // protect (keep forever) / unprotect the selected finished recordings; kept-only ones are not in Tvheadend
+  const protectable = [...selectedRecordings].filter(
+    (r) => r.status === 'completed' && !r.kept
+  );
+  const canProtect = getStatus() === 'finished' && protectable.length > 0;
+  const allProtected = protectable.every((r) => r.protected);
+  const toggleProtected = () => {
+    setProtected(
+      protectable.map((r) => r.id),
+      !allProtected
+    ).then((ok) => {
+      if (ok) {
+        clearSelection();
+        revalidate();
+      }
+    });
+  };
   const canDownload =
     getStatus() === 'finished' &&
     [...selectedRecordings].some((rec) => rec.status === 'completed');
@@ -231,9 +248,15 @@ export function Component() {
       count: list.length,
       size: size > 0 ? ` (${formatBytes(size)})` : '',
     });
-    return keptCount > 0
-      ? `${title} ${t('confirm_delete_kept_note', { count: keptCount })}`
-      : title;
+    const protectedCount = list.filter((r) => r.protected).length;
+    return [
+      title,
+      keptCount > 0 && t('confirm_delete_kept_note', { count: keptCount }),
+      protectedCount > 0 &&
+        t('confirm_delete_protected_note', { count: protectedCount }),
+    ]
+      .filter(Boolean)
+      .join(' ');
   };
 
   const renderRecordings = () => {
@@ -538,6 +561,15 @@ export function Component() {
         </div>
 
         <div className={styles.actions}>
+          {canProtect && (
+            <Button
+              label={allProtected ? `🔒 ${t('unprotect')}` : t('protect')}
+              onClick={() => toggleProtected()}
+              disabled={pending}
+              quiet
+              testID={TestIds.PROTECT_RECORDINGS_BUTTON}
+            />
+          )}
           {canDownload && (
             <Button
               label={t('download')}

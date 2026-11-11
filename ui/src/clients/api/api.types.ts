@@ -90,6 +90,8 @@ export type Recording = {
   playableSize?: number;
   // the original was deleted; only the converted MP4 copy is kept
   kept?: boolean;
+  // Tvheadend keeps it forever: never expired, never removed to make space
+  protected?: boolean;
 };
 
 export type UpdateRecording = {
@@ -103,6 +105,8 @@ export type UpdateRecording = {
   priority?: number;
   enabled?: boolean;
   episode?: string;
+  // keep the recording forever (true) or hand it back to the DVR profile's rules (false)
+  protected?: boolean;
 };
 
 export type UpdateUser = {
@@ -362,6 +366,9 @@ export type StorageStatus = {
     count: number;
     masterBytes: number;
     playableBytes: number;
+    // the part of masterBytes that is protected (Tvheadend cannot free it)
+    protectedBytes?: number;
+    protectedCount?: number;
     hours: number;
   };
   // the limits in Tvheadend's DVR profile (0 = not set)

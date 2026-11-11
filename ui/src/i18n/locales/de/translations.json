@@ -489,5 +489,15 @@
   "kept_hint": "Die Originalaufnahme wurde gelöscht; nur das konvertierte MP4 ist noch da",
   "confirm_delete_kept_recording": "Dieses behaltene MP4 endgültig löschen? Das Original ist bereits weg, das lässt sich nicht rückgängig machen.",
   "confirm_delete_kept_note_one": "Eine davon ist ein behaltenes MP4 und wird endgültig gelöscht.",
-  "confirm_delete_kept_note_other": "{{count}} davon sind behaltene MP4s und werden endgültig gelöscht."
+  "confirm_delete_kept_note_other": "{{count}} davon sind behaltene MP4s und werden endgültig gelöscht.",
+  "protect": "Schützen",
+  "unprotect": "Schutz aufheben",
+  "protected": "Geschützt",
+  "protected_hint": "Geschützt: Tvheadend behält diese Aufnahme für immer (sie läuft nie ab und wird nie für Platz entfernt).",
+  "recordings_protected": "Geschützt: diese Aufnahmen bleiben für immer erhalten",
+  "recordings_unprotected": "Schutz aufgehoben: es gelten wieder die normalen Aufbewahrungsregeln",
+  "confirm_delete_protected_note_one": "Sie ist geschützt: Löschen entfernt sie endgültig.",
+  "confirm_delete_protected_note_other": "{{count}} davon sind geschützt: Löschen entfernt sie endgültig.",
+  "storage_protected": "{{size}} geschützt ({{count}})",
+  "storage_protected_warn": "Geschützte Aufnahmen belegen einen großen Teil des Kontingents, Tvheadend kann diesen Platz nicht freigeben."
 }

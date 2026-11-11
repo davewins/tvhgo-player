@@ -48,6 +48,10 @@ export default function StorageBar() {
   const pct = percentUsed(used, s.allowanceBytes);
   const level = pct >= 90 ? styles.high : pct >= 75 ? styles.warn : '';
   const hours = hoursLabel(s.hoursLeft);
+  const protectedBytes = s.recordings.protectedBytes ?? 0;
+  // protected recordings cannot be freed by Tvheadend: say so when they take most of the allowance
+  const protectedHeavy =
+    s.allowanceBytes > 0 && protectedBytes / s.allowanceBytes >= 0.6;
   const limit =
     s.limits.minFreeBytes > 0 || s.limits.maxUsedBytes > 0
       ? [
@@ -120,6 +124,18 @@ export default function StorageBar() {
               {t('storage_copies')} {formatBytes(s.recordings.playableBytes)}
             </span>
           </div>
+          {protectedBytes > 0 && (
+            <div
+              className={protectedHeavy ? styles.protectedWarn : styles.foot}
+            >
+              🔒{' '}
+              {t('storage_protected', {
+                size: formatBytes(protectedBytes),
+                count: s.recordings.protectedCount ?? 0,
+              })}
+              {protectedHeavy && ` · ${t('storage_protected_warn')}`}
+            </div>
+          )}
           <div className={styles.foot}>
             {t('storage_disk', {
               used: formatBytes(s.disk.usedBytes),

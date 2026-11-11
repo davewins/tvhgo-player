@@ -24,6 +24,9 @@ var (
 	ErrRecordingInvalidEventID   = errors.New("recording invalid event id")
 )
 
+// removalForever is Tvheadend's "Forever" for a recording's file removal.
+const removalForever = 2147483647
+
 type (
 	// RecordingListResult defines a ListResult of recordings.
 	RecordingListResult = ListResult[*Recording]
@@ -69,6 +72,9 @@ type (
 		PlayableSize int64 `json:"playableSize"`
 		// Kept is true for a recording whose original was deleted but whose converted MP4 was kept in the library.
 		Kept bool `json:"kept,omitempty"`
+		// Protected is true when Tvheadend is told to keep the recording forever (file removal = "Forever"): it is
+		// neither expired nor removed to make space.
+		Protected bool `json:"protected"`
 	}
 
 	// KeepService is a RecordingService that can also keep a recording's converted MP4 when the original is deleted.
@@ -154,6 +160,8 @@ type (
 		Enabled *bool `json:"enabled"`
 		// Episode episode of the recording.
 		Episode *string `json:"episode"`
+		// Protected keeps the recording forever (true) or hands it back to the DVR profile's rules (false).
+		Protected *bool `json:"protected"`
 	}
 
 	// RecordingService provides access to recording
@@ -297,6 +305,7 @@ func MapToTvheadendDvrGridEntryToRecording(entry tvheadend.DvrGridEntry) Recordi
 		EventID:          entry.Broadcast,
 		PiconID:          MapTvheadendIconUrlToPiconID(entry.ChannelIcon),
 		Size:             int64(entry.Filesize),
+		Protected:        entry.Removal == removalForever,
 	}
 }
 
@@ -348,6 +357,10 @@ func MapTvheadendIdnodeToRecording(idnode tvheadend.Idnode) (*Recording, error) 
 			r.ExtraText, err = conv.InterfaceToString(p.Value)
 		case "disp_subtitle":
 			r.Subtitle, err = conv.InterfaceToString(p.Value)
+		case "removal":
+			var removal int64
+			removal, err = conv.InterfaceToInt64(p.Value)
+			r.Protected = removal == removalForever
 		case "channel_icon":
 			var value string
 			value, err = conv.InterfaceToString(p.Value)
@@ -463,6 +476,14 @@ func mergeDvrUpdateRecordingOptsAndUpdateRecording(
 
 	if opts.Title != nil {
 		tvhOpts.DispTitle = *opts.Title
+	}
+
+	if opts.Protected != nil {
+		if *opts.Protected {
+			tvhOpts.Removal = removalForever
+		} else {
+			tvhOpts.Removal = 0 // the DVR profile's rules
+		}
 	}
 
 	return tvhOpts

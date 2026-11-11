@@ -192,6 +192,11 @@ export function EpisodeTile({
         />
         <PipelineChip recordingId={recording.id} />
         <WatchBar recordingId={recording.id} />
+        {recording.protected && (
+          <span className={styles.keptChip} title={t('protected_hint')}>
+            🔒 {t('protected')}
+          </span>
+        )}
         {recording.kept && (
           <span className={styles.keptChip} title={t('kept_hint')}>
             {t('kept')}

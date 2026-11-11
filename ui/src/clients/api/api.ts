@@ -292,6 +292,14 @@ export async function updateRecording(
   await client.patch(`/recordings/${id}`, opts);
 }
 
+// protect (keep forever) or unprotect several recordings
+export async function setProtected(
+  ids: string[],
+  value: boolean
+): Promise<void> {
+  await Promise.all(ids.map((id) => updateRecording(id, { protected: value })));
+}
+
 export async function updateUser(opts: UpdateUser): Promise<UserResponse> {
   const response = await client.patch<UserResponse>(`/user`, opts);
   return response.data;

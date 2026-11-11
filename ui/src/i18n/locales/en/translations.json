@@ -495,5 +495,15 @@
   "kept_hint": "The original recording was deleted; only the converted MP4 is kept",
   "confirm_delete_kept_recording": "Permanently delete this kept MP4? The original is already gone, so this cannot be undone.",
   "confirm_delete_kept_note_one": "One of them is a kept MP4, which will be permanently deleted.",
-  "confirm_delete_kept_note_other": "{{count}} of them are kept MP4s, which will be permanently deleted."
+  "confirm_delete_kept_note_other": "{{count}} of them are kept MP4s, which will be permanently deleted.",
+  "protect": "Protect",
+  "unprotect": "Unprotect",
+  "protected": "Protected",
+  "protected_hint": "Protected: Tvheadend keeps this recording forever (it is never expired or removed to make space).",
+  "recordings_protected": "Protected: these recordings are kept forever",
+  "recordings_unprotected": "Unprotected: the normal retention rules apply again",
+  "confirm_delete_protected_note_one": "It is protected: deleting it removes it for good.",
+  "confirm_delete_protected_note_other": "{{count}} of them are protected: deleting them removes them for good.",
+  "storage_protected": "{{size}} protected ({{count}})",
+  "storage_protected_warn": "Protected recordings use a large part of the allowance, Tvheadend cannot free that space."
 }
