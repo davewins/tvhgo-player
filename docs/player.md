@@ -242,6 +242,15 @@ within the last minute, counts as not started / watched and plays from the top. 
 API: `GET /api/recordings/progress`, `PUT /api/recordings/{id}/progress` (`{"position": s, "duration": s}`),
 `DELETE /api/recordings/{id}/progress`. This is separate from Jellyfin's own resume position.
 
+## Delete, keeping the MP4 copy
+
+The delete confirmation (one recording, or a selection of recordings/shows) has a **Keep the MP4 copy** checkbox. With
+it ticked tvhgo writes a `<name>.keep` marker next to each recording's MP4 in the library, then deletes the originals in
+Tvheadend (`DELETE /api/recordings[/{id}]?keepMp4=true`). The pipeline's cleanup leaves marked MP4s alone, so they stay
+in the Jellyfin library. If any selected recording has no MP4 copy yet (or the library is not writable) nothing is
+deleted and the message says which one. This needs the library folder mounted read-write in tvhgo's container. Kept
+copies no longer show in tvhgo (they are not Tvheadend recordings) and do not count towards Tvheadend's space limit.
+
 ## Channel groups (Channels page)
 A row of chips above the guide (All, HD, +1, News, Kids, Shopping, Radio) filters the channel list. The groups are worked
 out from the channel number and name using UK Freeview numbering (HD 101-199, news 231-236, radio 700 and up,

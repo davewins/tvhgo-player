@@ -508,3 +508,18 @@ func TestEncoderFallsBackToCPUWithoutGPU(t *testing.T) {
 		t.Error("cpu is the default")
 	}
 }
+
+func TestKeepMarksTheLibraryCopy(t *testing.T) {
+	s, dir := testService(t)
+	rec := &core.Recording{ID: "k1", Filename: "/recordings/Show/Show - 1.ts"}
+	if err := s.Keep(rec); err != core.ErrNoLibraryCopy {
+		t.Fatalf("no copy: expected ErrNoLibraryCopy, got %v", err)
+	}
+	write(t, filepath.Join(dir, "src", "Show", "Show - 1.mp4"), 10)
+	if err := s.Keep(rec); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(filepath.Join(dir, "src", "Show", "Show - 1.keep")); err != nil {
+		t.Fatalf("marker missing: %v", err)
+	}
+}

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/davidborzek/tvhgo/api/request"
@@ -301,6 +302,10 @@ func (s *router) BatchCancelRecordings(w http.ResponseWriter, r *http.Request) {
 func (s *router) RemoveRecording(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 
+	if !s.keepCopies(w, r, []string{id}) {
+		return
+	}
+
 	err := s.recordings.Remove(r.Context(), id)
 	if err != nil {
 		log.Error().Str("id", id).
@@ -317,11 +322,13 @@ func (s *router) RemoveRecording(w http.ResponseWriter, r *http.Request) {
 //
 //	@Summary	Remove multiple recordings
 //	@Tags		recordings
-//	@Param		ids	query	[]string	true	"recording ids"	collectionFormat(multi)
+//	@Param		ids		query	[]string	true	"recording ids"	collectionFormat(multi)
+//	@Param		keepMp4	query	bool		false	"keep the converted MP4 copies in the library"
 //	@Produce	json
 //	@Success	204
 //	@Failure	400	{object}	response.ErrorResponse
 //	@Failure	401	{object}	response.ErrorResponse
+//	@Failure	409	{object}	response.ErrorResponse
 //	@Failure	500	{object}	response.ErrorResponse
 //	@Security	JWT
 //	@Router		/recordings [delete]
@@ -331,6 +338,10 @@ func (s *router) BatchRemoveRecordings(w http.ResponseWriter, r *http.Request) {
 
 	if len(ids) < 1 {
 		response.BadRequestf(w, "ids are required")
+		return
+	}
+
+	if !s.keepCopies(w, r, ids) {
 		return
 	}
 
@@ -422,4 +433,39 @@ func (s *router) UpdateRecording(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(201)
+}
+
+// keepCopies handles "?keepMp4=true" on a delete: every recording's MP4 copy in the library is marked to survive
+// (the pipeline's cleanup would otherwise remove it once the original is gone). If any copy cannot be kept nothing is
+// deleted: it answers 409 and returns false.
+func (s *router) keepCopies(w http.ResponseWriter, r *http.Request, ids []string) bool {
+	if r.URL.Query().Get("keepMp4") != "true" {
+		return true
+	}
+	if s.playback == nil {
+		response.Error(w, core.ErrNoLibraryCopy, http.StatusConflict)
+		return false
+	}
+	recs := make([]*core.Recording, 0, len(ids))
+	for _, id := range ids {
+		rec, err := s.recordings.Get(r.Context(), id)
+		if err != nil {
+			if err == core.ErrRecordingNotFound {
+				response.NotFound(w, err)
+				return false
+			}
+			log.Error().Str("id", id).Err(err).Msg("failed to get recording to keep")
+			response.InternalErrorCommon(w)
+			return false
+		}
+		recs = append(recs, rec)
+	}
+	for _, rec := range recs {
+		if err := s.playback.Keep(rec); err != nil {
+			log.Warn().Str("id", rec.ID).Err(err).Msg("could not keep the MP4 copy: nothing deleted")
+			response.Error(w, fmt.Errorf("%s: %w", rec.Title, err), http.StatusConflict)
+			return false
+		}
+	}
+	return true
 }

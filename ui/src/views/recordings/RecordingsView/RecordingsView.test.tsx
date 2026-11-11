@@ -42,8 +42,8 @@ beforeEach(() => {
   ]);
   vi.mocked(useNavigate).mockReturnValue(navigateMock);
 
-  vi.mocked(stopAndCancelRecordingsMock).mockResolvedValue(null);
-  vi.mocked(removeRecordingsMock).mockResolvedValue(null);
+  vi.mocked(stopAndCancelRecordingsMock).mockResolvedValue(true);
+  vi.mocked(removeRecordingsMock).mockResolvedValue(true);
 
   vi.mocked(useRevalidator).mockReturnValue({
     revalidate: vi.fn(),
@@ -323,7 +323,8 @@ describe('delete recordings', () => {
     await userEvent.click(confirmButton);
 
     expect(removeRecordingsMock).toHaveBeenCalledWith(
-      recordings.map((recording) => recording.id)
+      recordings.map((recording) => recording.id),
+      false
     );
 
     expect(selectAllCheckbox).not.toBeChecked();
@@ -364,10 +365,33 @@ describe('delete recordings', () => {
 
     expect(selectAllCheckbox).not.toBeChecked();
 
-    expect(removeRecordingsMock).toHaveBeenCalledWith([
-      recordings[0].id,
-      recordings[1].id,
-    ]);
+    expect(removeRecordingsMock).toHaveBeenCalledWith(
+      [recordings[0].id, recordings[1].id],
+      false
+    );
+  });
+
+  test('can keep the MP4 copies when deleting', async () => {
+    mockStatus('finished');
+    const recordings = buildRecordings('finished', 3);
+    vi.mocked(useLoaderData).mockReturnValue({
+      entries: recordings,
+      offset: 0,
+      total: 3,
+    });
+
+    const document = render(<RecordingsView />);
+    const recordingsCheckboxes = document.getAllByTestId(
+      TestIds.SELECT_RECORDING_CHECKBOX
+    );
+    await userEvent.click(recordingsCheckboxes[0]);
+    await userEvent.click(
+      document.getByTestId(TestIds.DELETE_CANCEL_RECORDINGS_BUTTON)
+    );
+    await userEvent.click(document.getByText('keep_mp4'));
+    await userEvent.click(document.getByTestId(TestIds.CONFIRM_DELETE_BUTTON));
+
+    expect(removeRecordingsMock).toHaveBeenCalledWith([recordings[0].id], true);
   });
 });
 

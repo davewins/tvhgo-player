@@ -9,6 +9,7 @@ import (
 var (
 	ErrPlaybackConversionDisabled = errors.New("on-demand conversion is disabled")
 	ErrPlaybackNoSource           = errors.New("recording file not available")
+	ErrNoLibraryCopy              = errors.New("there is no converted MP4 copy in the library to keep")
 	ErrLiveDisabled               = errors.New("live transcoding is disabled")
 	ErrLiveBusy                   = errors.New("too many live streams")
 	ErrLiveQuality                = errors.New("unsupported quality")
@@ -61,6 +62,9 @@ type (
 		ProgrammeArt(ctx context.Context, title string) (string, bool)
 		// File returns the path of the ready playable copy, if there is one.
 		File(rec *Recording) (string, bool)
+		// Keep marks the recording's MP4 copy in the library as one to keep after the original recording is deleted
+		// (the pipeline's cleanup leaves it alone). It fails if there is no library copy or it cannot be marked.
+		Keep(rec *Recording) error
 	}
 )
 

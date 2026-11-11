@@ -27,6 +27,7 @@ import ClashNotice from '@/components/clash/ClashNotice';
 import DeleteConfirmationModal from '@/components/common/deleteConfirmationModal/DeleteConfirmationModal';
 import Dropdown from '@/components/common/dropdown/Dropdown';
 import EmptyState from '@/components/common/emptyState/EmptyState';
+import KeepMp4Option from '@/components/recordings/keep/KeepMp4Option';
 import { LargeArrowLeftIcon } from '@/assets';
 import PaginationControls from '@/components/common/paginationControls/PaginationControls';
 import Player from '@/components/player/Player';
@@ -107,6 +108,7 @@ export function Component() {
   const [playing, setPlaying] = useState<Recording | null>(null);
   const [confirmationModalVisible, setConfirmationModalVisible] =
     useState<boolean>(false);
+  const [keepMp4, setKeepMp4] = useState(false);
 
   const { limit, nextPage, previousPage, getOffset, firstPage, lastPage } =
     usePagination(defaultLimit, queryParams, setQueryParams);
@@ -325,8 +327,15 @@ export function Component() {
       return;
     }
 
-    removeRecordings([...selectedRecordings].map((rec) => rec.id)).then(() => {
+    removeRecordings(
+      [...selectedRecordings].map((rec) => rec.id),
+      keepMp4
+    ).then((removed) => {
+      if (!removed) {
+        return; // e.g. no MP4 copy to keep: nothing was deleted, keep the dialog and selection
+      }
       clearSelection();
+      setKeepMp4(false);
       setConfirmationModalVisible(false);
       revalidate();
     });
@@ -341,7 +350,11 @@ export function Component() {
         title={getConfirmationModalTitle()}
         buttonTitle={getDeleteOrCancelButtonLabel()}
         pending={pending}
-      />
+      >
+        {getStatus() !== 'upcoming' && (
+          <KeepMp4Option checked={keepMp4} onChange={setKeepMp4} />
+        )}
+      </DeleteConfirmationModal>
 
       <div className={styles.header}>
         <div className={styles.headerLeft}>

@@ -15,6 +15,14 @@ import { useNotification } from './notification';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+// "nothing deleted: there is no MP4 copy to keep" comes back from the server as a 409 with a readable message
+function keepError(e: unknown): string | undefined {
+  const r = (
+    e as { response?: { status?: number; data?: { message?: string } } }
+  ).response;
+  return r?.status === 409 ? r.data?.message : undefined;
+}
+
 export const useManageRecordingByEvent = () => {
   const { notifyError, notifySuccess, dismissNotification } = useNotification(
     'manageRecordingByEvent'
@@ -70,16 +78,22 @@ export const useManageRecordingByEvent = () => {
       });
   };
 
-  const _removeRecording = async (id: string, success?: () => void) => {
+  const _removeRecording = async (
+    id: string,
+    success?: () => void,
+    keepMp4 = false
+  ) => {
     dismissNotification();
     setPending(true);
-    return await removeRecording(id)
+    return await removeRecording(id, keepMp4)
       .then(() => {
-        notifySuccess(t('recording_removed'));
+        notifySuccess(
+          t(keepMp4 ? 'recording_removed_kept' : 'recording_removed')
+        );
         if (success) success();
       })
-      .catch(() => {
-        notifyError(t('unexpected'));
+      .catch((e) => {
+        notifyError(keepError(e) ?? t('unexpected'));
       })
       .finally(() => {
         setPending(false);
@@ -146,16 +160,21 @@ export const useManageRecordings = () => {
       });
   };
 
-  const _removeRecordings = async (ids: string[]) => {
+  // resolves to true when the recordings were removed
+  const _removeRecordings = async (ids: string[], keepMp4 = false) => {
     dismissNotification();
     setPending(true);
 
-    return await removeRecordings(ids)
+    return await removeRecordings(ids, keepMp4)
       .then(() => {
-        notifySuccess(t('recordings_removed'));
+        notifySuccess(
+          t(keepMp4 ? 'recordings_removed_kept' : 'recordings_removed')
+        );
+        return true;
       })
-      .catch(() => {
-        notifyError(t('unexpected'));
+      .catch((e) => {
+        notifyError(keepError(e) ?? t('unexpected'));
+        return false;
       })
       .finally(() => {
         setPending(false);

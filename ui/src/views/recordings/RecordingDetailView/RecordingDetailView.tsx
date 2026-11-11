@@ -13,6 +13,7 @@ import EventChannelInfo from '@/components/epg/event/channelInfo/EventChannelInf
 import Form from '@/components/common/form/Form';
 import FormGroup from '@/components/common/form/FormGroup/FormGroup';
 import Input from '@/components/common/input/Input';
+import KeepMp4Option from '@/components/recordings/keep/KeepMp4Option';
 import Pair from '@/components/common/pairList/Pair/Pair';
 import PairKey from '@/components/common/pairList/PairKey/PairKey';
 import PairList from '@/components/common/pairList/PairList';
@@ -56,6 +57,7 @@ export function Component() {
   const [noThumb, setNoThumb] = useState<boolean>(false);
   const [confirmationModalVisible, setConfirmationModalVisible] =
     useState<boolean>(false);
+  const [keepMp4, setKeepMp4] = useState(false);
 
   const parseStatus = () => {
     switch (recording?.status) {
@@ -121,9 +123,13 @@ export function Component() {
         navigate(-1);
       });
     } else if (recording?.status === 'completed') {
-      removeRecording(recording.id, () => {
-        navigate(-1);
-      });
+      removeRecording(
+        recording.id,
+        () => {
+          navigate(-1);
+        },
+        keepMp4
+      );
     }
   };
 
@@ -247,7 +253,11 @@ export function Component() {
         title={getConfirmationModalTitle()}
         buttonTitle={getConfirmationButtonLabel()}
         pending={pending}
-      />
+      >
+        {recording.status === 'completed' && (
+          <KeepMp4Option checked={keepMp4} onChange={setKeepMp4} />
+        )}
+      </DeleteConfirmationModal>
 
       <Button
         label={`‹ ${t('go_back')}`}

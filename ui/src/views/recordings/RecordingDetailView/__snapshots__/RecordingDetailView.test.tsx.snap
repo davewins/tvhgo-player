@@ -47,6 +47,27 @@ exports[`with status completed > should render recording 1`] = `
             >
               confirm_delete_recording
             </h3>
+            <div
+              class="_option_821e09"
+              data-testid="keep-mp4"
+            >
+              <div
+                class="_container_f0b037"
+              >
+                <input
+                  class="_checkbox_f0b037"
+                  type="checkbox"
+                />
+              </div>
+              <label>
+                <strong>
+                  keep_mp4
+                </strong>
+                <span>
+                  keep_mp4_hint
+                </span>
+              </label>
+            </div>
             <button
               class="_button_a7f9df _medium_a7f9df _red_a7f9df"
               data-testid="confirm-delete-btn"

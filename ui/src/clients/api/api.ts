@@ -210,8 +210,14 @@ export async function cancelRecording(id: string): Promise<void> {
   await client.put(`/recordings/${id}/cancel`);
 }
 
-export async function removeRecording(id: string): Promise<void> {
-  await client.delete(`/recordings/${id}`);
+// keepMp4: also keep the converted MP4 copy in the library (the original recording is deleted either way)
+export async function removeRecording(
+  id: string,
+  keepMp4 = false
+): Promise<void> {
+  await client.delete(`/recordings/${id}`, {
+    params: keepMp4 ? { keepMp4: true } : undefined,
+  });
 }
 
 export async function stopRecordings(ids: string[]): Promise<void> {
@@ -226,9 +232,12 @@ export async function cancelRecordings(ids: string[]): Promise<void> {
   });
 }
 
-export async function removeRecordings(ids: string[]): Promise<void> {
+export async function removeRecordings(
+  ids: string[],
+  keepMp4 = false
+): Promise<void> {
   await client.delete(`/recordings`, {
-    params: { ids },
+    params: keepMp4 ? { ids, keepMp4: true } : { ids },
   });
 }
 

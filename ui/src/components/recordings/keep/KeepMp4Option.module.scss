@@ -1,0 +1,20 @@
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin: 0 0 1.5rem;
+  max-width: 20rem;
+  font-size: 0.9rem;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    cursor: pointer;
+  }
+
+  span {
+    opacity: 0.7;
+    font-size: 0.8rem;
+  }
+}

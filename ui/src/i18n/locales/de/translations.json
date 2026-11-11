@@ -480,5 +480,9 @@
   "skip_ad_break": "Werbepause überspringen",
   "player_resumed": "Fortgesetzt bei {{time}}",
   "player_start_over": "Von vorn beginnen",
-  "recording_watched": "Gesehen"
+  "recording_watched": "Gesehen",
+  "keep_mp4": "MP4-Kopie behalten",
+  "keep_mp4_hint": "Löscht die Originalaufnahme in Tvheadend, lässt aber das konvertierte MP4 in der Jellyfin-Bibliothek.",
+  "recording_removed_kept": "Aufnahme gelöscht, MP4-Kopie behalten",
+  "recordings_removed_kept": "Aufnahmen gelöscht, MP4-Kopien behalten"
 }
