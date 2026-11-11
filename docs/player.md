@@ -264,7 +264,9 @@ description, as JSON) because Tvheadend forgets them once the original is gone.
 Tvheadend to "Forever" (`PATCH /api/recordings/{id}` with `{"protected": true}`; unprotect sets it back to "DVR
 configuration", i.e. the profile's rules). Tvheadend then never expires it or removes it to make space, and because the
 original stays, the pipeline keeps its MP4 too. There is a Protect/Unprotect button on the recording page and for a
-selection of recordings, and protected recordings carry a lock badge (also if protection was set in Tvheadend itself).
+selection of recordings (on the shows page, ticking a show selects all its episodes). Protected recordings carry a lock
+badge (also if protection was set in Tvheadend itself); a show tile shows "Protected" when all its episodes are, or
+"Protected 2/3" when only some are ("Kept" works the same way).
 Deleting a protected recording still works; the dialog warns that it is protected.
 
 Protected originals still count towards Tvheadend's used-space limit, and Tvheadend cannot free them, so the storage

@@ -248,3 +248,24 @@ test('the flat list is still available and the other statuses are not grouped', 
   const upcoming = render(<RecordingsView />);
   expect(upcoming.queryAllByTestId(TestIds.SHOW_TILE)).toHaveLength(0);
 });
+
+test('a show tile says when its episodes are protected or kept', () => {
+  withParams('');
+  vi.mocked(useLoaderData).mockReturnValue({
+    entries: [
+      { ...rec('1', 'Emmerdale', 100), protected: true },
+      { ...rec('2', 'Emmerdale', 300), protected: true },
+      { ...rec('3', 'Coronation Street', 200), protected: true },
+      { ...rec('4', 'Coronation Street', 400), kept: true },
+      rec('5', 'Coronation Street', 500),
+    ],
+    offset: 0,
+    total: 5,
+  });
+  const doc = render(<RecordingsView />);
+  const [corrie, emmerdale] = doc.getAllByTestId(TestIds.SHOW_TILE);
+  // all of Emmerdale is protected: no fraction; one of three Coronation Street episodes each
+  expect(emmerdale.textContent).toContain('protected');
+  expect(emmerdale.textContent).not.toContain('1/');
+  expect(corrie.textContent).toContain('1/3');
+});

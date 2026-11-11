@@ -83,6 +83,10 @@ export function ShowTile({
 }: ShowProps) {
   const { t } = useTranslation();
   const count = show.episodes.length;
+  // protected / kept episodes: all of them or "2/3"
+  const protectedCount = show.episodes.filter((r) => r.protected).length;
+  const keptCount = show.episodes.filter((r) => r.kept).length;
+  const share = (n: number) => (n === count ? '' : ` ${n}/${count}`);
   return (
     <div
       className={c(styles.tile, layout === 'list' ? styles.row : '')}
@@ -105,6 +109,22 @@ export function ShowTile({
           onClick={onOpen}
           fallback={`/api/picon/${show.latest.piconId}`}
         />
+        {(protectedCount > 0 || keptCount > 0) && (
+          <div className={styles.chips}>
+            {protectedCount > 0 && (
+              <span className={styles.keptChip} title={t('protected_hint')}>
+                🔒 {t('protected')}
+                {share(protectedCount)}
+              </span>
+            )}
+            {keptCount > 0 && (
+              <span className={styles.keptChip} title={t('kept_hint')}>
+                {t('kept')}
+                {share(keptCount)}
+              </span>
+            )}
+          </div>
+        )}
         {count > 1 && <span className={styles.badge}>{count}</span>}
         {onSelection && (
           <div

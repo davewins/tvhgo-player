@@ -191,3 +191,18 @@
   font-size: 0.7rem;
   letter-spacing: 0.03em;
 }
+
+// the "Protected" / "Kept" chips on a show tile, stacked
+.chips {
+  position: absolute;
+  left: 0.4rem;
+  top: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+
+  .keptChip {
+    position: static;
+  }
+}
