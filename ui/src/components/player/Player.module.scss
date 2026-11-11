@@ -57,7 +57,10 @@
 
 .video {
   width: 100%;
-  max-height: 75vh;
+  // the modal is at most 75% of the screen: leave room in it for the header and padding so the
+  // video controls (and the close button) never scroll out of view
+  max-height: calc(75vh - 8rem);
+  max-height: calc(75dvh - 8rem);
   background: #000;
   border-radius: 2px;
 }
