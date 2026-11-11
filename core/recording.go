@@ -11,6 +11,7 @@ import (
 
 var (
 	ErrRecordingNotFound = errors.New("recording not found")
+	ErrNoLibraryCopy     = errors.New("there is no converted MP4 copy in the library to keep")
 
 	ErrGetRecordingsInvalidStatus = errors.New("get recording status invalid")
 
@@ -66,6 +67,18 @@ type (
 		Size int64 `json:"size"`
 		// PlayableSize is the size of the browser-friendly MP4 copy in bytes, 0 if there is none (filled in by the API).
 		PlayableSize int64 `json:"playableSize"`
+		// Kept is true for a recording whose original was deleted but whose converted MP4 was kept in the library.
+		Kept bool `json:"kept,omitempty"`
+	}
+
+	// KeepService is a RecordingService that can also keep a recording's converted MP4 when the original is deleted.
+	KeepService interface {
+		RecordingService
+		// KeepAndRemove marks the MP4 copies of the recordings to be kept, then removes the original recordings.
+		// If a copy cannot be kept nothing is removed (an error wrapping ErrNoLibraryCopy for a missing copy).
+		KeepAndRemove(ctx context.Context, ids []string) error
+		// IsKept tells whether the recording is one that only exists as a kept MP4.
+		IsKept(ctx context.Context, id string) bool
 	}
 
 	// PlayableSizer reports the size of a recording's playable MP4 copy.

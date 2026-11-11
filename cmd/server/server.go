@@ -20,6 +20,7 @@ import (
 	"github.com/davidborzek/tvhgo/services/clock"
 	"github.com/davidborzek/tvhgo/services/dvr"
 	"github.com/davidborzek/tvhgo/services/epg"
+	"github.com/davidborzek/tvhgo/services/kept"
 	"github.com/davidborzek/tvhgo/services/picon"
 	"github.com/davidborzek/tvhgo/services/pipeline"
 	"github.com/davidborzek/tvhgo/services/playback"
@@ -125,12 +126,18 @@ func start(ctx *cli.Context) error {
 	)
 	sessionCleaner.Start()
 
+	// recordings as the API shows them: Tvheadend's plus the ones kept as just an MP4 (when the library is set up)
+	shown := recordingService
+	if cfg.Playback.SourceDir != "" {
+		shown = kept.New(recordingService, cfg.Playback.SourceDir, cfg.Playback.TvheadendRoot)
+	}
+
 	apiRouter := api.New(
 		cfg,
 		channelService,
 		epgService,
 		piconService,
-		recordingService,
+		shown,
 		streamingService,
 		playbackService,
 		sessionManager,

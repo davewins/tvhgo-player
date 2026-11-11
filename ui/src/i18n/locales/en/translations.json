@@ -488,7 +488,12 @@
   "player_start_over": "Start from beginning",
   "recording_watched": "Watched",
   "keep_mp4": "Keep the MP4 copy",
-  "keep_mp4_hint": "Deletes the original recording from Tvheadend but leaves the converted MP4 in the Jellyfin library.",
+  "keep_mp4_hint": "Deletes the original recording from Tvheadend but keeps the converted MP4: it stays in the list here (marked Kept) and in the Jellyfin library.",
   "recording_removed_kept": "Recording removed, MP4 copy kept",
-  "recordings_removed_kept": "Recordings removed, MP4 copies kept"
+  "recordings_removed_kept": "Recordings removed, MP4 copies kept",
+  "kept": "Kept",
+  "kept_hint": "The original recording was deleted; only the converted MP4 is kept",
+  "confirm_delete_kept_recording": "Permanently delete this kept MP4? The original is already gone, so this cannot be undone.",
+  "confirm_delete_kept_note_one": "One of them is a kept MP4, which will be permanently deleted.",
+  "confirm_delete_kept_note_other": "{{count}} of them are kept MP4s, which will be permanently deleted."
 }

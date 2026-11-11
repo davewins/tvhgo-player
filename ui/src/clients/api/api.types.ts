@@ -88,6 +88,8 @@ export type Recording = {
   // bytes: the recording file, and its browser-friendly MP4 copy (0 if none)
   size?: number;
   playableSize?: number;
+  // the original was deleted; only the converted MP4 copy is kept
+  kept?: boolean;
 };
 
 export type UpdateRecording = {

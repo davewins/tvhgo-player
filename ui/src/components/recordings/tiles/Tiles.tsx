@@ -192,6 +192,11 @@ export function EpisodeTile({
         />
         <PipelineChip recordingId={recording.id} />
         <WatchBar recordingId={recording.id} />
+        {recording.kept && (
+          <span className={styles.keptChip} title={t('kept_hint')}>
+            {t('kept')}
+          </span>
+        )}
         {onPlay && (
           <span className={styles.playIcon} aria-hidden="true">
             ▶

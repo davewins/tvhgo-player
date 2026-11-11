@@ -226,10 +226,14 @@ export function Component() {
     }
     const list = [...selectedRecordings];
     const size = totalBytes(list);
-    return t('confirm_delete_selected', {
+    const keptCount = list.filter((r) => r.kept).length;
+    const title = t('confirm_delete_selected', {
       count: list.length,
       size: size > 0 ? ` (${formatBytes(size)})` : '',
     });
+    return keptCount > 0
+      ? `${title} ${t('confirm_delete_kept_note', { count: keptCount })}`
+      : title;
   };
 
   const renderRecordings = () => {
@@ -351,9 +355,10 @@ export function Component() {
         buttonTitle={getDeleteOrCancelButtonLabel()}
         pending={pending}
       >
-        {getStatus() !== 'upcoming' && (
-          <KeepMp4Option checked={keepMp4} onChange={setKeepMp4} />
-        )}
+        {getStatus() !== 'upcoming' &&
+          [...selectedRecordings].some((r) => !r.kept) && (
+            <KeepMp4Option checked={keepMp4} onChange={setKeepMp4} />
+          )}
       </DeleteConfirmationModal>
 
       <div className={styles.header}>

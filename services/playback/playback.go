@@ -157,18 +157,6 @@ func (s *service) PlayableSize(rec *core.Recording) int64 {
 	return 0
 }
 
-// KeepSuffix is the marker file written next to an MP4 that must survive its original recording being deleted.
-const KeepSuffix = ".keep"
-
-func (s *service) Keep(rec *core.Recording) error {
-	p, ok := s.sourceFile(rec)
-	if !ok {
-		return core.ErrNoLibraryCopy
-	}
-	marker := strings.TrimSuffix(p, ".mp4") + KeepSuffix
-	return os.WriteFile(marker, nil, 0o644)
-}
-
 func (s *service) File(rec *core.Recording) (string, bool) {
 	if p, ok := s.sourceFile(rec); ok {
 		return p, true

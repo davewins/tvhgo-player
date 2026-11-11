@@ -102,7 +102,9 @@ export function Component() {
       case 'recording':
         return t('confirm_stop_recording');
       case 'completed':
-        return t('confirm_delete_recording');
+        return recording.kept
+          ? t('confirm_delete_kept_recording')
+          : t('confirm_delete_recording');
     }
     return '';
   };
@@ -254,7 +256,7 @@ export function Component() {
         buttonTitle={getConfirmationButtonLabel()}
         pending={pending}
       >
-        {recording.status === 'completed' && (
+        {recording.status === 'completed' && !recording.kept && (
           <KeepMp4Option checked={keepMp4} onChange={setKeepMp4} />
         )}
       </DeleteConfirmationModal>
@@ -281,6 +283,7 @@ export function Component() {
         />
       )}
       <h2>{recording.title}</h2>
+      {recording.kept && <p>{t('kept_hint')}</p>}
       <PairList>
         <Pair>
           <PairKey>{t('subtitle')}</PairKey>

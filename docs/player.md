@@ -246,10 +246,17 @@ API: `GET /api/recordings/progress`, `PUT /api/recordings/{id}/progress` (`{"pos
 
 The delete confirmation (one recording, or a selection of recordings/shows) has a **Keep the MP4 copy** checkbox. With
 it ticked tvhgo writes a `<name>.keep` marker next to each recording's MP4 in the library, then deletes the originals in
-Tvheadend (`DELETE /api/recordings[/{id}]?keepMp4=true`). The pipeline's cleanup leaves marked MP4s alone, so they stay
-in the Jellyfin library. If any selected recording has no MP4 copy yet (or the library is not writable) nothing is
-deleted and the message says which one. This needs the library folder mounted read-write in tvhgo's container. Kept
-copies no longer show in tvhgo (they are not Tvheadend recordings) and do not count towards Tvheadend's space limit.
+Tvheadend (`DELETE /api/recordings[/{id}]?keepMp4=true`). The marker holds the recording's details (title, channel, times,
+description, as JSON) because Tvheadend forgets them once the original is gone.
+
+- The pipeline's cleanup leaves marked MP4s alone, so they stay in the Jellyfin library.
+- tvhgo keeps **listing them** with the other recordings, marked **Kept**: you can play them, resume, download them
+  and see their sizes. Deleting a kept recording deletes the MP4, its thumbnail, NFO and marker for good (the dialog
+  says so; the "keep" checkbox is not offered for kept-only selections).
+- If any selected recording has no MP4 copy yet (or the library is not writable) nothing is deleted and the message
+  says which one.
+- Needs the library folder mounted read-write in tvhgo's container. Kept recordings are not Tvheadend recordings, so
+  they do not count towards Tvheadend's space limit or the storage bar (they do use disk space).
 
 ## Channel groups (Channels page)
 A row of chips above the guide (All, HD, +1, News, Kids, Shopping, Radio) filters the channel list. The groups are worked
