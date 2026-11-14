@@ -27,6 +27,18 @@ import { useTuners } from '@/hooks/tuners';
 
 // Layout: 1 minute = PX_PER_MIN pixels. The guide covers the selected day from `axisStart` to `axisEnd`.
 const PX_PER_MIN = 5;
+const COMPACT_KEY = 'tvhgo.guideCompact';
+
+// phones get the compact guide unless a choice was made; the choice is remembered
+function initialCompact(): boolean {
+  try {
+    const v = localStorage.getItem(COMPACT_KEY);
+    if (v === 'true' || v === 'false') return v === 'true';
+  } catch {
+    // storage unavailable: use the default
+  }
+  return typeof window !== 'undefined' && window.innerWidth < 700;
+}
 // how much of the past is shown to the left of the now line when the guide opens or Now is pressed
 const NOW_LEAD_MIN = 10;
 const SPAN_HOURS = 30; // the day plus the early hours of the next one
@@ -183,6 +195,17 @@ export function Component() {
   // the time of day being looked at when another day is chosen: the new day opens at the same time
   const carriedMinutes = useRef<number | null>(null);
   const [now, setNow] = useState(moment().unix());
+  const [compact, setCompact] = useState(initialCompact);
+  const toggleCompact = () => {
+    setCompact((c) => {
+      try {
+        localStorage.setItem(COMPACT_KEY, String(!c));
+      } catch {
+        // not remembered
+      }
+      return !c;
+    });
+  };
   const search = searchParams.get('q') || '';
   const [playing, setPlaying] = useState<EpgChannel | null>(null);
   // every tuner busy: channels on a multiplex nobody holds cannot be watched until a recording finishes
@@ -300,7 +323,10 @@ export function Component() {
   const showNow = now >= axisStart && now <= axisEnd;
 
   return (
-    <div className={styles.container}>
+    <div
+      className={`${styles.container} ${compact ? styles.compact : ''}`}
+      data-testid="guide"
+    >
       <div className={styles.toolbar}>
         <div className={styles.days}>
           {days.map((d) => (
@@ -371,6 +397,15 @@ export function Component() {
           >
             {t('guide_later')} ›
           </button>
+          <button
+            type="button"
+            className={styles.density}
+            aria-pressed={compact}
+            title={t(compact ? 'guide_comfortable_hint' : 'guide_compact_hint')}
+            onClick={toggleCompact}
+          >
+            {t(compact ? 'guide_comfortable' : 'guide_compact')}
+          </button>
         </div>
       </div>
 
@@ -424,7 +459,7 @@ export function Component() {
         <div className={styles.scroller} ref={scroller}>
           <div
             className={styles.grid}
-            style={{ width: 150 + px(axisEnd - axisStart) }}
+            style={{ width: `calc(var(--left) + ${px(axisEnd - axisStart)}px)` }}
           >
             <div className={styles.ruler}>
               <div className={styles.corner} />
@@ -444,7 +479,7 @@ export function Component() {
               </div>
             </div>
             {showNow && (
-              <div className={styles.nowLine} style={{ left: 150 + nowX }} />
+              <div className={styles.nowLine} style={{ left: `calc(var(--left) + ${nowX}px)` }} />
             )}
             {channels.map((c) => (
               <GuideRow

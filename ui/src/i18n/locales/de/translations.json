@@ -417,7 +417,6 @@
   "pipeline_gave_up": "Konvertierung fehlgeschlagen",
   "player_queued_ahead": "Warte auf einen freien Konvertierungsplatz ({{count}} davor)…",
   "player_pipeline": "Wird im Hintergrund konvertiert… {{progress}}%",
-  "storage": "Speicher",
   "storage_used_of": "{{used}} von {{allowance}} für Aufnahmen verfügbar ({{percent}} %)",
   "storage_originals": "Originale",
   "storage_copies": "MP4-Kopien",
@@ -504,5 +503,9 @@
   "break_prev": "Vorherige Pause",
   "break_next": "Nächste Pause",
   "break_count_one": "1 Werbepause",
-  "break_count_other": "{{count}} Werbepausen"
+  "break_count_other": "{{count}} Werbepausen",
+  "guide_compact": "Kompakt",
+  "guide_comfortable": "Großzügig",
+  "guide_compact_hint": "Mehr Sender auf dem Bildschirm",
+  "guide_comfortable_hint": "Größere Zeilen und Schrift"
 }

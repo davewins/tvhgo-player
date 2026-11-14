@@ -1,7 +1,7 @@
-$left: 150px;
-$row: 68px;
-
+// row height and channel-column width; the compact layout (phones by default) shrinks both
 .container {
+  --row: 68px;
+  --left: 150px;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -93,7 +93,7 @@ $row: 68px;
   position: sticky;
   left: 0;
   z-index: 5;
-  flex: 0 0 $left;
+  flex: 0 0 var(--left);
   background: var(--color-bg);
 }
 
@@ -134,7 +134,7 @@ $row: 68px;
 
 .row {
   display: flex;
-  height: $row;
+  height: var(--row);
   border-bottom: 1px solid var(--color-bg);
 }
 
@@ -142,7 +142,7 @@ $row: 68px;
   position: sticky;
   left: 0;
   z-index: 2;
-  flex: 0 0 $left;
+  flex: 0 0 var(--left);
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -312,4 +312,91 @@ $row: 68px;
 
 .blocked {
   opacity: 0.35;
+}
+
+.compact {
+  --row: 40px;
+  --left: 96px;
+
+  .toolbar {
+    gap: 0.3rem;
+    padding: 0.4rem 0.75rem;
+  }
+
+  .day {
+    flex-direction: row;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    padding: 0.15rem 0.45rem;
+  }
+
+  .nav,
+  .density {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .groups {
+    padding: 0 0.75rem 0.35rem;
+  }
+
+  .group {
+    font-size: 0.72rem;
+    padding: 0.12rem 0.6rem;
+  }
+
+  .ruler {
+    height: 1.6rem;
+  }
+
+  .tick {
+    font-size: 0.68rem;
+  }
+
+  .channel {
+    gap: 0.25rem;
+    padding: 0 0.3rem;
+  }
+
+  .number {
+    width: 1.2rem;
+    font-size: 0.7rem;
+  }
+
+  .logo {
+    padding: 0.1rem;
+  }
+
+  .logoName {
+    font-size: 0.62rem;
+  }
+
+  .event {
+    padding: 0.2rem 0.45rem;
+    gap: 0;
+    justify-content: center;
+  }
+
+  .title {
+    font-size: 0.78rem;
+  }
+
+  .meta {
+    font-size: 0.66rem;
+  }
+}
+
+.density {
+  background: none;
+  border: 1px solid rgba(128, 128, 128, 0.5);
+  border-radius: 2px;
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 0.35rem 0.6rem;
+  opacity: 0.85;
+
+  &:hover {
+    opacity: 1;
+  }
 }

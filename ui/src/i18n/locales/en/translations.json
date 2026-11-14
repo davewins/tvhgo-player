@@ -423,7 +423,6 @@
   "pipeline_gave_up": "Conversion failed",
   "player_queued_ahead": "Waiting for a free conversion slot ({{count}} ahead)…",
   "player_pipeline": "Being converted in the background… {{progress}}%",
-  "storage": "Storage",
   "storage_used_of": "{{used}} of {{allowance}} available for recordings ({{percent}}%)",
   "storage_originals": "Originals",
   "storage_copies": "MP4 copies",
@@ -510,5 +509,9 @@
   "break_prev": "Previous break",
   "break_next": "Next break",
   "break_count_one": "1 ad break",
-  "break_count_other": "{{count}} ad breaks"
+  "break_count_other": "{{count}} ad breaks",
+  "guide_compact": "Compact",
+  "guide_comfortable": "Roomy",
+  "guide_compact_hint": "Show more channels on screen",
+  "guide_comfortable_hint": "Larger rows and text"
 }
