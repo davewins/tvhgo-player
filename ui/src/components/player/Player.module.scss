@@ -291,3 +291,19 @@
     cursor: pointer;
   }
 }
+
+// live TV: shown when paused or rewound, to jump back to the live picture
+.goLive {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 3px;
+  background: #e5484d;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}

@@ -146,3 +146,13 @@ func (s *router) StopLiveHLS(w http.ResponseWriter, r *http.Request) {
 	s.playback.StopHLS(chi.URLParam(r, "id"))
 	w.WriteHeader(http.StatusNoContent)
 }
+
+// PingLiveHLS keeps a live HLS session alive while the viewer has it open but paused (a paused player may not fetch
+// anything for a while, and idle sessions are stopped).
+func (s *router) PingLiveHLS(w http.ResponseWriter, r *http.Request) {
+	if _, ok := s.playback.HLSFile(chi.URLParam(r, "id"), "index.m3u8"); !ok {
+		http.NotFound(w, r)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}

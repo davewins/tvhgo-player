@@ -10,6 +10,7 @@ import {
 } from '@/clients/api/api';
 import { dropProgress, setProgress } from '@/hooks/progress';
 import { formatClock, resumePoint } from '@/utils/progress';
+import Hls from 'hls.js';
 import { useEffect, useRef, useState } from 'react';
 
 import BreakBar from './BreakBar';
@@ -50,6 +51,17 @@ function pickAutoProfile(video: HTMLVideoElement): string | null {
   const match = AUTO_PROFILES.find((p) => video.canPlayType(p.mime) !== '');
   return match ? match.profile : null;
 }
+
+// a live session is kept alive while the viewer has it open, even if the player is paused and fetches nothing
+function pingHLS(id: string) {
+  fetch(`/api/live/hls/${id}/ping`, {
+    method: 'POST',
+    credentials: 'same-origin',
+  }).catch(() => undefined);
+}
+
+// how far behind the live edge before "Back to live" is offered (seconds)
+const LIVE_BEHIND = 12;
 
 function stopHLS(id: string) {
   // keepalive lets the request finish even while the page is closing
@@ -126,6 +138,8 @@ function Inner({
   const [currentBreak, setCurrentBreak] = useState<Chapter | null>(null);
   // for the break bar under the video
   const [clock, setClock] = useState({ time: 0, duration: 0 });
+  // live: the viewer paused or rewound and is now behind the live edge
+  const [behindLive, setBehindLive] = useState(false);
   // live: heights tvhgo can transcode to (null = still loading) and the current choice ("auto" or a height)
   const [qualities, setQualities] = useState<number[] | null>(null);
   const [quality, setQuality] = useState<string>(AUTO);
@@ -218,8 +232,10 @@ function Inner({
     }
     setError(null);
 
-    // HLS: ask the server for a session, play its playlist, and end the session when we leave
-    if (wantsHLS(video) && qualities.length > 0) {
+    // HLS: ask the server for a session (it keeps the last half hour, so the viewer can pause and rewind), play its
+    // playlist, and end the session when we leave. Safari and iOS play it natively, other browsers through hls.js.
+    const native = wantsHLS(video);
+    if ((native || Hls.isSupported()) && qualities.length > 0) {
       const height =
         quality !== AUTO
           ? parseInt(quality)
@@ -228,6 +244,8 @@ function Inner({
             : qualities[0];
       let cancelled = false;
       let sessionId: string | null = null;
+      let hls: Hls | null = null;
+      let beat: ReturnType<typeof setInterval> | undefined;
       const onCanPlay = () => video.play().catch(() => undefined);
       video.addEventListener('canplay', onCanPlay, { once: true });
       startLiveHLS(channelNumber, height)
@@ -237,12 +255,29 @@ function Inner({
             stopHLS(id);
             return;
           }
-          video.src = url;
+          beat = setInterval(() => pingHLS(id), 10000);
+          if (native) {
+            video.src = url;
+            return;
+          }
+          hls = new Hls({ backBufferLength: 120 });
+          hls.on(Hls.Events.ERROR, (_e, data) => {
+            if (!data.fatal) return;
+            if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+              hls?.recoverMediaError();
+            } else {
+              setError(t('player_live_error'));
+            }
+          });
+          hls.loadSource(url);
+          hls.attachMedia(video);
         })
         .catch(() => !cancelled && setError(t('player_live_error')));
       return () => {
         cancelled = true;
+        clearInterval(beat);
         video.removeEventListener('canplay', onCanPlay);
+        hls?.destroy();
         video.pause();
         video.removeAttribute('src');
         video.load();
@@ -394,6 +429,28 @@ function Inner({
     if (force || now - lastSave.current >= SAVE_EVERY_MS) {
       lastSave.current = now;
       saveProgress(recordingId, video.currentTime, video.duration);
+    }
+  };
+
+  // live: notice when the viewer has fallen behind the live edge (also while paused, when no time updates arrive)
+  useEffect(() => {
+    if (channelNumber === undefined || recordingId) return;
+    const timer = setInterval(() => {
+      const v = videoRef.current;
+      if (!v || v.seekable.length === 0) return;
+      const behind =
+        v.seekable.end(v.seekable.length - 1) - v.currentTime > LIVE_BEHIND;
+      setBehindLive((prev) => (prev === behind ? prev : behind));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [channelNumber, recordingId]);
+
+  const goLive = () => {
+    const v = videoRef.current;
+    if (v && v.seekable.length > 0) {
+      v.currentTime = v.seekable.end(v.seekable.length - 1) - 2;
+      v.play().catch(() => undefined);
+      setBehindLive(false);
     }
   };
 
@@ -566,6 +623,16 @@ function Inner({
               {t('player_start_over')}
             </button>
           </div>
+        )}
+        {behindLive && (
+          <button
+            type="button"
+            className={styles.goLive}
+            onClick={goLive}
+            data-testid="go-live"
+          >
+            {t('player_back_to_live')} ›
+          </button>
         )}
         {currentBreak && (
           <button

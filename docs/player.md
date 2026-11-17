@@ -21,7 +21,16 @@ Your choice is remembered in the browser. The default is **720p**.
 transcode as **HLS** instead (rolling 2-second MPEG-TS segments, still H.264/AAC). It is automatic. *Auto* is not
 offered as a separate mode there (Tvheadend's Matroska/WebM streams are not playable in Safari): it uses 720p, or the
 highest quality you have enabled. HLS needs the live quality transcoding to be enabled. A session ends when you close
-the player, or 25 seconds after the browser stops fetching it, which frees the tuner.
+the player, or 25 seconds after the browser stops checking in, which frees the tuner.
+
+**Pause and rewind live TV.** Every browser now gets live TV as HLS (Safari and iOS natively, Chrome, Firefox and the
+rest through hls.js), and tvhgo keeps the last **30 minutes** of the channel while you have it open
+(`LIVE_TIMESHIFT_MINUTES`, default 30, at most 240; kept as segments in the container's temp directory, roughly
+0.5 GB per half hour at 720p). Pause, then carry on later, or use the player's scrubber to go back; **Back to live**
+(top right) appears when you are more than about 12 seconds behind. The window starts when you open the channel, so you
+cannot rewind to before that. The page tells the server it is still there every 10 seconds, so a long pause does not
+end the session; closing the player does. A browser that cannot play HLS falls back to the old endless MP4 stream,
+which cannot be paused for long.
 
 **Radio channels** play too. A radio channel has no video, so tvhgo detects the audio-only stream and the player shows
 the station logo, a "Radio" label and a plain audio bar instead of a black video area. This works on any quality

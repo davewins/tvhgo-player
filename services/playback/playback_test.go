@@ -485,7 +485,7 @@ func TestLiveArgsVAAPI(t *testing.T) {
 }
 
 func TestHLSArgsVAAPIKeepEncoderOptions(t *testing.T) {
-	joined := strings.Join(hlsArgsFor(liveEncoder{vaapi: true, device: "/dev/dri/renderD128"}, 720, "veryfast", "/tmp/x"), " ")
+	joined := strings.Join(hlsArgsFor(liveEncoder{vaapi: true, device: "/dev/dri/renderD128"}, 720, "veryfast", "/tmp/x", 8), " ")
 	for _, want := range []string{"-f hls", "-c:v h264_vaapi", "/tmp/x/index.m3u8", "-vaapi_device"} {
 		if !strings.Contains(joined, want) {
 			t.Errorf("missing %q in %s", want, joined)

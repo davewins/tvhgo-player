@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -39,10 +40,19 @@ var (
 // hlsArgs builds the ffmpeg arguments that turn a raw MPEG-TS stream on stdin into a rolling HLS playlist
 // (MPEG-TS segments, H.264 + AAC) in dir. Safari and iOS play HLS natively but not an endless fragmented MP4.
 func hlsArgs(height int, preset, dir string) []string {
-	return hlsArgsFor(liveEncoder{}, height, preset, dir)
+	return hlsArgsFor(liveEncoder{}, height, preset, dir, 8)
 }
 
-func hlsArgsFor(enc liveEncoder, height int, preset, dir string) []string {
+// hlsSegments is the number of 2 s segments that cover the given minutes (at least 8, so a player always has a buffer).
+func hlsSegments(minutes int) int {
+	if n := minutes * 30; n > 8 {
+		return n
+	}
+	return 8
+}
+
+// hlsArgsFor keeps the last `segments` segments in the playlist: that is how far back a viewer can pause or rewind.
+func hlsArgsFor(enc liveEncoder, height int, preset, dir string, segments int) []string {
 	args := liveArgsFor(enc, height, preset)
 	// keep everything up to the output options; drop the "-f mp4 ... pipe:1" tail
 	cut := len(args)
@@ -54,7 +64,7 @@ func hlsArgsFor(enc liveEncoder, height int, preset, dir string) []string {
 	}
 	// segments need a key frame every 2 s at most (liveArgs forces one per second)
 	return append(args[:cut:cut],
-		"-f", "hls", "-hls_time", "2", "-hls_list_size", "8",
+		"-f", "hls", "-hls_time", "2", "-hls_list_size", strconv.Itoa(segments),
 		"-hls_flags", "delete_segments+independent_segments+omit_endlist",
 		"-hls_segment_filename", filepath.Join(dir, "seg%d.ts"),
 		filepath.Join(dir, "index.m3u8"),
@@ -105,7 +115,7 @@ func (s *service) StartHLS(open func(ctx context.Context) (io.ReadCloser, error)
 		bin = nice
 	}
 	enc := s.encoder()
-	cmd := exec.CommandContext(ctx, bin, append(pre, hlsArgsFor(enc, height, s.cfg.Preset, dir)...)...)
+	cmd := exec.CommandContext(ctx, bin, append(pre, hlsArgsFor(enc, height, s.cfg.Preset, dir, hlsSegments(s.cfg.LiveTimeshiftMinutes))...)...)
 	started := time.Now()
 	cmd.Stdin = src
 	if err := cmd.Start(); err != nil {

@@ -45,6 +45,9 @@ type (
 		LiveQualities []int `yaml:"live_qualities" env:"LIVE_QUALITIES"`
 		// LiveMaxStreams limits concurrent live transcodes.
 		LiveMaxStreams int `yaml:"live_max_streams" env:"LIVE_MAX_STREAMS"`
+		// LiveTimeshiftMinutes is how much of a live channel a viewer can pause and rewind through. It is kept as
+		// segments on disk for as long as the viewer has the channel open. Default 30.
+		LiveTimeshiftMinutes int `yaml:"live_timeshift_minutes" env:"LIVE_TIMESHIFT_MINUTES"`
 		// LiveEncoder chooses how live TV is encoded: "cpu" (x264, the default) or "vaapi" (Intel/AMD GPU via VAAPI: far less
 		// CPU per stream). If the GPU is missing or fails, tvhgo falls back to the CPU on its own.
 		LiveEncoder string `yaml:"live_encoder" env:"LIVE_ENCODER"`
@@ -101,6 +104,12 @@ func (c *PlaybackConfig) SetDefaults() {
 	}
 	if c.LiveMaxStreams < 1 {
 		c.LiveMaxStreams = 3
+	}
+	if c.LiveTimeshiftMinutes < 1 {
+		c.LiveTimeshiftMinutes = 30
+	}
+	if c.LiveTimeshiftMinutes > 240 {
+		c.LiveTimeshiftMinutes = 240
 	}
 	if c.TMDBLanguage == "" {
 		c.TMDBLanguage = "en-GB"

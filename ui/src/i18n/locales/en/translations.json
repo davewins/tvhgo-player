@@ -513,5 +513,6 @@
   "guide_compact": "Compact",
   "guide_comfortable": "Roomy",
   "guide_compact_hint": "Show more channels on screen",
-  "guide_comfortable_hint": "Larger rows and text"
+  "guide_comfortable_hint": "Larger rows and text",
+  "player_back_to_live": "Back to live"
 }

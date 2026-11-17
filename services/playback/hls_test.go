@@ -27,3 +27,13 @@ func TestHLSFileRejectsOddNames(t *testing.T) {
 		}
 	}
 }
+
+func TestHLSWindow(t *testing.T) {
+	if hlsSegments(30) != 900 || hlsSegments(0) != 8 {
+		t.Errorf("unexpected window: %d, %d", hlsSegments(30), hlsSegments(0))
+	}
+	args := strings.Join(hlsArgsFor(liveEncoder{}, 720, "veryfast", "/tmp/x", hlsSegments(30)), " ")
+	if !strings.Contains(args, "-hls_list_size 900") {
+		t.Errorf("window not applied: %s", args)
+	}
+}
