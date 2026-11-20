@@ -312,6 +312,17 @@ With `pipeline_status` set, tvhgo reads the status file of a recording pipeline.
 bar, and pressing Play on a recording the pipeline is already converting shows its progress instead of starting a
 second conversion. A status file older than about 90 seconds means the pipeline is not running and nothing is shown.
 
+## Status page
+
+The **Status** item in the menu (the same on phones) shows what is happening right now: what is **recording** (when it
+started, when it ends, time left, a progress bar), what the background pipeline is **converting** (step, percent, an
+estimate of the time left based on the pace so far, how long it has run), what is **waiting** and what **failed** (with
+the reason and when it will retry), the **next recordings** and what each **tuner** is doing. The badges in the header
+(a red **REC** badge while recording, the conversion percentage, and on wider screens the tuner count) open this page,
+and on a phone the header keeps the REC and conversion badges. The estimate is only shown once a conversion is a few
+percent in. Finished recordings that Tvheadend flagged (for example *Too many data errors*, which means poor reception
+while recording) show that reason on their row and on the recording's page.
+
 ## Browser support
 
 - **Tested:** Google Chrome on desktop - live TV at all qualities, recording playback and seeking, the guide, all

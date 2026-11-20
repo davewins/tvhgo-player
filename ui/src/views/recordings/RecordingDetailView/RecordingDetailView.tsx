@@ -59,6 +59,14 @@ export function Component() {
     useState<boolean>(false);
   const [keepMp4, setKeepMp4] = useState(false);
 
+  // a finished recording that Tvheadend flagged (not "Completed OK"), with its reason
+  const problem = (r?: { status: string; statusText?: string }) =>
+    (r?.status === 'completed' || r?.status === 'completedError') &&
+    r.statusText &&
+    !/^completed ok$/i.test(r.statusText)
+      ? r.statusText
+      : '';
+
   const parseStatus = () => {
     switch (recording?.status) {
       case 'scheduled':
@@ -318,7 +326,10 @@ export function Component() {
         </Pair>
         <Pair>
           <PairKey>{t('status')}</PairKey>
-          <PairValue>{parseStatus()}</PairValue>
+          <PairValue>
+            {parseStatus()}
+            {problem(recording) && ` — ${problem(recording)}`}
+          </PairValue>
         </Pair>
         <Pair>
           <PairKey>{t('description')}</PairKey>

@@ -3,6 +3,7 @@ import { useMatch, useNavigate, useSearchParams } from 'react-router-dom';
 
 import Input from '../common/input/Input';
 import PipelineBadge from './PipelineBadge';
+import RecordingBadge from './RecordingBadge';
 import TunerBadge from './TunerBadge';
 import styles from './Header.module.scss';
 import { useFormik } from 'formik';
@@ -70,6 +71,7 @@ function Header({ onToggle }: Props) {
           <TvhgoHorizontalLogo className={styles.logo} />
         </div>
         <div className={styles.right}>
+          <RecordingBadge />
           <PipelineBadge />
           <TunerBadge />
           {renderSearch()}

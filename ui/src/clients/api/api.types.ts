@@ -85,6 +85,8 @@ export type Recording = {
   startPadding: number;
   endPadding: number;
   status: string;
+  // Tvheadend's own wording, e.g. "Completed OK" or "Too many data errors"
+  statusText?: string;
   // bytes: the recording file, and its browser-friendly MP4 copy (0 if none)
   size?: number;
   playableSize?: number;

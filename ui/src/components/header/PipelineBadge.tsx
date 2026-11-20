@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styles from './TunerBadge.module.scss';
 import { summary } from '@/utils/pipeline';
 import { usePipeline } from '@/hooks/pipeline';
@@ -28,7 +29,8 @@ export default function PipelineBadge() {
   const warn = s.failed > 0 && !s.current;
 
   return (
-    <div
+    <Link
+      to="/status"
       className={`${styles.badge} ${warn ? styles.full : ''}`}
       title={parts.join(' · ')}
       data-testid="pipeline-badge"
@@ -40,6 +42,6 @@ export default function PipelineBadge() {
           ? `${Math.round(s.current.percent)}%`
           : '…'}
       </span>
-    </div>
+    </Link>
   );
 }

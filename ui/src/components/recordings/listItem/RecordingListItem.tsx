@@ -90,6 +90,14 @@ function RecordingListItem({
               ` | ${formatBytes(recordingBytes(recording))}`}
           </span>
         </div>
+        {(recording.status === 'completed' ||
+          recording.status === 'completedError') &&
+          recording.statusText &&
+          !/^completed ok$/i.test(recording.statusText) && (
+            <span className={styles.problem} title={recording.statusText}>
+              {recording.statusText}
+            </span>
+          )}
       </div>
 
       <Checkbox

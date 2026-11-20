@@ -195,6 +195,10 @@ function App() {
                 }
               />
               <Route
+                path="/status"
+                lazy={() => import('@/views/status/StatusView')}
+              />
+              <Route
                 path="/dvr/series"
                 lazy={() => import('@/views/dvr/series/SeriesRulesView')}
               />

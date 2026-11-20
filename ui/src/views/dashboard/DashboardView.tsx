@@ -1,4 +1,10 @@
-import { GuideIcon, RecordingsIcon, SettingsIcon, TvIcon } from '@/assets';
+import {
+  GuideIcon,
+  RecIcon,
+  RecordingsIcon,
+  SettingsIcon,
+  TvIcon,
+} from '@/assets';
 import {
   Outlet,
   ScrollRestoration,
@@ -41,6 +47,7 @@ export function Component() {
         { title: t('config'), to: '/dvr/config' },
       ],
     },
+    { icon: <RecIcon />, title: t('status'), to: '/status' },
     {
       icon: <SettingsIcon />,
       title: t('settings'),
