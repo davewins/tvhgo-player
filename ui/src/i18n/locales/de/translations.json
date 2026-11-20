@@ -537,5 +537,9 @@
   "status_live": "Live-Ansicht",
   "player_damaged": "Der Empfang war während der Aufnahme schlecht ({{count}} beschädigte Pakete), daher sind Bildstörungen oder Lücken möglich.",
   "player_live_risk": "Aufnahme läuft: {{recording}}. Dieser Sender nutzt den zweiten Tuner, was eine HD-Aufnahme beschädigen kann (Bildstörungen oder Lücken). Trotzdem ansehen?",
-  "player_live_risk_go": "Trotzdem ansehen"
+  "player_live_risk_go": "Trotzdem ansehen",
+  "move_to_finished": "Zu Fertig verschieben",
+  "recordings_moved_finished": "Zu Fertig verschoben",
+  "poor_reception": "Schlechter Empfang",
+  "poor_reception_hint": "Durch schlechten Empfang beschädigt: Bildstörungen möglich"
 }

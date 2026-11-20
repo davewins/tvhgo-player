@@ -113,8 +113,13 @@ export function Component() {
   const { limit, nextPage, previousPage, getOffset, firstPage, lastPage } =
     usePagination(defaultLimit, queryParams, setQueryParams);
 
-  const { stopAndCancelRecordings, removeRecordings, setProtected, pending } =
-    useManageRecordings();
+  const {
+    stopAndCancelRecordings,
+    removeRecordings,
+    setProtected,
+    moveToFinished,
+    pending,
+  } = useManageRecordings();
 
   const getStatus = () =>
     (queryParams.get('status') as RecordingStatus) || 'finished';
@@ -207,6 +212,18 @@ export function Component() {
       protectable.map((r) => r.id),
       !allProtected
     ).then((ok) => {
+      if (ok) {
+        clearSelection();
+        revalidate();
+      }
+    });
+  };
+  // on the Failed list: accept recordings that have a file (damaged by poor reception, say) as finished
+  const movable = [...selectedRecordings].filter(
+    (r) => getStatus() === 'failed' && (r.size ?? 0) > 0
+  );
+  const moveSelected = () => {
+    moveToFinished(movable.map((r) => r.id)).then((ok) => {
       if (ok) {
         clearSelection();
         revalidate();
@@ -561,6 +578,15 @@ export function Component() {
         </div>
 
         <div className={styles.actions}>
+          {movable.length > 0 && (
+            <Button
+              label={t('move_to_finished')}
+              onClick={moveSelected}
+              disabled={pending}
+              quiet
+              testID={TestIds.MOVE_FINISHED_BUTTON}
+            />
+          )}
           {canProtect && (
             <Button
               label={allProtected ? `🔒 ${t('unprotect')}` : t('protect')}

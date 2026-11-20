@@ -459,7 +459,9 @@ export function Component() {
         <div className={styles.scroller} ref={scroller}>
           <div
             className={styles.grid}
-            style={{ width: `calc(var(--left) + ${px(axisEnd - axisStart)}px)` }}
+            style={{
+              width: `calc(var(--left) + ${px(axisEnd - axisStart)}px)`,
+            }}
           >
             <div className={styles.ruler}>
               <div className={styles.corner} />
@@ -479,7 +481,10 @@ export function Component() {
               </div>
             </div>
             {showNow && (
-              <div className={styles.nowLine} style={{ left: `calc(var(--left) + ${nowX}px)` }} />
+              <div
+                className={styles.nowLine}
+                style={{ left: `calc(var(--left) + ${nowX}px)` }}
+              />
             )}
             {channels.map((c) => (
               <GuideRow

@@ -3,6 +3,7 @@ import {
   cancelRecording,
   cancelRecordings,
   createRecording,
+  moveRecordingToFinished,
   recordByEvent,
   removeRecording,
   removeRecordings,
@@ -202,7 +203,26 @@ export const useManageRecordings = () => {
       });
   };
 
+  // resolves to true when the recordings were moved to Finished
+  const _moveToFinished = async (ids: string[]) => {
+    dismissNotification();
+    setPending(true);
+    return await Promise.all(ids.map((id) => moveRecordingToFinished(id)))
+      .then(() => {
+        notifySuccess(t('recordings_moved_finished'));
+        return true;
+      })
+      .catch(() => {
+        notifyError(t('unexpected'));
+        return false;
+      })
+      .finally(() => {
+        setPending(false);
+      });
+  };
+
   return {
+    moveToFinished: _moveToFinished,
     setProtected: _setProtected,
     stopAndCancelRecordings,
     removeRecordings: _removeRecordings,

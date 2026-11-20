@@ -261,6 +261,12 @@ export async function getRecordings(
   return response.data;
 }
 
+// Tvheadend files a recording under Failed when it flagged a problem (e.g. too many data errors); this accepts it
+// as finished, so it shows up with the other finished recordings.
+export async function moveRecordingToFinished(id: string): Promise<void> {
+  await client.put(`/recordings/${id}/move/finished`);
+}
+
 export async function getRecording(id: string): Promise<Recording> {
   const response = await client.get<Recording>(`/recordings/${id}`);
   return response.data;

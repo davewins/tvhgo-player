@@ -22,6 +22,7 @@ import Player from '@/components/player/Player';
 import { Recording } from '@/clients/api/api.types';
 import { TestIds } from '@/__test__/ids';
 import { downloadRecording } from '@/utils/download';
+import { flaggedStatus } from '@/utils/reception';
 import { getRecording } from '@/clients/api/api';
 import styles from './RecordingDetailView.module.scss';
 import { useFormik } from 'formik';
@@ -59,13 +60,7 @@ export function Component() {
     useState<boolean>(false);
   const [keepMp4, setKeepMp4] = useState(false);
 
-  // a finished recording that Tvheadend flagged (not "Completed OK"), with its reason
-  const problem = (r?: { status: string; statusText?: string }) =>
-    (r?.status === 'completed' || r?.status === 'completedError') &&
-    r.statusText &&
-    !/^completed ok$/i.test(r.statusText)
-      ? r.statusText
-      : '';
+  const problem = (r?: Recording) => flaggedStatus(r);
 
   const parseStatus = () => {
     switch (recording?.status) {

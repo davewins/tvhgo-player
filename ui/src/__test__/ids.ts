@@ -18,6 +18,7 @@ export enum TestIds {
   SELECT_SHOW_CHECKBOX = 'select-show-checkbox',
   DOWNLOAD_RECORDINGS_BUTTON = 'download-recordings-button',
   PROTECT_RECORDINGS_BUTTON = 'protect-recordings-button',
+  MOVE_FINISHED_BUTTON = 'move-finished-button',
   RECORDING_BACK_BUTTON = 'recording-back-button',
   RECORDINGS_LAYOUT_GRID = 'recordings-layout-grid',
   RECORDINGS_LAYOUT_LIST = 'recordings-layout-list',

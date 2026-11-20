@@ -15,3 +15,15 @@ export function damagedErrors(
   const count = r.dataErrors ?? 0;
   return flagged || count >= NOTICEABLE_ERRORS ? count : null;
 }
+
+const OK = /^(completed|forced) ok$/i;
+
+// Tvheadend's own wording when it flagged a finished recording ("Too many data errors", "Time missed"), else ''.
+export function flaggedStatus(
+  r: Pick<Recording, 'status' | 'statusText'> | null | undefined
+): string {
+  if (!r || (r.status !== 'completed' && r.status !== 'completedError')) {
+    return '';
+  }
+  return r.statusText && !OK.test(r.statusText) ? r.statusText : '';
+}

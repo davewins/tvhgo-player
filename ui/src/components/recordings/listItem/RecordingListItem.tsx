@@ -1,3 +1,4 @@
+import { damagedErrors, flaggedStatus } from '@/utils/reception';
 import { formatBytes, recordingBytes } from '@/utils/storage';
 
 import Checkbox from '@/components/common/checkbox/Checkbox';
@@ -90,14 +91,14 @@ function RecordingListItem({
               ` | ${formatBytes(recordingBytes(recording))}`}
           </span>
         </div>
-        {(recording.status === 'completed' ||
-          recording.status === 'completedError') &&
-          recording.statusText &&
-          !/^completed ok$/i.test(recording.statusText) && (
-            <span className={styles.problem} title={recording.statusText}>
-              {recording.statusText}
-            </span>
-          )}
+        {(flaggedStatus(recording) || damagedErrors(recording) !== null) && (
+          <span
+            className={styles.problem}
+            title={flaggedStatus(recording) || t('poor_reception_hint')}
+          >
+            {flaggedStatus(recording) || t('poor_reception')}
+          </span>
+        )}
       </div>
 
       <Checkbox

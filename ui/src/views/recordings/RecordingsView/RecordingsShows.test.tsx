@@ -59,6 +59,7 @@ beforeEach(() => {
     pending: false,
     removeRecordings: vi.fn(),
     setProtected: vi.fn(),
+    moveToFinished: vi.fn(),
     stopAndCancelRecordings: vi.fn(),
   });
   vi.mocked(useNavigate).mockReturnValue(navigateMock);
@@ -146,6 +147,7 @@ test('a show can be selected on the shows page, selecting all its recordings', a
     pending: false,
     removeRecordings,
     setProtected: vi.fn(),
+    moveToFinished: vi.fn(),
     stopAndCancelRecordings: vi.fn(),
   });
   const doc = render(<RecordingsView />);

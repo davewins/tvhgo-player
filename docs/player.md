@@ -343,6 +343,14 @@ multiplex, so it would need the second tuner. If so, the player asks first: **Wa
 the recording's own multiplex, SD recordings, and times when both tuners are already busy do not trigger it. If the
 check fails you are never blocked.
 
+## Failed recordings
+
+Tvheadend files a recording under **Failed** when it flags a problem, and tvhgo shows the reason on its row (*Too many
+data errors*, *Time missed*). In the Failed list, select recordings that have a file and press **Move to Finished** to accept
+them: they then appear with the other finished recordings (Tvheadend labels them *Forced OK*; tvhgo still shows a
+*Poor reception* chip and the player warning when they have 1000 or more damaged packets). Removing a failed entry that
+has no file (*Time missed*) now works: Tvheadend's remove leaves such an entry behind, so tvhgo deletes it outright.
+
 ## Browser support
 
 - **Tested:** Google Chrome on desktop - live TV at all qualities, recording playback and seeking, the guide, all

@@ -23,6 +23,7 @@ const navigateMock = vi.fn();
 const stopAndCancelRecordingsMock = vi.fn();
 const removeRecordingsMock = vi.fn();
 const setProtectedMock = vi.fn();
+const moveToFinishedMock = vi.fn();
 const setQueryParamsMock = vi.fn();
 
 beforeEach(() => {
@@ -35,9 +36,11 @@ beforeEach(() => {
     pending: false,
     removeRecordings: removeRecordingsMock,
     setProtected: setProtectedMock,
+    moveToFinished: moveToFinishedMock,
     stopAndCancelRecordings: stopAndCancelRecordingsMock,
   });
   setProtectedMock.mockResolvedValue(true);
+  moveToFinishedMock.mockResolvedValue(true);
 
   vi.mocked(useSearchParams).mockReturnValue([
     new URLSearchParams(),
@@ -398,6 +401,28 @@ describe('delete recordings', () => {
       [recordings[0].id, recordings[1].id],
       true
     );
+  });
+
+  test('failed recordings that have a file can be moved to Finished', async () => {
+    mockStatus('failed');
+    const recordings = buildRecordings('failed', 2).map((r, i) => ({
+      ...r,
+      size: i === 0 ? 1000 : 0,
+    }));
+    vi.mocked(useLoaderData).mockReturnValue({
+      entries: recordings,
+      offset: 0,
+      total: 2,
+    });
+
+    const document = render(<RecordingsView />);
+    const boxes = document.getAllByTestId(TestIds.SELECT_RECORDING_CHECKBOX);
+    // one with no file: nothing to move
+    await userEvent.click(boxes[1]);
+    expect(document.queryByTestId(TestIds.MOVE_FINISHED_BUTTON)).toBeNull();
+    await userEvent.click(boxes[0]);
+    await userEvent.click(document.getByTestId(TestIds.MOVE_FINISHED_BUTTON));
+    expect(moveToFinishedMock).toHaveBeenCalledWith([recordings[0].id]);
   });
 
   test('can keep the MP4 copies when deleting', async () => {

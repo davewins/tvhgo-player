@@ -575,6 +575,15 @@ func TestRemoveSucceeds(t *testing.T) {
 				Body:       http.NoBody,
 			}}, nil).
 		Times(1)
+	// nothing is left behind
+	mockClient.EXPECT().
+		Exec(ctx, "/api/idnode/load", gomock.Any(), gomock.Any()).
+		Return(&tvheadend.Response{
+			Response: &http.Response{
+				StatusCode: 200,
+				Body:       http.NoBody,
+			}}, nil).
+		Times(1)
 
 	service := recording.New(mockClient)
 	err := service.Remove(ctx, id)
@@ -828,4 +837,30 @@ func TestGetSucceeds(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.NotNil(t, rec)
+}
+
+func TestRemoveDeletesAnEntryTvheadendLeavesBehind(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	ok := func() *tvheadend.Response {
+		return &tvheadend.Response{Response: &http.Response{StatusCode: 200, Body: http.NoBody}}
+	}
+	mockClient := mock_tvheadend.NewMockClient(ctrl)
+	mockClient.EXPECT().
+		Exec(ctx, "/api/dvr/entry/remove", gomock.Any(), gomock.Any()).
+		Return(ok(), nil).Times(1)
+	// the entry is still there after "remove" (a failed recording with no file) ...
+	mockClient.EXPECT().
+		Exec(ctx, "/api/idnode/load", gomock.Any(), gomock.Any()).
+		DoAndReturn(func(_ interface{}, _ string, dst interface{}, _ ...interface{}) (*tvheadend.Response, error) {
+			dst.(*tvheadend.IdnodeLoadResponse).Entries = []tvheadend.Idnode{{UUID: "someID"}}
+			return ok(), nil
+		}).Times(1)
+	// ... so it is deleted outright
+	mockClient.EXPECT().
+		Exec(ctx, "/api/idnode/delete", gomock.Any(), gomock.Any()).
+		Return(ok(), nil).Times(1)
+
+	assert.Nil(t, recording.New(mockClient).Remove(ctx, "someID"))
 }

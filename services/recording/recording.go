@@ -144,14 +144,14 @@ func (s *service) Remove(ctx context.Context, id string) error {
 	q := tvheadend.NewQuery()
 	q.Set("uuid", id)
 
-	return s.remove(ctx, q)
+	return s.remove(ctx, q, []string{id})
 }
 
 func (s *service) BatchRemove(ctx context.Context, ids []string) error {
 	q := tvheadend.NewQuery()
 	q.SetJSON("uuid", ids)
 
-	return s.remove(ctx, q)
+	return s.remove(ctx, q, ids)
 }
 
 func (s *service) MoveFinished(ctx context.Context, id string) error {
@@ -275,7 +275,7 @@ func (s *service) cancel(ctx context.Context, q tvheadend.Query) error {
 	return nil
 }
 
-func (s *service) remove(ctx context.Context, q tvheadend.Query) error {
+func (s *service) remove(ctx context.Context, q tvheadend.Query, ids []string) error {
 	res, err := s.tvh.Exec(ctx, "/api/dvr/entry/remove", nil, q)
 	if err != nil {
 		return err
@@ -285,5 +285,37 @@ func (s *service) remove(ctx context.Context, q tvheadend.Query) error {
 		return ErrRequestFailed
 	}
 
+	return s.deleteLeftovers(ctx, ids)
+}
+
+// deleteLeftovers deletes what "remove" did not get rid of: Tvheadend removes the files of a recording that has no file or
+// a failed state (for example "Time missed") but leaves the entry itself in the Failed list, so it can never be removed
+// from there. Deleting the node removes it for good.
+func (s *service) deleteLeftovers(ctx context.Context, ids []string) error {
+	var left []string
+	for _, id := range ids {
+		q := tvheadend.NewQuery()
+		q.Set("uuid", id)
+		var load tvheadend.IdnodeLoadResponse
+		res, err := s.tvh.Exec(ctx, "/api/idnode/load", &load, q)
+		if err != nil || res == nil || res.StatusCode >= 400 {
+			continue // cannot tell: the removal itself succeeded, so do not fail it
+		}
+		if len(load.Entries) > 0 {
+			left = append(left, id)
+		}
+	}
+	if len(left) == 0 {
+		return nil
+	}
+	q := tvheadend.NewQuery()
+	q.SetJSON("uuid", left)
+	res, err := s.tvh.Exec(ctx, "/api/idnode/delete", nil, q)
+	if err != nil {
+		return err
+	}
+	if res.StatusCode >= 400 {
+		return ErrRequestFailed
+	}
 	return nil
 }
