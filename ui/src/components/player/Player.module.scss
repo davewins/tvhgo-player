@@ -307,3 +307,13 @@
   cursor: pointer;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
+
+// the recording had poor reception: picture glitches or gaps are to be expected
+.damaged {
+  margin: 0.5rem 0 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d29922;
+  border-radius: 3px;
+  color: #d29922;
+  font-size: 0.85rem;
+}

@@ -87,6 +87,8 @@ export type Recording = {
   status: string;
   // Tvheadend's own wording, e.g. "Completed OK" or "Too many data errors"
   statusText?: string;
+  // damaged packets seen while recording (poor reception); a few hundred is normal
+  dataErrors?: number;
   // bytes: the recording file, and its browser-friendly MP4 copy (0 if none)
   size?: number;
   playableSize?: number;

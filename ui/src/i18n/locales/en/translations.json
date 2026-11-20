@@ -540,5 +540,6 @@
   "status_tuners_free": "All tuners are free.",
   "status_pipeline_unavailable": "The conversion pipeline is not connected, so conversions are not shown.",
   "status_on": "on {{channel}}",
-  "status_live": "watching live"
+  "status_live": "watching live",
+  "player_damaged": "Reception was poor while this was recorded ({{count}} damaged packets), so expect some picture glitches or gaps."
 }

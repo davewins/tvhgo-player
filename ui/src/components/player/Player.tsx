@@ -4,18 +4,20 @@ import {
   getChapters,
   getLiveQualities,
   getPlayback,
+  getRecording,
   getWatchProgress,
   preparePlayback,
   startLiveHLS,
 } from '@/clients/api/api';
 import { dropProgress, setProgress } from '@/hooks/progress';
 import { formatClock, resumePoint } from '@/utils/progress';
-import Hls from 'hls.js';
 import { useEffect, useRef, useState } from 'react';
 
 import BreakBar from './BreakBar';
+import Hls from 'hls.js';
 import Modal from '@/components/common/modal/Modal';
 import { c } from '@/utils/classNames';
+import { damagedErrors } from '@/utils/reception';
 import styles from './Player.module.scss';
 import { useTranslation } from 'react-i18next';
 
@@ -150,6 +152,8 @@ function Inner({
   const [restart, setRestart] = useState(0);
   // recordings: where the previous viewing stopped (offered as "start from the beginning"), and bookkeeping for saving
   const [resumedAt, setResumedAt] = useState<number | null>(null);
+  // recordings: poor reception while it was recorded (damaged packet count), so the viewer is told to expect glitches
+  const [damaged, setDamaged] = useState<number | null>(null);
   const seekTo = useRef<number | null>(null);
   const lastPos = useRef<{ position: number; duration: number } | null>(null);
   const lastSave = useRef(0);
@@ -189,6 +193,18 @@ function Inner({
       if (recordingId && pos) {
         saveProgress(recordingId, pos.position, pos.duration);
       }
+    };
+  }, [recordingId]);
+
+  useEffect(() => {
+    setDamaged(null);
+    if (!recordingId) return;
+    let live = true;
+    Promise.resolve(getRecording(recordingId))
+      .then((r) => live && setDamaged(damagedErrors(r)))
+      .catch(() => undefined);
+    return () => {
+      live = false;
     };
   }, [recordingId]);
 
@@ -658,6 +674,11 @@ function Inner({
             }
           }}
         />
+      )}
+      {damaged !== null && !preparing && (
+        <p className={styles.damaged} data-testid="damaged-notice">
+          {t('player_damaged', { count: damaged })}
+        </p>
       )}
       {error && <p className={styles.error}>{error}</p>}
     </div>

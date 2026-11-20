@@ -1,6 +1,11 @@
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
-import { getChapters, getPlayback, getWatchProgress } from '@/clients/api/api';
+import {
+  getChapters,
+  getPlayback,
+  getRecording,
+  getWatchProgress,
+} from '@/clients/api/api';
 
 import Player from './Player';
 
@@ -8,6 +13,7 @@ vi.mock('@/clients/api/api', async (orig) => ({
   ...(await orig<typeof import('@/clients/api/api')>()),
   getChapters: vi.fn(),
   getPlayback: vi.fn(),
+  getRecording: vi.fn().mockResolvedValue({ statusText: 'Completed OK' }),
   getWatchProgress: vi.fn().mockResolvedValue([]),
   clearWatchProgress: vi.fn().mockResolvedValue(undefined),
   getLiveQualities: vi.fn().mockResolvedValue([]),
@@ -175,4 +181,23 @@ test('no break bar for a recording without ad breaks', async () => {
   await waitFor(() => expect(getChapters).toHaveBeenCalled());
   await new Promise((r) => setTimeout(r, 0));
   expect(doc.queryByTestId('break-bar')).toBeNull();
+});
+
+test('a recording with poor reception carries a warning', async () => {
+  vi.mocked(getRecording).mockResolvedValue({
+    statusText: 'Too many data errors',
+    dataErrors: 18152,
+  } as never);
+  const doc = await open();
+  await waitFor(() => expect(doc.getByTestId('damaged-notice')).toBeTruthy());
+});
+
+test('a clean recording has no warning', async () => {
+  vi.mocked(getRecording).mockResolvedValue({
+    statusText: 'Completed OK',
+    dataErrors: 12,
+  } as never);
+  const doc = await open();
+  await waitFor(() => expect(getRecording).toHaveBeenCalled());
+  expect(doc.queryByTestId('damaged-notice')).toBeNull();
 });

@@ -68,6 +68,8 @@ type (
 		Status     string `json:"status"`
 		// StatusText is Tvheadend's own description of how it went ("Completed OK", "Too many data errors", ...).
 		StatusText string `json:"statusText,omitempty"`
+		// DataErrors is how many damaged packets Tvheadend saw while recording (poor reception): usually under a few hundred.
+		DataErrors int `json:"dataErrors,omitempty"`
 		// Size is the size of the recording file in bytes (0 until something has been recorded).
 		Size int64 `json:"size"`
 		// PlayableSize is the size of the browser-friendly MP4 copy in bytes, 0 if there is none (filled in by the API).
@@ -304,6 +306,7 @@ func MapToTvheadendDvrGridEntryToRecording(entry tvheadend.DvrGridEntry) Recordi
 		ExtraText:        entry.DispExtratext,
 		Status:           entry.SchedStatus,
 		StatusText:       entry.Status,
+		DataErrors:       entry.DataErrors,
 		Description:      entry.DispDescription,
 		EventID:          entry.Broadcast,
 		PiconID:          MapTvheadendIconUrlToPiconID(entry.ChannelIcon),
@@ -352,6 +355,8 @@ func MapTvheadendIdnodeToRecording(idnode tvheadend.Idnode) (*Recording, error) 
 			r.CreatedAt, err = conv.InterfaceToInt64(p.Value)
 		case "status":
 			r.StatusText, err = conv.InterfaceToString(p.Value)
+		case "data_errors":
+			r.DataErrors, err = conv.InterfaceToInt(p.Value)
 		case "sched_status":
 			r.Status, err = conv.InterfaceToString(p.Value)
 		case "broadcast":

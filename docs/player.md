@@ -321,7 +321,9 @@ the reason and when it will retry), the **next recordings** and what each **tune
 (a red **REC** badge while recording, the conversion percentage, and on wider screens the tuner count) open this page,
 and on a phone the header keeps the REC and conversion badges. The estimate is only shown once a conversion is a few
 percent in. Finished recordings that Tvheadend flagged (for example *Too many data errors*, which means poor reception
-while recording) show that reason on their row and on the recording's page.
+while recording) show that reason on their row and on the recording's page, and the player shows a warning under the
+video ("Reception was poor while this was recorded... expect some picture glitches or gaps") for any recording with a
+flag or 1000 or more damaged packets (a few hundred is normal and invisible).
 
 ## Browser support
 

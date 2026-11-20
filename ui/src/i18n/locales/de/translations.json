@@ -534,5 +534,6 @@
   "status_tuners_free": "Alle Tuner sind frei.",
   "status_pipeline_unavailable": "Die Konvertierungs-Pipeline ist nicht verbunden, daher werden keine Konvertierungen angezeigt.",
   "status_on": "auf {{channel}}",
-  "status_live": "Live-Ansicht"
+  "status_live": "Live-Ansicht",
+  "player_damaged": "Der Empfang war während der Aufnahme schlecht ({{count}} beschädigte Pakete), daher sind Bildstörungen oder Lücken möglich."
 }
