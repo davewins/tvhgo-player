@@ -11,6 +11,7 @@ import (
 	"github.com/davidborzek/tvhgo/api/request"
 	"github.com/davidborzek/tvhgo/api/response"
 	"github.com/davidborzek/tvhgo/core"
+	"github.com/davidborzek/tvhgo/tvheadend"
 	"github.com/go-chi/chi/v5"
 	"github.com/rs/zerolog/log"
 )
@@ -52,7 +53,7 @@ func (s *router) StreamChannelLive(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// raw MPEG-TS from tvheadend (no tvheadend-side transcoding); tied to this request, so it ends with the viewer
-	res, err := s.streaming.GetChannelStream(r.Context(), number, "pass")
+	res, err := s.streaming.GetChannelStream(viewerContext(r.Context(), r), number, "pass")
 	if err != nil {
 		log.Error().Int64("channel", number).Err(err).Msg("failed to get channel stream for live transcode")
 		response.InternalErrorCommon(w)
@@ -103,7 +104,7 @@ func (s *router) StartChannelLiveHLS(w http.ResponseWriter, r *http.Request) {
 	}
 
 	open := func(ctx context.Context) (io.ReadCloser, error) {
-		res, err := s.streaming.GetChannelStream(ctx, number, "pass")
+		res, err := s.streaming.GetChannelStream(viewerContext(ctx, r), number, "pass")
 		if err != nil {
 			return nil, err
 		}
@@ -155,4 +156,16 @@ func (s *router) PingLiveHLS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusNoContent)
+}
+
+// viewerContext returns ctx marked so that the Tvheadend stream opened with it names the viewer's browser.
+func viewerContext(ctx context.Context, r *http.Request) context.Context {
+	ua := r.UserAgent()
+	if len(ua) > 200 {
+		ua = ua[:200]
+	}
+	if ua == "" {
+		ua = "unknown browser"
+	}
+	return tvheadend.WithUserAgent(ctx, "tvhgo: "+ua)
 }

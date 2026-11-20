@@ -1,5 +1,11 @@
+import {
+  browserName,
+  heldMuxes,
+  isFull,
+  joinNames,
+  viewerLabel,
+} from './tuners';
 import { describe, expect, test } from 'vitest';
-import { heldMuxes, isFull, joinNames } from './tuners';
 
 import { TunerStatus } from '@/clients/api/api.types';
 
@@ -42,4 +48,18 @@ describe('tuners', () => {
     expect(heldMuxes(status(2))).toBe('482MHz and 498MHz');
     expect(heldMuxes(status(1))).toBe('482MHz');
   });
+});
+
+test('viewers are described for people', () => {
+  const iphone =
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1';
+  const chrome =
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
+  expect(browserName(iphone)).toBe('Safari on iPhone');
+  expect(browserName(chrome)).toBe('Chrome on Windows');
+  expect(viewerLabel({ client: `tvhgo: ${iphone}` })).toBe('Safari on iPhone');
+  expect(
+    viewerLabel({ client: 'Lavf/62.1', username: 'jellyfin', host: '10.0.0.4' })
+  ).toBe('Jellyfin (10.0.0.4)');
+  expect(viewerLabel({})).toBe('');
 });

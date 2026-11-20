@@ -33,7 +33,7 @@ func (s *router) StreamChannel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, err := s.streaming.GetChannelStream(r.Context(), number, profile)
+	res, err := s.streaming.GetChannelStream(viewerContext(r.Context(), r), number, profile)
 	if err != nil {
 		log.Error().Int64("channel", number).
 			Err(err).Msg("failed to get channel stream")

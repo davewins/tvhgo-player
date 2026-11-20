@@ -56,6 +56,8 @@ Gotchas:
 - Playwright's Chromium cannot decode H.264, so a headless browser cannot verify actual video playback. Verify player
   *logic* with unit tests; verify layout with screenshots (override `HTMLMediaElement.duration` via an init script if
   you need a duration). Real playback must be checked by a person on a device.
+- Repository tests need cgo (sqlite3): run them with `-e CGO_ENABLED=1` and `apk add build-base` in the golang image, or
+  they panic in `testdb.Setup`.
 - SQLite in tests: every connection to `:memory:` is its own database; use `SetMaxOpenConns(1)`. Foreign keys are
   enforced, so create real users first.
 

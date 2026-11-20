@@ -9,6 +9,7 @@ import { usePipeline } from '@/hooks/pipeline';
 import { useTranslation } from 'react-i18next';
 import { useTuners } from '@/hooks/tuners';
 import { useUpcoming } from '@/hooks/activity';
+import { viewerLabel } from '@/utils/tuners';
 
 const stepKey = (step: string) =>
   step === 'convert_mp4' ? 'pipeline_converting' : `pipeline_step_${step}`;
@@ -202,7 +203,7 @@ export function Component() {
                   {x.users
                     .map((u) =>
                       u.kind === 'live'
-                        ? [u.channel, t('status_live')]
+                        ? [u.channel, t('status_live'), viewerLabel(u)]
                             .filter(Boolean)
                             .join(' · ')
                         : u.title

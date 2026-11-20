@@ -41,6 +41,14 @@ type (
 	}
 )
 
+type userAgentKey struct{}
+
+// WithUserAgent makes requests sent with ctx identify themselves to Tvheadend with the given User-Agent, so that for a
+// stream started on behalf of a viewer Tvheadend's subscription list (and tvhgo's Status page) shows who it is for.
+func WithUserAgent(ctx context.Context, ua string) context.Context {
+	return context.WithValue(ctx, userAgentKey{}, ua)
+}
+
 // NewQuery creates a new tvheadend request query.
 func NewQuery() Query {
 	return Query{
@@ -99,6 +107,9 @@ func (c *client) Exec(
 	}
 
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	if ua, ok := ctx.Value(userAgentKey{}).(string); ok && ua != "" {
+		req.Header.Set("User-Agent", ua)
+	}
 
 	if c.opts.Username != "" && c.opts.Password != "" {
 		req.SetBasicAuth(c.opts.Username, c.opts.Password)

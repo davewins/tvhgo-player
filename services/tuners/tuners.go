@@ -30,6 +30,10 @@ type (
 		Channel string `json:"channel"`
 		Service string `json:"service"`
 		State   string `json:"state"`
+		// who is on the other end of an HTTP stream
+		Hostname string `json:"hostname"`
+		Username string `json:"username"`
+		Client   string `json:"client"`
 	}
 	mpegtsService struct {
 		Enabled   bool     `json:"enabled"`
@@ -68,11 +72,18 @@ func compute(
 
 	busyMux := map[string]bool{}
 	for _, in := range inputs {
-		t := core.Tuner{Name: in.Input, Mux: in.Stream, Busy: in.Subs > 0, Users: []core.TunerUser{}}
+		t := core.Tuner{Name: in.Input, Mux: in.Stream, Users: []core.TunerUser{}}
+		// Tvheadend's own guide (EPG) scanner borrows an idle tuner every few minutes. It gives way at once to anything
+		// real, so it is not "in use": counting it made both tuners look busy with nothing going on.
+		epg := 0
 		for _, s := range subs {
 			// service looks like "adapter/network/multiplex/service name"
 			parts := strings.SplitN(s.Service, "/", 4)
 			if len(parts) < 3 || parts[0] != in.Input {
+				continue
+			}
+			if s.Title == "epggrab" {
+				epg++
 				continue
 			}
 			kind := "live"
@@ -81,7 +92,14 @@ func compute(
 				kind = "recording"
 				title = strings.TrimSpace(strings.TrimPrefix(s.Title, "DVR:"))
 			}
-			t.Users = append(t.Users, core.TunerUser{Title: title, Channel: s.Channel, Kind: kind})
+			t.Users = append(t.Users, core.TunerUser{
+				Title: title, Channel: s.Channel, Kind: kind,
+				Client: s.Client, Username: s.Username, Host: s.Hostname,
+			})
+		}
+		t.Busy = in.Subs > epg
+		if !t.Busy {
+			t.Mux = ""
 		}
 		if t.Busy {
 			st.Busy++

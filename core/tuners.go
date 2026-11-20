@@ -9,6 +9,12 @@ type (
 		Channel string `json:"channel"`
 		// Kind is "recording" or "live".
 		Kind string `json:"kind"`
+		// Client is what Tvheadend knows of who is watching: for a stream started from tvhgo the viewer's browser
+		// ("tvhgo: <browser user agent>"), for other programs their own name (e.g. "Lavf/62" for Jellyfin).
+		Client string `json:"client,omitempty"`
+		// Username is the Tvheadend account the stream uses and Host the address it came from.
+		Username string `json:"username,omitempty"`
+		Host     string `json:"host,omitempty"`
 	}
 
 	// Tuner is one tuner (input) of the tvheadend server.

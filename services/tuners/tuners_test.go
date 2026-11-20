@@ -90,3 +90,29 @@ func TestClashes(t *testing.T) {
 	// no tuners known: nothing to say
 	assert.Empty(t, findClashes([]need{need1("1", 0, 10, a)}, 0))
 }
+
+func TestGuideScannerDoesNotCountAsInUse(t *testing.T) {
+	epg := subscription{Title: "epggrab", Service: "tuner #0/Freeview/498MHz/Raw PID Subscription"}
+	st := compute([]input{
+		{Input: "tuner #1", Stream: "482MHz in Freeview", Subs: 1},
+		{Input: "tuner #0", Stream: "498MHz in Freeview", Subs: 1},
+	}, []subscription{epg, {Title: "epggrab", Service: "tuner #1/Freeview/482MHz/Raw PID Subscription"}}, svcs)
+
+	assert.Equal(t, 0, st.Busy)
+	assert.Empty(t, st.Blocked)
+	assert.False(t, st.Tuners[0].Busy)
+	assert.Empty(t, st.Tuners[0].Users)
+}
+
+func TestViewerIsReported(t *testing.T) {
+	live := subscription{
+		Title: "HTTP", Channel: "ITV1", Service: "tuner #1/Freeview/538MHz/ITV1",
+		Client: "tvhgo: Mozilla/5.0 (iPhone)", Username: "tvhgo", Hostname: "10.0.0.5",
+	}
+	st := compute([]input{{Input: "tuner #1", Stream: "538MHz in Freeview", Subs: 2}},
+		[]subscription{live, {Title: "epggrab", Service: "tuner #1/Freeview/538MHz/Raw PID Subscription"}}, svcs)
+
+	assert.Equal(t, 1, st.Busy)
+	assert.Equal(t, "tvhgo: Mozilla/5.0 (iPhone)", st.Tuners[0].Users[0].Client)
+	assert.Equal(t, "10.0.0.5", st.Tuners[0].Users[0].Host)
+}

@@ -307,6 +307,10 @@ export type TunerUser = {
   title: string;
   channel: string;
   kind: 'recording' | 'live';
+  // who is watching: "tvhgo: <browser user agent>" for a stream started here, otherwise the other program's name
+  client?: string;
+  username?: string;
+  host?: string;
 };
 
 export type Tuner = {

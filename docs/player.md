@@ -325,6 +325,15 @@ while recording) show that reason on their row and on the recording's page, and 
 video ("Reception was poor while this was recorded... expect some picture glitches or gaps") for any recording with a
 flag or 1000 or more damaged packets (a few hundred is normal and invisible).
 
+### Who is using a tuner
+
+The tuner count and the Status page ignore Tvheadend's own guide (EPG) scanner, which borrows an idle tuner every few
+minutes and gives way instantly to anything real; before this, both tuners could look "in use" with nothing happening.
+For live viewing, tvhgo now passes the viewer's browser to Tvheadend as the stream's User-Agent
+(`tvhgo: <browser user agent>`), so the Status page shows e.g. *Safari on iPhone* (and Tvheadend's own Status → Subscriptions
+page shows the same string). Streams from other programs are named by what Tvheadend reports (Jellyfin shows as
+*Jellyfin*, with its address).
+
 ## Browser support
 
 - **Tested:** Google Chrome on desktop - live TV at all qualities, recording playback and seeking, the guide, all
