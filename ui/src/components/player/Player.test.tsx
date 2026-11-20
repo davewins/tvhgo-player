@@ -2,9 +2,12 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import {
   getChapters,
+  getLiveImpact,
+  getLiveQualities,
   getPlayback,
   getRecording,
   getWatchProgress,
+  startLiveHLS,
 } from '@/clients/api/api';
 
 import Player from './Player';
@@ -17,6 +20,8 @@ vi.mock('@/clients/api/api', async (orig) => ({
   getWatchProgress: vi.fn().mockResolvedValue([]),
   clearWatchProgress: vi.fn().mockResolvedValue(undefined),
   getLiveQualities: vi.fn().mockResolvedValue([]),
+  getLiveImpact: vi.fn().mockResolvedValue({ warn: false, recording: [] }),
+  startLiveHLS: vi.fn().mockResolvedValue({ id: 'x', url: '/x.m3u8' }),
   preparePlayback: vi.fn(),
 }));
 
@@ -200,4 +205,29 @@ test('a clean recording has no warning', async () => {
   const doc = await open();
   await waitFor(() => expect(getRecording).toHaveBeenCalled());
   expect(doc.queryByTestId('damaged-notice')).toBeNull();
+});
+
+const openLive = () =>
+  render(
+    <Player visible onClose={() => undefined} title="Film4" channelNumber={9} />
+  );
+
+test('watching live during an HD recording asks first, and waits for the answer', async () => {
+  vi.mocked(getLiveImpact).mockResolvedValue({
+    warn: true,
+    recording: ['ITV Lunchtime News'],
+  });
+  vi.mocked(getLiveQualities).mockResolvedValue([720]);
+  const doc = openLive();
+  await waitFor(() => expect(doc.getByTestId('live-risk')).toBeTruthy());
+  expect(startLiveHLS).not.toHaveBeenCalled();
+  fireEvent.click(doc.getByTestId('live-risk-proceed'));
+  await waitFor(() => expect(doc.queryByTestId('live-risk')).toBeNull());
+});
+
+test('no warning when nothing is at risk', async () => {
+  vi.mocked(getLiveImpact).mockResolvedValue({ warn: false, recording: [] });
+  const doc = openLive();
+  await waitFor(() => expect(getLiveImpact).toHaveBeenCalledWith('Film4'));
+  expect(doc.queryByTestId('live-risk')).toBeNull();
 });

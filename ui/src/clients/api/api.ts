@@ -170,6 +170,17 @@ export async function getTuners(): Promise<TunerStatus> {
   return response.data;
 }
 
+// Would watching this channel live take the second tuner from an HD recording in progress?
+export async function getLiveImpact(
+  channel: string
+): Promise<{ warn: boolean; recording: string[] }> {
+  const response = await client.get<{ warn: boolean; recording: string[] }>(
+    '/tuners/live-impact',
+    { params: { channel } }
+  );
+  return response.data;
+}
+
 export async function getClashes(probe?: {
   channelId: string;
   start: number;

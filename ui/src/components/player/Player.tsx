@@ -2,6 +2,7 @@ import { Chapter, PlaybackInfo } from '@/clients/api/api.types';
 import {
   clearWatchProgress,
   getChapters,
+  getLiveImpact,
   getLiveQualities,
   getPlayback,
   getRecording,
@@ -128,7 +129,8 @@ function Inner({
   channelNumber,
   recordingId,
   picon,
-}: Omit<Props, 'visible' | 'onClose'>) {
+  onClose,
+}: Omit<Props, 'visible'>) {
   const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [error, setError] = useState<string | null>(null);
@@ -140,6 +142,12 @@ function Inner({
   const [currentBreak, setCurrentBreak] = useState<Chapter | null>(null);
   // for the break bar under the video
   const [clock, setClock] = useState({ time: 0, duration: 0 });
+  // live: watching this channel would take the second tuner away from an HD recording in progress, which damages it
+  // (null = not checked yet; an empty list = no problem). The stream waits until the viewer has chosen.
+  const [atRisk, setAtRisk] = useState<string[] | null>(
+    channelNumber === undefined ? [] : null
+  );
+  const [proceed, setProceed] = useState(false);
   // live: the viewer paused or rewound and is now behind the live edge
   const [behindLive, setBehindLive] = useState(false);
   // live: heights tvhgo can transcode to (null = still loading) and the current choice ("auto" or a height)
@@ -208,6 +216,18 @@ function Inner({
     };
   }, [recordingId]);
 
+  // --- live: would this harm a recording?
+  useEffect(() => {
+    if (channelNumber === undefined) return;
+    let live = true;
+    Promise.resolve(getLiveImpact(title))
+      .then((r) => live && setAtRisk(r?.warn ? r.recording : []))
+      .catch(() => live && setAtRisk([]));
+    return () => {
+      live = false;
+    };
+  }, [channelNumber, title]);
+
   // --- live: find out which qualities are available and pick the remembered / a sensible default
   useEffect(() => {
     if (channelNumber === undefined) {
@@ -243,7 +263,13 @@ function Inner({
   // --- live: (re)start the stream whenever the quality changes
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || channelNumber === undefined || qualities === null) {
+    if (
+      !video ||
+      channelNumber === undefined ||
+      qualities === null ||
+      atRisk === null ||
+      (atRisk.length > 0 && !proceed)
+    ) {
       return;
     }
     setError(null);
@@ -334,7 +360,7 @@ function Inner({
       video.removeAttribute('src');
       video.load();
     };
-  }, [channelNumber, quality, qualities, restart]);
+  }, [channelNumber, quality, qualities, restart, atRisk, proceed]);
 
   // --- recording: play the MP4 copy, asking the server to prepare one first if needed
   useEffect(() => {
@@ -591,6 +617,24 @@ function Inner({
           )}
         </div>
       )}
+      {atRisk && atRisk.length > 0 && !proceed && (
+        <div className={styles.risk} data-testid="live-risk">
+          <p>{t('player_live_risk', { recording: atRisk.join(', ') })}</p>
+          <div className={styles.riskButtons}>
+            <button type="button" onClick={onClose}>
+              {t('cancel')}
+            </button>
+            <button
+              type="button"
+              className={styles.riskGo}
+              onClick={() => setProceed(true)}
+              data-testid="live-risk-proceed"
+            >
+              {t('player_live_risk_go')}
+            </button>
+          </div>
+        </div>
+      )}
       <div className={styles.videoWrap}>
         <video
           ref={videoRef}
@@ -602,7 +646,11 @@ function Inner({
                   adBreaks.length > 0 ? styles.videoWithBreaks : ''
                 )
           }
-          style={preparing ? { display: 'none' } : undefined}
+          style={
+            preparing || (atRisk && atRisk.length > 0 && !proceed)
+              ? { display: 'none' }
+              : undefined
+          }
           controls={!liveRadio}
           playsInline
           onLoadedMetadata={onMetadata}
@@ -690,7 +738,7 @@ export default function Player(props: Props) {
   return (
     <Modal visible={visible} onClose={onClose} maxWidth="1100px">
       {/* only mounted while open, so closing the modal stops playback and releases the tuner */}
-      {visible && <Inner {...rest} />}
+      {visible && <Inner {...rest} onClose={onClose} />}
     </Modal>
   );
 }

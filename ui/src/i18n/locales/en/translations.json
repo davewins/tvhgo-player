@@ -541,5 +541,7 @@
   "status_pipeline_unavailable": "The conversion pipeline is not connected, so conversions are not shown.",
   "status_on": "on {{channel}}",
   "status_live": "watching live",
-  "player_damaged": "Reception was poor while this was recorded ({{count}} damaged packets), so expect some picture glitches or gaps."
+  "player_damaged": "Reception was poor while this was recorded ({{count}} damaged packets), so expect some picture glitches or gaps.",
+  "player_live_risk": "Recording in progress: {{recording}}. Watching this channel uses the second tuner, which can corrupt an HD recording (picture glitches or gaps). Watch anyway?",
+  "player_live_risk_go": "Watch anyway"
 }

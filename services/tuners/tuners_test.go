@@ -116,3 +116,31 @@ func TestViewerIsReported(t *testing.T) {
 	assert.Equal(t, "tvhgo: Mozilla/5.0 (iPhone)", st.Tuners[0].Users[0].Client)
 	assert.Equal(t, "10.0.0.5", st.Tuners[0].Users[0].Host)
 }
+
+func hdRecording() *core.TunerStatus {
+	return &core.TunerStatus{Total: 2, Busy: 1, Tuners: []core.Tuner{
+		{Name: "t1", Mux: "482MHz in Freeview", Busy: true, Users: []core.TunerUser{{Title: "ITV Lunchtime News", Channel: "ITV1 HD", Kind: "recording"}}},
+		{Name: "t0"},
+	}}
+}
+
+func TestWatchingAnotherMuxDuringAnHDRecordingWarns(t *testing.T) {
+	r := liveImpact(hdRecording(), svcs, "film4")
+	assert.True(t, r.Warn)
+	assert.Equal(t, []string{"ITV Lunchtime News"}, r.Recording)
+}
+
+func TestWatchingOnTheRecordingsMuxDoesNotWarn(t *testing.T) {
+	assert.False(t, liveImpact(hdRecording(), svcs, "bbc1hd").Warn)
+}
+
+func TestSDRecordingOrBusyTunersDoNotWarn(t *testing.T) {
+	sd := hdRecording()
+	sd.Tuners[0].Users[0].Channel = "ITV1"
+	assert.False(t, liveImpact(sd, svcs, "film4").Warn)
+
+	full := hdRecording()
+	full.Busy = 2
+	assert.False(t, liveImpact(full, svcs, "film4").Warn)
+	assert.False(t, liveImpact(&core.TunerStatus{Total: 2}, svcs, "film4").Warn)
+}

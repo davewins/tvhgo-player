@@ -185,3 +185,91 @@ func (s *service) get(ctx context.Context, path string, dst interface{}, q ...tv
 	}
 	return nil
 }
+
+// isHD reports whether a channel name is an HD channel ("ITV1 HD", "BBC ONE HD"). HD multiplexes are the fragile ones.
+func isHD(name string) bool {
+	for _, w := range strings.Fields(name) {
+		if strings.EqualFold(w, "HD") {
+			return true
+		}
+	}
+	return false
+}
+
+// liveImpact is the pure part of LiveImpact.
+func liveImpact(st *core.TunerStatus, services []mpegtsService, channel string) *core.LiveImpact {
+	res := &core.LiveImpact{Recording: []string{}}
+	if st == nil || st.Total < 2 || st.Busy >= st.Total {
+		return res // nothing to harm, or no second tuner free to take
+	}
+	recMux := map[string]bool{}
+	for _, t := range st.Tuners {
+		for _, u := range t.Users {
+			if u.Kind == "recording" && isHD(u.Channel) {
+				recMux[t.Mux] = true
+				res.Recording = append(res.Recording, u.Title)
+			}
+		}
+	}
+	if len(recMux) == 0 {
+		return res
+	}
+	for _, s := range services {
+		if !s.Enabled || !contains(s.Channel, channel) {
+			continue
+		}
+		if recMux[muxKey(s.Multiplex, s.Network)] {
+			res.Recording = []string{}
+			return res // same multiplex as the recording: no extra tuner is needed
+		}
+	}
+	res.Warn = true
+	return res
+}
+
+func (s *service) LiveImpact(ctx context.Context, channel string) (*core.LiveImpact, error) {
+	if s.off {
+		return &core.LiveImpact{Recording: []string{}}, nil
+	}
+	st, err := s.Status(ctx)
+	if err != nil {
+		return nil, err
+	}
+	probe := liveImpact(st, nil, channel)
+	hd := false
+	for _, t := range st.Tuners {
+		for _, u := range t.Users {
+			hd = hd || (u.Kind == "recording" && isHD(u.Channel))
+		}
+	}
+	if !hd || st.Busy >= st.Total || st.Total < 2 {
+		return probe, nil
+	}
+	// services list their channels by id, the viewer knows the channel by name
+	var chans tvheadend.GridResponse[struct {
+		UUID string `json:"uuid"`
+		Name string `json:"name"`
+	}]
+	cq := tvheadend.NewQuery()
+	cq.Limit(1000)
+	if err := s.get(ctx, "/api/channel/grid", &chans, cq); err != nil {
+		return nil, err
+	}
+	id := ""
+	for _, c := range chans.Entries {
+		if c.Name == channel {
+			id = c.UUID
+			break
+		}
+	}
+	if id == "" {
+		return &core.LiveImpact{Recording: []string{}}, nil // unknown channel: say nothing rather than guess
+	}
+	var svcs tvheadend.GridResponse[mpegtsService]
+	q := tvheadend.NewQuery()
+	q.Limit(5000)
+	if err := s.get(ctx, "/api/mpegts/service/grid", &svcs, q); err != nil {
+		return nil, err
+	}
+	return liveImpact(st, svcs.Entries, id), nil
+}

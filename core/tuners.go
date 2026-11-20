@@ -66,8 +66,19 @@ type (
 		End       int64
 	}
 
+	// LiveImpact says whether starting to watch a channel live would harm a recording in progress.
+	LiveImpact struct {
+		// Warn is true when an HD recording is running and watching the channel would take the second tuner (the
+		// channel is on another multiplex). On a Hauppauge dualHD that corrupts the HD recording.
+		Warn bool `json:"warn"`
+		// Recording lists the HD recordings that would be at risk.
+		Recording []string `json:"recording"`
+	}
+
 	// TunerService reports tuner usage.
 	TunerService interface {
+		// LiveImpact checks whether watching the named channel would take the second tuner away from an HD recording.
+		LiveImpact(ctx context.Context, channel string) (*LiveImpact, error)
 		Status(ctx context.Context) (*TunerStatus, error)
 		// Clashes looks through the scheduled recordings of the next two weeks, optionally with one more
 		// programme added, for times when there are more multiplexes to record than tuners.

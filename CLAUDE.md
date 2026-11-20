@@ -96,6 +96,12 @@ all other browsers through **hls.js**, which is what makes pause/rewind possible
 session (this frees the tuner). Browsers without HLS fall back to an endless fragmented MP4 (no real pause).
 `LIVE_MAX_STREAMS` limits concurrent transcodes.
 
+**Live-viewing guard (`GET /api/tuners/live-impact`).** Before a live stream starts, the player asks whether an HD
+recording (channel name contains the word `HD`) is running and the chosen channel is on a different multiplex (it would
+take the second tuner, which damages the HD recording on a Hauppauge dualHD). Services list channels by **UUID**, the
+viewer only has the name, so the service resolves name → uuid through `/api/channel/grid`. A failed check never blocks
+watching.
+
 **Break bar and Skip ad break.** Ad breaks are `Commercial` chapters written into the MP4 by the pipeline.
 `BreakBar` is ordinary page content under the video (native controls cannot show markers), so it is **not visible in
 native fullscreen**: a known, accepted limitation (iPhone forces native fullscreen).

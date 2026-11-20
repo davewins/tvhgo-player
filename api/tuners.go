@@ -118,3 +118,26 @@ func (s *router) GetStorage(w http.ResponseWriter, r *http.Request) {
 	}
 	response.JSON(w, st, 200)
 }
+
+// GetLiveImpact godoc
+//
+//	@Summary	Would watching this channel live harm an HD recording in progress?
+//	@Tags		tuners
+//	@Param		channel	query	string	true	"Channel name"
+//	@Produce	json
+//	@Success	200	{object}	core.LiveImpact
+//	@Security	JWT
+//	@Router		/tuners/live-impact [get]
+func (s *router) GetLiveImpact(w http.ResponseWriter, r *http.Request) {
+	if s.tuners == nil {
+		response.JSON(w, core.LiveImpact{Recording: []string{}}, 200)
+		return
+	}
+	res, err := s.tuners.LiveImpact(r.Context(), r.URL.Query().Get("channel"))
+	if err != nil {
+		log.Error().Err(err).Msg("failed to check live impact")
+		response.JSON(w, core.LiveImpact{Recording: []string{}}, 200) // never stand in the way of watching
+		return
+	}
+	response.JSON(w, res, 200)
+}

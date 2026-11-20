@@ -334,6 +334,15 @@ For live viewing, tvhgo now passes the viewer's browser to Tvheadend as the stre
 page shows the same string). Streams from other programs are named by what Tvheadend reports (Jellyfin shows as
 *Jellyfin*, with its address).
 
+### Live viewing during an HD recording
+
+On a Hauppauge dualHD, an HD recording is damaged while anything else uses the second tuner (see the stack repo's
+`CLAUDE.md`). When you start watching live, tvhgo checks (`GET /api/tuners/live-impact?channel=<name>`) whether an
+HD recording (a channel whose name has the word *HD*) is running and the channel you picked is on a different
+multiplex, so it would need the second tuner. If so, the player asks first: **Watch anyway** or **Cancel**. Channels on
+the recording's own multiplex, SD recordings, and times when both tuners are already busy do not trigger it. If the
+check fails you are never blocked.
+
 ## Browser support
 
 - **Tested:** Google Chrome on desktop - live TV at all qualities, recording playback and seeking, the guide, all

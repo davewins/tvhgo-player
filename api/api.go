@@ -143,6 +143,7 @@ func (s *router) Handler() http.Handler {
 	authenticated.Get("/pipeline", s.GetPipeline)
 	authenticated.Get("/tuners", s.GetTuners)
 	authenticated.Get("/tuners/clashes", s.GetTunerClashes)
+	authenticated.Get("/tuners/live-impact", s.GetLiveImpact)
 
 	authenticated.Get("/picon/{id}", s.GetPicon)
 
