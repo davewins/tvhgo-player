@@ -31,6 +31,61 @@ body {
 
   --color-accent: #58a6ff;
   --color-accent-light: #58a6ff33;
+  --color-on-accent: #fff;
+  --color-on-rec: #fff;
+
+  // status colours: warning (amber), good (green) and recording (red)
+  --color-warn: #d29922;
+  --color-ok: #3fb950;
+  --color-rec: #e5484d;
+  --radius-sm: 2px;
+  --radius: 3px;
+
+  // Custom branding (the vewins kit, see docs/player.md). Values are the kit's tokens
+  // (vewins-brand/tokens/tokens.css), pinned explicitly for each theme.
+  &[data-brand='vewins'] {
+    --radius-sm: 6px;
+    --radius: 8px;
+    --color-danger-border: rgba(185, 28, 28, 0.4);
+    --color-danger-bg: #b91c1c;
+    --color-success-border: rgba(4, 120, 87, 0.4);
+    --color-success-bg: #047857;
+    --color-text-primary: #0b1426;
+    --color-text-subtle: #6b7a9c;
+    --color-card-bg: #ffffff;
+    --color-border-subtle: #d3dae8;
+    --color-bg: #f4f6fb;
+    --color-accent-contrast: #4a5878;
+    --color-nav-accent: #0284c7;
+    --color-accent: #0284c7;
+    --color-accent-light: rgba(2, 132, 199, 0.16);
+    --color-on-accent: #ffffff;
+    --color-on-rec: #ffffff;
+    --color-warn: #b45309;
+    --color-ok: #047857;
+    --color-rec: #b91c1c;
+
+    &[data-theme='dark'] {
+      --color-danger-border: rgba(248, 113, 113, 0.4);
+      --color-danger-bg: #dc2626;
+      --color-success-border: rgba(52, 211, 153, 0.4);
+      --color-success-bg: #047857;
+      --color-text-primary: #e6ecf8;
+      --color-text-subtle: #8b98b5;
+      --color-card-bg: #0e1628;
+      --color-border-subtle: #1e2a44;
+      --color-bg: #070b16;
+      --color-accent-contrast: #8b98b5;
+      --color-nav-accent: #38bdf8;
+      --color-accent: #38bdf8;
+      --color-accent-light: rgba(56, 189, 248, 0.2);
+      --color-on-accent: #04101c;
+      --color-on-rec: #04101c;
+      --color-warn: #fbbf24;
+      --color-ok: #34d399;
+      --color-rec: #f87171;
+    }
+  }
 
   --toastify-color-light: var(--color-card-bg);
   --toastify-color-dark: var(--color-card-bg);

@@ -1,6 +1,7 @@
-import { BurgerMenuIcon, SearchIcon, TvhgoHorizontalLogo } from '@/assets';
+import { BurgerMenuIcon, SearchIcon } from '@/assets';
 import { useMatch, useNavigate, useSearchParams } from 'react-router-dom';
 
+import BrandLogo from '../brand/BrandLogo';
 import Input from '../common/input/Input';
 import PipelineBadge from './PipelineBadge';
 import RecordingBadge from './RecordingBadge';
@@ -68,7 +69,7 @@ function Header({ onToggle }: Props) {
             className={styles.menuIcon}
             onClick={() => onToggle()}
           />
-          <TvhgoHorizontalLogo className={styles.logo} />
+          <BrandLogo className={styles.logo} />
         </div>
         <div className={styles.right}>
           <RecordingBadge />

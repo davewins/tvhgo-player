@@ -113,6 +113,9 @@ remembered in localStorage; compact is the default under 700 px). The time axis 
 
 ## Conventions
 
+- **Colours and corners come from CSS variables** (`ui/src/index.scss`): `--color-*`, `--radius`, `--radius-sm`. Two brands exist
+  (Original, Custom/vewins, switched by `body[data-brand]`, see `docs/player.md`). Hardcoding a hex colour breaks the custom brand.
+
 - Match surrounding style; comments explain *why*. Go: `gofmt`. UI: prettier style as in existing files (single quotes).
 - A new endpoint: handler in `api/`, route in `api/api.go`, interface method in `core/`, implementation in `services/`,
   a test next to it, and a line in the `docs/player.md` API table.

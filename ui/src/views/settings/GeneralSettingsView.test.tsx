@@ -1,4 +1,4 @@
-import { Theme, useTheme } from '@/contexts/ThemeContext';
+import { Brand, Theme, useTheme } from '@/contexts/ThemeContext';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { cleanup, render } from '@testing-library/react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
@@ -34,6 +34,7 @@ afterEach(() => {
 });
 
 const setThemeMock = vi.fn();
+const setBrandMock = vi.fn();
 const navigateMock = vi.fn();
 const updateUserMock = vi.fn();
 
@@ -46,6 +47,8 @@ beforeEach(() => {
   vi.mocked(useTheme).mockReturnValue({
     setTheme: setThemeMock,
     theme: Theme.DARK,
+    brand: Brand.VEWINS,
+    setBrand: setBrandMock,
   });
 
   vi.mocked(useUpdateUser).mockReturnValue({
@@ -136,6 +139,17 @@ test('should logout', async () => {
   await userEvent.click(logoutButton);
 
   expect(navigateMock).toHaveBeenCalledWith('/logout');
+});
+
+test('should change branding', async () => {
+  const document = render(<GeneralSettingsView />);
+
+  await userEvent.selectOptions(
+    document.getByTestId(TestIds.BRAND_DROPDOWN),
+    Brand.ORIGINAL
+  );
+
+  expect(setBrandMock).toHaveBeenCalledWith(Brand.ORIGINAL);
 });
 
 test('should change theme', async () => {

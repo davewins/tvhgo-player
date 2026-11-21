@@ -13,7 +13,7 @@
   user-select: none;
 
   &:focus-visible {
-    outline: 2px solid #58a6ff;
+    outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
 }
@@ -23,7 +23,7 @@
   left: 0;
   top: 0;
   bottom: 0;
-  background: rgba(88, 166, 255, 0.45);
+  background: color-mix(in srgb, var(--color-accent) 45%, transparent);
 }
 
 // the ad breaks, drawn over the played part so they stay visible
@@ -55,7 +55,7 @@
   button {
     padding: 0.35rem 0.7rem;
     border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 3px;
+    border-radius: var(--radius);
     background: transparent;
     color: inherit;
     font: inherit;

@@ -14,7 +14,7 @@
 
 .card {
   background: var(--color-card-bg);
-  border-radius: 3px;
+  border-radius: var(--radius);
   padding: 0.9rem 1.1rem;
 
   h3 {
@@ -70,7 +70,7 @@
 }
 
 .warn {
-  color: #d29922;
+  color: var(--color-warn);
 }
 
 .detail {
@@ -98,7 +98,7 @@
   > span {
     display: block;
     height: 100%;
-    background: #58a6ff;
+    background: var(--color-accent);
   }
 }
 
@@ -108,5 +108,5 @@
   height: 0.6rem;
   margin-right: 0.45rem;
   border-radius: 50%;
-  background: #e5484d;
+  background: var(--color-rec);
 }

@@ -1,8 +1,8 @@
 .button {
-  border: 1px solid #58a6ff;
-  border-radius: 2px;
-  background-color: #58a6ff;
-  color: white;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
   cursor: pointer;
   font-weight: 600;
   display: flex;
@@ -17,10 +17,10 @@
   &.quiet {
     border: none;
     background-color: transparent;
-    color: #58a6ff;
+    color: var(--color-accent);
 
     &:hover:not(&.disabled) {
-      background-color: rgba(88, 166, 255, 0.1);
+      background-color: color-mix(in srgb, var(--color-accent) 10%, transparent);
 
       &.red {
         background-color: rgba(250, 153, 153, 0.3);
@@ -44,7 +44,7 @@
     }
 
     svg {
-      stroke: #58a6ff;
+      stroke: var(--color-accent);
     }
   }
 

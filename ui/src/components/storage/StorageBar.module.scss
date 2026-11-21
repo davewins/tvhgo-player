@@ -22,7 +22,7 @@
   .protectedWarn {
     margin-top: 0.3rem;
     font-size: 0.78rem;
-    color: #d29922;
+    color: var(--color-warn);
   }
 
   .bar {
@@ -64,12 +64,12 @@
 }
 
 .originals {
-  background: #58a6ff;
+  background: var(--color-accent);
   min-width: 2px;
 }
 
 .copies {
-  background: #3fb950;
+  background: var(--color-ok);
 }
 
 .legend {
@@ -89,11 +89,11 @@
 }
 
 .originalsDot {
-  background: #58a6ff;
+  background: var(--color-accent);
 }
 
 .copiesDot {
-  background: #3fb950;
+  background: var(--color-ok);
 }
 
 .foot {

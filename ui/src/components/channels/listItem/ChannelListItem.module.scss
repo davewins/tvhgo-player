@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   background-color: var(--color-card-bg);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   margin: 1rem 0;
   cursor: pointer;
 }
@@ -16,7 +16,7 @@
   margin: 1rem;
   padding: 0.3rem;
   background-color: var(--color-border-subtle);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   flex-shrink: 0;
 }
 
@@ -52,8 +52,8 @@
   width: 2.2rem;
   height: 2.2rem;
   border-radius: 50%;
-  border: 1px solid #58a6ff;
-  background-color: #58a6ff;
+  border: 1px solid var(--color-accent);
+  background-color: var(--color-accent);
   color: white;
   font-size: 0.8rem;
   cursor: pointer;

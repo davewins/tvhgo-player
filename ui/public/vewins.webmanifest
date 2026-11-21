@@ -1,0 +1,19 @@
+{
+  "short_name": "tvhgo",
+  "name": "tvhgo",
+  "icons": [
+    { "src": "img/vewins/icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "img/vewins/icon-512.png", "type": "image/png", "sizes": "512x512" },
+    {
+      "src": "img/vewins/icon-maskable-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#070b16",
+  "background_color": "#070b16"
+}

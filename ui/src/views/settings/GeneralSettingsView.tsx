@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 
+import { Brand, Theme, useTheme } from '@/contexts/ThemeContext';
 import Dropdown, { Option } from '@/components/common/dropdown/Dropdown';
-import { Theme, useTheme } from '@/contexts/ThemeContext';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 
 import { AuthInfo } from '@/clients/api/api.types';
@@ -31,7 +31,7 @@ export const Component = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const { setTheme, theme } = useTheme();
+  const { setTheme, theme, setBrand, brand } = useTheme();
   const { update } = useUpdateUser();
 
   const [authInfo] = useLoaderData() as [AuthInfo];
@@ -39,6 +39,11 @@ export const Component = () => {
   const themeOptions: Option[] = [
     { title: t('dark'), value: 'dark' },
     { title: t('light'), value: 'light' },
+  ];
+
+  const brandOptions: Option[] = [
+    { title: t('brand_custom'), value: Brand.VEWINS },
+    { title: t('brand_original'), value: Brand.ORIGINAL },
   ];
 
   const languageOptions: Option[] = [
@@ -182,6 +187,14 @@ export const Component = () => {
             onChange={(theme) => setTheme(theme as Theme)}
             fullWidth
             testID={TestIds.THEME_DROPDOWN}
+          />
+          <Dropdown
+            label={t('branding')}
+            value={brand}
+            options={brandOptions}
+            onChange={(brand) => setBrand(brand as Brand)}
+            fullWidth
+            testID={TestIds.BRAND_DROPDOWN}
           />
           <Dropdown
             label={t('language')}

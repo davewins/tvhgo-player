@@ -370,3 +370,18 @@ has no file (*Time missed*) now works: Tvheadend's remove leaves such an entry b
   menu simply disappears for radio.
 - Audio-description tracks are skipped by choosing the main audio track; subtitles are not included in converted video.
 - No Chromecast / AirPlay / external-player integration.
+
+
+## Branding (Original or Custom)
+
+**Settings → User interface → Branding** switches the look of the whole app between **Original** (upstream tvhgo colours and
+logo) and **Custom**, which uses the vewins brand kit: its colour tokens, rounder corners, the orbit mark with the
+unchanged "tvhgo" name, and its favicon, home-screen icon and manifest. Custom follows the existing **Appearance** setting
+(light or dark), so both brands can be light or dark. Both choices are remembered per browser (`localStorage` keys
+`tvhgo_brand`, `tvhgo_theme`); Custom is the default.
+
+How it works: all colours are CSS variables defined in `ui/src/index.scss` (`--color-*`, `--radius`). The Custom brand is
+the block `body[data-brand='vewins']` (with a `[data-theme='dark']` variant) that overrides them; `ThemeProvider` sets
+`data-brand` and swaps the favicon/manifest links. Never hardcode a colour in a stylesheet: use `--color-accent`,
+`--color-warn`, `--color-ok`, `--color-rec` (and `--color-on-accent` for text on them). To change the custom palette,
+edit that block; the source tokens are `tokens/tokens.css` in the brand kit.

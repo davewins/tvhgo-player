@@ -9,7 +9,7 @@
   border: 1px solid var(--color-danger-bg);
   padding: 0 1.25rem;
   font: inherit;
-  border-radius: 3px;
+  border-radius: var(--radius);
   background-color: var(--color-danger-bg);
   color: white;
   cursor: pointer;

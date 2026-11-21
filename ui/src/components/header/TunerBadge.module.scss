@@ -13,8 +13,8 @@
   text-decoration: none;
 
   &.full {
-    color: #d29922;
-    border-color: #d29922;
+    color: var(--color-warn);
+    border-color: var(--color-warn);
     font-weight: 600;
   }
 }
@@ -23,10 +23,10 @@
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
-  background: #3fb950;
+  background: var(--color-ok);
 
   .full & {
-    background: #d29922;
+    background: var(--color-warn);
   }
 }
 
@@ -54,7 +54,7 @@
 
 // recording: red dot
 .rec .dot {
-  background: #e5484d;
+  background: var(--color-rec);
 }
 
 // the tuner count is on the Status page; the phone header keeps room for the recording and conversion badges

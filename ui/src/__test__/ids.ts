@@ -6,6 +6,7 @@ export enum TestIds {
   REVOKE_SESSION_BUTTON = 'revoke-session-btn',
   REVOKE_TOKEN_BUTTON = 'revoke-token-btn',
   THEME_DROPDOWN = 'theme-dropdown',
+  BRAND_DROPDOWN = 'brand-dropdown',
   LANGUAGE_DROPDOWN = 'language-dropdown',
   TIME_FORMAT_DROPDOWN = 'time-format-dropdown',
   LOGOUT_BUTTON = 'logout-button',

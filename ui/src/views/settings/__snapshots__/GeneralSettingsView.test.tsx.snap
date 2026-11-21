@@ -129,6 +129,31 @@ exports[`should render 1`] = `
         <label
           class="_inputLabel_979188"
         >
+          branding
+        </label>
+        <select
+          class="_dropdown_979188"
+          data-testid="brand-dropdown"
+          style="width: 100%;"
+        >
+          <option
+            value="vewins"
+          >
+            brand_custom
+          </option>
+          <option
+            value="original"
+          >
+            brand_original
+          </option>
+        </select>
+      </div>
+      <div
+        class="_inputContainer_979188"
+      >
+        <label
+          class="_inputLabel_979188"
+        >
           language
         </label>
         <select
@@ -1006,6 +1031,31 @@ exports[`should render render without logout button when authenticated by revers
             value="light"
           >
             light
+          </option>
+        </select>
+      </div>
+      <div
+        class="_inputContainer_979188"
+      >
+        <label
+          class="_inputLabel_979188"
+        >
+          branding
+        </label>
+        <select
+          class="_dropdown_979188"
+          data-testid="brand-dropdown"
+          style="width: 100%;"
+        >
+          <option
+            value="vewins"
+          >
+            brand_custom
+          </option>
+          <option
+            value="original"
+          >
+            brand_original
           </option>
         </select>
       </div>

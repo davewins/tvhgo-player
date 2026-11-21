@@ -82,7 +82,7 @@
   flex: none;
   width: 8rem;
   aspect-ratio: 16 / 9;
-  border-radius: 3px;
+  border-radius: var(--radius);
   background-color: var(--color-border-subtle);
   object-fit: cover;
 }
