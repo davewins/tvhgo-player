@@ -157,6 +157,14 @@ exports[`login > should render 1`] = `
          | 
       </span>
       <span>
+        updated_with
+      </span>
+      <span
+        class="_sep_223d5a"
+      >
+         | 
+      </span>
+      <span>
         <a
           class="_link_223d5a"
           href="https://github.com/davidborzek/tvhgo"
@@ -328,6 +336,14 @@ exports[`login with totp > should render two factor auth 1`] = `
     >
       <span>
         made_with
+      </span>
+      <span
+        class="_sep_223d5a"
+      >
+         | 
+      </span>
+      <span>
+        updated_with
       </span>
       <span
         class="_sep_223d5a"

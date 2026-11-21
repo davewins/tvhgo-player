@@ -14,6 +14,8 @@ function LoginFooter(props: Props) {
     <footer className={styles.footer}>
       <span>{t('made_with')}</span>
       <span className={styles.sep}> | </span>
+      <span>{t('updated_with')}</span>
+      <span className={styles.sep}> | </span>
       <span>
         <a
           className={styles.link}
